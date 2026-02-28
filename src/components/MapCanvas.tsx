@@ -1,0 +1,166 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ReactFlow,
+  MiniMap,
+  Controls,
+  useNodesState,
+  useEdgesState,
+  useReactFlow,
+  ReactFlowProvider,
+} from "@xyflow/react";
+import type { Node, Edge, NodeMouseHandler } from "@xyflow/react";
+import NodeCard from "./NodeCard";
+import AutoExpandToggle from "./AutoExpandToggle";
+import { buildFlowGraph, countNodesAtDepth, getIdsToDepth } from "@/lib/graphLayout";
+import { useAppStore } from "@/lib/store";
+import type { FlowNodeData } from "@/types";
+
+const nodeTypes = { industryNode: NodeCard };
+
+function MapCanvasInner() {
+  const mapData = useAppStore((s) => s.mapData);
+  const autoExpand = useAppStore((s) => s.autoExpand);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const { fitView } = useReactFlow();
+
+  // Calculate total nodes at depth 2 for the auto-expand guard
+  const totalNodesAtDepth2 = useMemo(() => {
+    if (!mapData) return 0;
+    return countNodesAtDepth(mapData.rootNodes, 2);
+  }, [mapData]);
+
+  // Build graph when mapData, expandedIds, or autoExpand changes
+  useEffect(() => {
+    if (!mapData) {
+      setNodes([]);
+      setEdges([]);
+      return;
+    }
+
+    // Determine which nodes should be expanded
+    let activeExpandedIds = expandedIds;
+
+    if (autoExpand && totalNodesAtDepth2 <= 80) {
+      // Auto-expand to depth 2
+      const autoIds = getIdsToDepth(mapData.rootNodes, 2);
+      activeExpandedIds = new Set([...expandedIds, ...autoIds]);
+    }
+
+    const { nodes: newNodes, edges: newEdges } = buildFlowGraph(
+      mapData,
+      activeExpandedIds
+    );
+
+    setNodes(newNodes);
+    setEdges(newEdges);
+
+    // Fit view after layout with a small delay for rendering
+    setTimeout(() => {
+      fitView({ duration: 400, padding: 0.15 });
+    }, 50);
+  }, [mapData, expandedIds, autoExpand, totalNodesAtDepth2, setNodes, setEdges, fitView]);
+
+  // Handle node click: toggle expand/collapse
+  const onNodeClick: NodeMouseHandler = useCallback(
+    (_event, node) => {
+      const data = node.data as unknown as FlowNodeData;
+      if (!data.hasChildren) return;
+
+      setExpandedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(node.id)) {
+          // Collapse: remove this node and all descendants
+          next.delete(node.id);
+          // Also collapse any children that were expanded
+          removeDescendants(next, node.id, mapData!);
+        } else {
+          next.add(node.id);
+        }
+        return next;
+      });
+    },
+    [mapData]
+  );
+
+  if (!mapData) return null;
+
+  return (
+    <div className="relative w-full h-full">
+      <AutoExpandToggle totalNodesAtDepth2={totalNodesAtDepth2} />
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onNodeClick={onNodeClick}
+        nodeTypes={nodeTypes}
+        fitView
+        fitViewOptions={{ padding: 0.15 }}
+        minZoom={0.1}
+        maxZoom={2}
+        proOptions={{ hideAttribution: true }}
+        className="bg-white"
+        defaultEdgeOptions={{
+          type: "default",
+          style: { stroke: "#d1d5db", strokeWidth: 1.2 },
+        }}
+      >
+        <Controls
+          showInteractive={false}
+          className="!shadow-none"
+        />
+        <MiniMap
+          nodeColor={() => "#e5e7eb"}
+          maskColor="rgba(0, 0, 0, 0.05)"
+          className="!shadow-none"
+          pannable
+          zoomable
+        />
+      </ReactFlow>
+    </div>
+  );
+}
+
+/**
+ * Remove all descendant IDs from the expanded set when collapsing a node
+ */
+function removeDescendants(
+  expandedIds: Set<string>,
+  parentId: string,
+  mapData: { rootNodes: Array<{ id: string; subNodes?: Array<unknown> }> }
+) {
+  function findAndRemove(
+    nodes: Array<{ id: string; subNodes?: Array<unknown> }>
+  ) {
+    for (const node of nodes) {
+      const n = node as { id: string; subNodes?: Array<{ id: string; subNodes?: Array<unknown> }> };
+      if (n.id === parentId && n.subNodes) {
+        for (const child of n.subNodes) {
+          expandedIds.delete(child.id);
+          if (child.subNodes) {
+            removeDescendants(expandedIds, child.id, { rootNodes: n.subNodes });
+          }
+        }
+        return;
+      }
+      if (n.subNodes) {
+        findAndRemove(n.subNodes);
+      }
+    }
+  }
+  findAndRemove(mapData.rootNodes);
+}
+
+// Wrap with ReactFlowProvider
+export default function MapCanvas() {
+  return (
+    <ReactFlowProvider>
+      <MapCanvasInner />
+    </ReactFlowProvider>
+  );
+}

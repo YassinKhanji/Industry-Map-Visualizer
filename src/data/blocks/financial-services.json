@@ -1,0 +1,893 @@
+{
+  "industry": "Financial Services & Investment Products",
+  "rootNodes": [
+    {
+      "id": "upstream-inputs",
+      "label": "Upstream Inputs",
+      "category": "upstream-inputs",
+      "description": "Raw data, securities, and market inputs that feed the investment process",
+      "subNodes": [
+        {
+          "id": "equity-issuers",
+          "label": "Equity Issuers",
+          "category": "upstream-inputs",
+          "description": "Public companies issuing stock via exchanges"
+        },
+        {
+          "id": "debt-issuers",
+          "label": "Debt Issuers",
+          "category": "upstream-inputs",
+          "description": "Governments and corporations issuing bonds and notes"
+        },
+        {
+          "id": "primary-markets",
+          "label": "Primary Markets",
+          "category": "upstream-inputs",
+          "description": "IPO and new bond issuance processes via investment bank underwriting"
+        },
+        {
+          "id": "index-providers",
+          "label": "Index Providers",
+          "category": "upstream-inputs",
+          "description": "S&P, MSCI, FTSE — create market indices used for benchmarking"
+        },
+        {
+          "id": "ratings-agencies",
+          "label": "Ratings Agencies",
+          "category": "upstream-inputs",
+          "description": "Moody's, S&P, Fitch — provide credit ratings on issuers"
+        },
+        {
+          "id": "market-data-vendors",
+          "label": "Market Data Vendors",
+          "category": "upstream-inputs",
+          "description": "Bloomberg, Reuters, Refinitiv — financial data and analysis providers"
+        },
+        {
+          "id": "underwriters",
+          "label": "Underwriters",
+          "category": "upstream-inputs",
+          "description": "Investment banks underwriting new stock or bond issues"
+        },
+        {
+          "id": "economic-data",
+          "label": "Economic Data",
+          "category": "upstream-inputs",
+          "description": "Central bank reports, GDP data, CPI, market indicators"
+        },
+        {
+          "id": "corporate-filings",
+          "label": "Corporate Filings",
+          "category": "upstream-inputs",
+          "description": "10-K, 10-Q, prospectuses, SEC EDGAR filings feeding analysis"
+        }
+      ]
+    },
+    {
+      "id": "product-planning",
+      "label": "Product Planning",
+      "category": "core-production",
+      "description": "Strategic incubation and product design phase",
+      "subNodes": [
+        {
+          "id": "product-sponsor",
+          "label": "Product Sponsor",
+          "category": "core-production",
+          "description": "ETF Issuer or fund sponsor — strategic architect of the product"
+        },
+        {
+          "id": "competitor-analysis",
+          "label": "Competitor Analysis",
+          "category": "core-production",
+          "description": "Evaluating market gaps and optimal pricing structures"
+        },
+        {
+          "id": "economic-proforma",
+          "label": "Economic Pro Forma",
+          "category": "core-production",
+          "description": "Projecting revenue based on anticipated AUM and expense ratios"
+        },
+        {
+          "id": "board-of-trustees",
+          "label": "Board of Trustees",
+          "category": "core-production",
+          "description": "Ultimate authority to approve fund launch and ongoing oversight"
+        },
+        {
+          "id": "prospectus-drafting",
+          "label": "Prospectus Drafting",
+          "category": "core-production",
+          "description": "Preparing SEC Form N-1A disclosure document"
+        },
+        {
+          "id": "regulatory-liaison",
+          "label": "Regulatory Liaison",
+          "category": "core-production",
+          "description": "Interacting with SEC for filing feedback and compliance"
+        },
+        {
+          "id": "xbrl-tagging",
+          "label": "XBRL Data Tagging",
+          "category": "core-production",
+          "description": "Standardized tagging for regulatory disclosure processing"
+        },
+        {
+          "id": "marketing-consultant",
+          "label": "Marketing Consultant",
+          "category": "core-production",
+          "description": "Strategy to reach target investors — websites, factsheets, sales materials"
+        }
+      ]
+    },
+    {
+      "id": "core-investment",
+      "label": "Core Investment Process",
+      "category": "core-production",
+      "description": "Front office functions driving investment performance",
+      "subNodes": [
+        {
+          "id": "portfolio-management",
+          "label": "Portfolio Management",
+          "category": "core-production",
+          "description": "Selecting and overseeing mix of investments to meet fund objectives"
+        },
+        {
+          "id": "investment-research",
+          "label": "Investment Research",
+          "category": "core-production",
+          "description": "Equity/credit analysts researching companies and industries"
+        },
+        {
+          "id": "asset-allocation",
+          "label": "Asset Allocation",
+          "category": "core-production",
+          "description": "Deciding how to spread assets across equity, bond, cash, alternatives"
+        },
+        {
+          "id": "strategy-development",
+          "label": "Strategy Development",
+          "category": "core-production",
+          "description": "Setting investment strategy — growth, value, passive, active, thematic"
+        },
+        {
+          "id": "trading-desk",
+          "label": "Trading Desk",
+          "category": "core-production",
+          "description": "Executing buy/sell orders on exchanges or OTC markets"
+        },
+        {
+          "id": "risk-management",
+          "label": "Risk Management",
+          "category": "core-production",
+          "description": "VaR, stress tests, scenario analysis, hedging portfolio risks"
+        },
+        {
+          "id": "compliance-monitoring",
+          "label": "Compliance Monitoring",
+          "category": "core-production",
+          "description": "Ensuring adherence to investment mandate and regulatory limits"
+        },
+        {
+          "id": "fund-accounting-core",
+          "label": "Fund Accounting",
+          "category": "core-production",
+          "description": "Calculating NAV, performance metrics, bookkeeping"
+        }
+      ]
+    },
+    {
+      "id": "primary-market",
+      "label": "Primary Market Mechanism",
+      "category": "processing",
+      "description": "Creation and redemption engine — unique to ETFs and pooled vehicles",
+      "subNodes": [
+        {
+          "id": "authorized-participant",
+          "label": "Authorized Participant",
+          "category": "processing",
+          "description": "Large financial institution permitted to transact directly with the fund"
+        },
+        {
+          "id": "creation-unit",
+          "label": "Creation Unit",
+          "category": "processing",
+          "description": "Large blocks of 10K-100K shares created in exchange for basket of securities"
+        },
+        {
+          "id": "redemption-basket",
+          "label": "Redemption Basket",
+          "category": "processing",
+          "description": "In-kind redemption process returning underlying securities"
+        },
+        {
+          "id": "arbitrage-mechanism",
+          "label": "Arbitrage Mechanism",
+          "category": "processing",
+          "description": "Keeps ETF price aligned with NAV through AP activity"
+        },
+        {
+          "id": "tax-efficiency",
+          "label": "Tax Efficiency",
+          "category": "processing",
+          "description": "In-kind transactions avoid realizing capital gains"
+        }
+      ]
+    },
+    {
+      "id": "operations",
+      "label": "Operations & Processing",
+      "category": "processing",
+      "description": "Trade lifecycle — order management through settlement",
+      "subNodes": [
+        {
+          "id": "order-management",
+          "label": "Order Management",
+          "category": "processing",
+          "description": "OMS for routing, confirming, and tracking trade orders"
+        },
+        {
+          "id": "trade-execution",
+          "label": "Trade Execution",
+          "category": "processing",
+          "description": "Processing orders through brokers or electronic platforms"
+        },
+        {
+          "id": "clearing-settlement",
+          "label": "Clearing & Settlement",
+          "category": "processing",
+          "description": "Matching and finalizing trades — cash and securities exchange"
+        },
+        {
+          "id": "nav-calculation",
+          "label": "NAV Calculation",
+          "category": "processing",
+          "description": "Daily computation of Net Asset Value per share"
+        },
+        {
+          "id": "reconciliation",
+          "label": "Reconciliation",
+          "category": "processing",
+          "description": "Matching positions and transactions across systems"
+        },
+        {
+          "id": "tax-reporting",
+          "label": "Tax Reporting",
+          "category": "processing",
+          "description": "Preparing 1099-DIV, K-1s, IRS filings for investors"
+        },
+        {
+          "id": "nport-ncen",
+          "label": "N-PORT/N-CEN Filings",
+          "category": "processing",
+          "description": "Ongoing regulatory filings for liquidity assessment"
+        }
+      ]
+    },
+    {
+      "id": "distribution",
+      "label": "Distribution",
+      "category": "distribution",
+      "description": "Channels through which investment products reach investors",
+      "subNodes": [
+        {
+          "id": "broker-dealers",
+          "label": "Broker-Dealers",
+          "category": "distribution",
+          "description": "Financial intermediaries selling fund shares to clients"
+        },
+        {
+          "id": "financial-advisors",
+          "label": "Financial Advisors",
+          "category": "distribution",
+          "description": "Professionals recommending the fund to their clients"
+        },
+        {
+          "id": "online-platforms",
+          "label": "Online Platforms",
+          "category": "distribution",
+          "description": "Retail brokerage platforms — Schwab, Fidelity, Robinhood"
+        },
+        {
+          "id": "institutional-sales",
+          "label": "Institutional Sales",
+          "category": "distribution",
+          "description": "Marketing to pension funds, endowments, sovereign wealth funds"
+        },
+        {
+          "id": "retirement-providers",
+          "label": "Retirement Providers",
+          "category": "distribution",
+          "description": "401(k)/IRA plan sponsors including the fund in offerings"
+        },
+        {
+          "id": "marketing-pr",
+          "label": "Marketing & PR",
+          "category": "distribution",
+          "description": "Materials, campaigns, brand building to attract investors"
+        },
+        {
+          "id": "investor-relations",
+          "label": "Investor Relations",
+          "category": "distribution",
+          "description": "Communications with current and prospective investors"
+        },
+        {
+          "id": "cross-border-dist",
+          "label": "Cross-Border Distribution",
+          "category": "distribution",
+          "description": "International partners or fund wrappers for global access"
+        },
+        {
+          "id": "distributor",
+          "label": "Distributor",
+          "category": "distribution",
+          "description": "Legal underwriter facilitating fund-to-AP and fund-to-market relationship"
+        }
+      ]
+    },
+    {
+      "id": "secondary-market",
+      "label": "Secondary Market",
+      "category": "distribution",
+      "description": "Where the majority of investor trading activity occurs",
+      "subNodes": [
+        {
+          "id": "market-makers",
+          "label": "Market Makers",
+          "category": "distribution",
+          "description": "Dealers posting continuous bid/ask prices on exchanges"
+        },
+        {
+          "id": "exchanges",
+          "label": "Exchanges",
+          "category": "distribution",
+          "description": "NYSE, NASDAQ, CBOE — where ETFs and securities trade"
+        },
+        {
+          "id": "liquidity-providers",
+          "label": "Liquidity Providers",
+          "category": "distribution",
+          "description": "HFT firms providing depth to the order book"
+        },
+        {
+          "id": "clearing-house",
+          "label": "Clearing House",
+          "category": "distribution",
+          "description": "Central counterparty ensuring trade settlement — DTCC, OCC"
+        }
+      ]
+    },
+    {
+      "id": "customer-facing",
+      "label": "Customer-Facing",
+      "category": "customer-facing",
+      "description": "End investors and client-facing services",
+      "subNodes": [
+        {
+          "id": "retail-investors",
+          "label": "Retail Investors",
+          "category": "customer-facing",
+          "description": "Individual end-investors buying through accounts or retirement plans"
+        },
+        {
+          "id": "institutional-investors",
+          "label": "Institutional Investors",
+          "category": "customer-facing",
+          "description": "Pension funds, insurance companies, endowments investing large sums"
+        },
+        {
+          "id": "plan-sponsors",
+          "label": "Plan Sponsors",
+          "category": "customer-facing",
+          "description": "Employers offering the fund in retirement/benefit plans"
+        },
+        {
+          "id": "rias",
+          "label": "Registered Investment Advisers",
+          "category": "customer-facing",
+          "description": "Firms managing money for clients that allocate to this fund"
+        },
+        {
+          "id": "customer-portal",
+          "label": "Customer Portal",
+          "category": "customer-facing",
+          "description": "Online account access, statements, performance reporting"
+        }
+      ]
+    },
+    {
+      "id": "support-ops",
+      "label": "Support & Operations",
+      "category": "support-ops",
+      "description": "Back-office infrastructure keeping the fund running",
+      "subNodes": [
+        {
+          "id": "custodian-bank",
+          "label": "Custodian Bank",
+          "category": "support-ops",
+          "description": "Holding fund assets in custody — State Street, BNY Mellon, JPMorgan"
+        },
+        {
+          "id": "transfer-agent",
+          "label": "Transfer Agent",
+          "category": "support-ops",
+          "description": "Shareholder recordkeeping, share issuance and redemption"
+        },
+        {
+          "id": "fund-administrator",
+          "label": "Fund Administrator",
+          "category": "support-ops",
+          "description": "Third-party handling NAV calculation, statements, reporting"
+        },
+        {
+          "id": "external-auditor",
+          "label": "External Auditor",
+          "category": "support-ops",
+          "description": "Verifying fund financial statements — Big Four firms"
+        },
+        {
+          "id": "legal-counsel",
+          "label": "Legal Counsel",
+          "category": "support-ops",
+          "description": "In-house or external counsel for contracts and regulation"
+        },
+        {
+          "id": "it-infrastructure",
+          "label": "IT & Infrastructure",
+          "category": "support-ops",
+          "description": "Servers, networks, trading systems maintenance"
+        },
+        {
+          "id": "hr-finance",
+          "label": "HR & Finance",
+          "category": "support-ops",
+          "description": "Internal staff support, budgeting, payroll"
+        },
+        {
+          "id": "crm-ops",
+          "label": "Client Relationship Mgmt",
+          "category": "support-ops",
+          "description": "CRM software and teams handling investor inquiries"
+        }
+      ]
+    },
+    {
+      "id": "regulation",
+      "label": "Regulation & Standards",
+      "category": "regulation",
+      "description": "Legal and regulatory framework governing investment products",
+      "subNodes": [
+        {
+          "id": "sec",
+          "label": "SEC",
+          "category": "regulation",
+          "description": "Securities & Exchange Commission — federal securities regulator"
+        },
+        {
+          "id": "finra",
+          "label": "FINRA",
+          "category": "regulation",
+          "description": "Financial Industry Regulatory Authority — broker-dealer oversight"
+        },
+        {
+          "id": "investment-company-act",
+          "label": "Investment Company Act",
+          "category": "regulation",
+          "description": "1940 Act regulating mutual funds and requiring disclosures"
+        },
+        {
+          "id": "securities-acts",
+          "label": "Securities Acts",
+          "category": "regulation",
+          "description": "1933/1934 Acts governing registration and trading"
+        },
+        {
+          "id": "aml-kyc",
+          "label": "AML / KYC",
+          "category": "regulation",
+          "description": "Anti-money laundering and Know Your Customer requirements"
+        },
+        {
+          "id": "data-privacy",
+          "label": "Data Privacy",
+          "category": "regulation",
+          "description": "GDPR, CCPA — investor data protection regulations"
+        },
+        {
+          "id": "accounting-standards",
+          "label": "Accounting Standards",
+          "category": "regulation",
+          "description": "GAAP/IFRS standards for financial reporting"
+        },
+        {
+          "id": "mifid-ii",
+          "label": "MiFID II",
+          "category": "regulation",
+          "description": "European Markets in Financial Instruments Directive"
+        },
+        {
+          "id": "dodd-frank",
+          "label": "Dodd-Frank Act",
+          "category": "regulation",
+          "description": "Post-2008 U.S. financial regulation reform"
+        }
+      ]
+    },
+    {
+      "id": "technology",
+      "label": "Technology Stack",
+      "category": "technology",
+      "description": "Digital nervous system underpinning investment operations",
+      "subNodes": [
+        {
+          "id": "pms",
+          "label": "Portfolio Mgmt System",
+          "category": "technology",
+          "description": "Real-time holdings, analytics, rebalancing — BlackRock Aladdin, FactSet"
+        },
+        {
+          "id": "oms",
+          "label": "Order Mgmt System",
+          "category": "technology",
+          "description": "Centralizes trade orders, lifecycle tracking, pre-trade compliance"
+        },
+        {
+          "id": "ems",
+          "label": "Execution Mgmt System",
+          "category": "technology",
+          "description": "High-speed connectivity to trading venues, algorithmic routing"
+        },
+        {
+          "id": "fix-protocol",
+          "label": "FIX Protocol",
+          "category": "technology",
+          "description": "Universal standard for electronic trading communication"
+        },
+        {
+          "id": "market-data-api",
+          "label": "Market Data APIs",
+          "category": "technology",
+          "description": "Real-time price and news feeds — Bloomberg, Reuters terminals"
+        },
+        {
+          "id": "risk-analytics",
+          "label": "Risk Analytics Tools",
+          "category": "technology",
+          "description": "Stress testing, VaR calculation, scenario analysis platforms"
+        },
+        {
+          "id": "crm-system",
+          "label": "CRM System",
+          "category": "technology",
+          "description": "Salesforce, Dynamics — managing investor contacts and communications"
+        },
+        {
+          "id": "client-portal-tech",
+          "label": "Client Portals",
+          "category": "technology",
+          "description": "Secure web portals for investor access and reporting"
+        },
+        {
+          "id": "cloud-services",
+          "label": "Cloud Services",
+          "category": "technology",
+          "description": "AWS, Azure, GCP — scalable infrastructure"
+        },
+        {
+          "id": "cybersecurity",
+          "label": "Cybersecurity",
+          "category": "technology",
+          "description": "Threat protection, encryption, SOC compliance, SEC Rule 38a-2"
+        },
+        {
+          "id": "blockchain-dlt",
+          "label": "Blockchain / DLT",
+          "category": "technology",
+          "description": "Emerging ledger technology for settlement and custody"
+        }
+      ]
+    },
+    {
+      "id": "roles",
+      "label": "Key Roles",
+      "category": "roles",
+      "description": "People who drive the investment process",
+      "subNodes": [
+        {
+          "id": "role-pm",
+          "label": "Portfolio Manager",
+          "category": "roles",
+          "description": "Makes investment decisions and asset allocation"
+        },
+        {
+          "id": "role-analyst",
+          "label": "Research Analyst",
+          "category": "roles",
+          "description": "Analyzes securities and markets to support PM"
+        },
+        {
+          "id": "role-trader",
+          "label": "Trader",
+          "category": "roles",
+          "description": "Executes trades on exchanges or OTC markets"
+        },
+        {
+          "id": "role-risk",
+          "label": "Risk Manager",
+          "category": "roles",
+          "description": "Monitors portfolio risk and implements hedges"
+        },
+        {
+          "id": "role-compliance",
+          "label": "Compliance Officer",
+          "category": "roles",
+          "description": "Ensures all activities meet regulatory requirements"
+        },
+        {
+          "id": "role-accountant",
+          "label": "Fund Accountant",
+          "category": "roles",
+          "description": "Handles accounting, NAV calculations, financial records"
+        },
+        {
+          "id": "role-sales",
+          "label": "Sales Representative",
+          "category": "roles",
+          "description": "Sells the fund and builds distribution channels"
+        },
+        {
+          "id": "role-cio",
+          "label": "Chief Investment Officer",
+          "category": "roles",
+          "description": "Sets overall investment strategy and risk appetite"
+        },
+        {
+          "id": "role-coo",
+          "label": "Chief Operating Officer",
+          "category": "roles",
+          "description": "Oversees operations and back-office processes"
+        },
+        {
+          "id": "role-quant",
+          "label": "Quant / Data Scientist",
+          "category": "roles",
+          "description": "Builds algorithms and models for trading and analytics"
+        }
+      ]
+    },
+    {
+      "id": "alternative-assets",
+      "label": "Alternative Assets",
+      "category": "alternative-assets",
+      "description": "Non-traditional investment classes expanding the value chain",
+      "subNodes": [
+        {
+          "id": "private-equity",
+          "label": "Private Equity",
+          "category": "alternative-assets",
+          "description": "Investments in non-public companies — buyouts, growth capital"
+        },
+        {
+          "id": "venture-capital",
+          "label": "Venture Capital",
+          "category": "alternative-assets",
+          "description": "Early-stage company investments — seed, Series A-D"
+        },
+        {
+          "id": "private-credit",
+          "label": "Private Credit",
+          "category": "alternative-assets",
+          "description": "Direct lending without bank intermediary"
+        },
+        {
+          "id": "real-estate",
+          "label": "Real Estate",
+          "category": "alternative-assets",
+          "description": "REITs, direct property investment, commercial real estate"
+        },
+        {
+          "id": "infrastructure",
+          "label": "Infrastructure",
+          "category": "alternative-assets",
+          "description": "Airports, toll roads, utilities — essential services investing"
+        },
+        {
+          "id": "commodities",
+          "label": "Commodities",
+          "category": "alternative-assets",
+          "description": "Gold, oil, agricultural products — supply and demand driven"
+        },
+        {
+          "id": "digital-assets",
+          "label": "Digital Assets",
+          "category": "alternative-assets",
+          "description": "Crypto, tokenized assets, digital custody solutions"
+        },
+        {
+          "id": "hedge-funds",
+          "label": "Hedge Funds",
+          "category": "alternative-assets",
+          "description": "Long/short, event-driven, macro strategies — alternative vehicles"
+        },
+        {
+          "id": "liquid-alts",
+          "label": "Liquid Alternatives",
+          "category": "alternative-assets",
+          "description": "Mutual fund wrappers providing hedge-fund-like strategies with daily liquidity"
+        }
+      ]
+    },
+    {
+      "id": "esg",
+      "label": "ESG & Stewardship",
+      "category": "esg-stewardship",
+      "description": "Environmental, Social, and Governance integration into investing",
+      "subNodes": [
+        {
+          "id": "esg-frameworks",
+          "label": "ESG Frameworks",
+          "category": "esg-stewardship",
+          "description": "GRI, TCFD, SASB — sustainability disclosure standards"
+        },
+        {
+          "id": "esg-ratings",
+          "label": "ESG Rating Agencies",
+          "category": "esg-stewardship",
+          "description": "MSCI ESG, Sustainalytics — scoring and assessments"
+        },
+        {
+          "id": "proxy-advisory",
+          "label": "Proxy Advisory",
+          "category": "esg-stewardship",
+          "description": "ISS, Glass Lewis — voting recommendations and stewardship"
+        },
+        {
+          "id": "impact-assessment",
+          "label": "Impact Assessment",
+          "category": "esg-stewardship",
+          "description": "Measuring real-world outcomes of ESG-aligned investments"
+        },
+        {
+          "id": "esg-compliance",
+          "label": "ESG Compliance",
+          "category": "esg-stewardship",
+          "description": "SFDR, EU Taxonomy, CSRD — mandatory sustainability reporting"
+        }
+      ]
+    },
+    {
+      "id": "private-wealth",
+      "label": "Private Wealth & Estate",
+      "category": "private-wealth",
+      "description": "Individualized planning and fiduciary services for end investors",
+      "subNodes": [
+        {
+          "id": "wealth-manager",
+          "label": "Wealth Manager",
+          "category": "private-wealth",
+          "description": "Holistic financial planning integrating investments, tax, estate"
+        },
+        {
+          "id": "estate-planning",
+          "label": "Estate Planning",
+          "category": "private-wealth",
+          "description": "Wills, trusts, beneficiary designations"
+        },
+        {
+          "id": "trusts",
+          "label": "Trust Structures",
+          "category": "private-wealth",
+          "description": "Revocable, irrevocable, charitable remainder trusts",
+          "subNodes": [
+            {
+              "id": "revocable-trust",
+              "label": "Revocable Trust",
+              "category": "private-wealth",
+              "description": "Client maintains control during lifetime"
+            },
+            {
+              "id": "irrevocable-trust",
+              "label": "Irrevocable Trust",
+              "category": "private-wealth",
+              "description": "Tax advantages and creditor protection"
+            },
+            {
+              "id": "charitable-trust",
+              "label": "Charitable Trust",
+              "category": "private-wealth",
+              "description": "CRTs and donor-advised funds"
+            }
+          ]
+        },
+        {
+          "id": "tax-optimization",
+          "label": "Tax Optimization",
+          "category": "private-wealth",
+          "description": "Tax-loss harvesting, asset location, Roth conversions"
+        },
+        {
+          "id": "fiduciary-services",
+          "label": "Fiduciary Services",
+          "category": "private-wealth",
+          "description": "Trustee, executor, power of attorney, healthcare proxy"
+        }
+      ]
+    },
+    {
+      "id": "systemic-oversight",
+      "label": "Systemic Oversight",
+      "category": "systemic-oversight",
+      "description": "Macro-level monitoring and stability of the financial system",
+      "subNodes": [
+        {
+          "id": "fsoc",
+          "label": "FSOC",
+          "category": "systemic-oversight",
+          "description": "Financial Stability Oversight Council — systemic risk monitoring"
+        },
+        {
+          "id": "ofr",
+          "label": "OFR",
+          "category": "systemic-oversight",
+          "description": "Office of Financial Research — mapping financial interdependencies"
+        },
+        {
+          "id": "federal-reserve",
+          "label": "Federal Reserve",
+          "category": "systemic-oversight",
+          "description": "Interest rate policy, monetary stability, bank supervision"
+        },
+        {
+          "id": "fdic",
+          "label": "FDIC",
+          "category": "systemic-oversight",
+          "description": "Federal Deposit Insurance Corporation — deposit protection"
+        },
+        {
+          "id": "cftc",
+          "label": "CFTC",
+          "category": "systemic-oversight",
+          "description": "Commodity Futures Trading Commission — derivatives oversight"
+        },
+        {
+          "id": "sec-oversight",
+          "label": "SEC Oversight",
+          "category": "systemic-oversight",
+          "description": "Securities market regulation, investor protection mandates"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    { "source": "upstream-inputs", "target": "core-investment" },
+    { "source": "upstream-inputs", "target": "product-planning" },
+    { "source": "product-planning", "target": "core-investment" },
+    { "source": "core-investment", "target": "primary-market" },
+    { "source": "core-investment", "target": "operations" },
+    { "source": "primary-market", "target": "operations" },
+    { "source": "primary-market", "target": "secondary-market" },
+    { "source": "operations", "target": "distribution" },
+    { "source": "distribution", "target": "customer-facing" },
+    { "source": "secondary-market", "target": "customer-facing" },
+    { "source": "support-ops", "target": "core-investment" },
+    { "source": "support-ops", "target": "operations" },
+    { "source": "support-ops", "target": "distribution" },
+    { "source": "regulation", "target": "product-planning" },
+    { "source": "regulation", "target": "core-investment" },
+    { "source": "regulation", "target": "operations" },
+    { "source": "regulation", "target": "distribution" },
+    { "source": "technology", "target": "core-investment" },
+    { "source": "technology", "target": "operations" },
+    { "source": "technology", "target": "distribution" },
+    { "source": "technology", "target": "customer-facing" },
+    { "source": "roles", "target": "core-investment" },
+    { "source": "roles", "target": "operations" },
+    { "source": "alternative-assets", "target": "core-investment" },
+    { "source": "alternative-assets", "target": "distribution" },
+    { "source": "esg", "target": "core-investment" },
+    { "source": "esg", "target": "regulation" },
+    { "source": "customer-facing", "target": "private-wealth" },
+    { "source": "systemic-oversight", "target": "regulation" },
+    { "source": "systemic-oversight", "target": "primary-market" }
+  ]
+}

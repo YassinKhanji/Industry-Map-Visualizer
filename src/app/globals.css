@@ -1,0 +1,84 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111827;
+  --accent: #2563eb;
+  --border: #e5e7eb;
+  --border-hover: #d1d5db;
+  --edge: #d1d5db;
+  --muted: #6b7280;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-edge: var(--edge);
+  --color-muted: var(--muted);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* React Flow node transitions */
+.react-flow__node {
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+/* React Flow edge styling */
+.react-flow__edge-path {
+  stroke: var(--edge);
+  stroke-width: 1.2px;
+}
+
+/* React Flow minimap */
+.react-flow__minimap {
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  background: var(--background) !important;
+}
+
+/* React Flow controls */
+.react-flow__controls {
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+.react-flow__controls-button {
+  border-bottom: 1px solid var(--border) !important;
+  background: var(--background) !important;
+  fill: var(--foreground) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: #f9fafb !important;
+}
+
+/* Loading bar animation */
+@keyframes loading-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.loading-bar {
+  animation: loading-slide 1.2s ease-in-out infinite;
+}
+
+/* Scrollbar hide for clean look */
+::-webkit-scrollbar {
+  display: none;
+}
