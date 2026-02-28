@@ -83,7 +83,9 @@ export default function SearchBar() {
   const setSource = useAppStore((s) => s.setSource);
   const setError = useAppStore((s) => s.setError);
   const setCorrectedQuery = useAppStore((s) => s.setCorrectedQuery);
+  const setProgress = useAppStore((s) => s.setProgress);
   const isLoading = useAppStore((s) => s.isLoading);
+  const progress = useAppStore((s) => s.progress);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -106,43 +108,104 @@ export default function SearchBar() {
         return;
       }
 
-      // Hit API (GET for cacheability)
+      // Hit API with SSE streaming for real-time progress
       setIsLoading(true);
+      setProgress({ step: "starting", message: "Starting\u2026", pct: 0 });
+
       try {
         const res = await fetch(
-          `/api/generate?q=${encodeURIComponent(trimmed)}`
+          `/api/generate?q=${encodeURIComponent(trimmed)}&stream=1`
         );
 
-        const json = await res.json();
-
-        if (!res.ok) {
-          setError(json.error || "Something went wrong");
+        if (!res.ok || !res.body) {
+          setError("Something went wrong");
+          setProgress(null);
           return;
         }
 
-        const source = (res.headers.get("X-Source") || "generate") as
-          | "prebuilt"
-          | "assemble"
-          | "generate";
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let finalHandled = false;
 
-        // Check for spell-correction
-        const correctedQ = res.headers.get("X-Corrected-Query");
-        if (correctedQ) {
-          setCorrectedQuery(correctedQ);
+        // Helper to process SSE chunks from buffer
+        const processChunks = (chunks: string[]) => {
+          for (const part of chunks) {
+            for (const line of part.split("\n")) {
+              if (!line.startsWith("data: ")) continue;
+              try {
+                const evt = JSON.parse(line.slice(6)) as {
+                  step: string;
+                  message: string;
+                  pct: number;
+                  data?: IndustryMap;
+                  source?: string;
+                  corrected?: string;
+                };
+
+                if (evt.step === "done" && evt.data) {
+                  finalHandled = true;
+                  if (evt.corrected) setCorrectedQuery(evt.corrected);
+                  const src = (evt.source || "generate") as
+                    | "prebuilt"
+                    | "assemble"
+                    | "generate";
+                  setMapData(evt.data);
+                  setSource(src);
+                  localSet(cacheKey, evt.data, src);
+                  setProgress(null);
+                } else if (evt.step === "error") {
+                  finalHandled = true;
+                  if (evt.data) {
+                    setMapData(evt.data);
+                    setSource("generate");
+                  }
+                  setError(evt.message);
+                  setProgress(null);
+                } else {
+                  setProgress({ step: evt.step, message: evt.message, pct: evt.pct });
+                }
+              } catch {
+                // skip unparseable lines
+              }
+            }
+          }
+        };
+
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            // Flush any remaining bytes from the TextDecoder
+            buffer += decoder.decode();
+            break;
+          }
+
+          buffer += decoder.decode(value, { stream: true });
+
+          // SSE events are separated by double newlines
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+          processChunks(parts);
         }
 
-        setMapData(json.data);
-        setSource(source);
+        // Process any remaining data left in buffer after stream ends
+        if (buffer.trim()) {
+          processChunks(buffer.split("\n\n"));
+        }
 
-        // Cache in localStorage (skips fallback skeletons)
-        localSet(cacheKey, json.data, source);
+        if (!finalHandled) {
+          setError("Connection lost during generation");
+          setProgress(null);
+        }
       } catch {
         setError("Failed to connect to the server");
+        setProgress(null);
       } finally {
         setIsLoading(false);
       }
     },
-    [input, isLoading, setQuery, setMapData, setIsLoading, setIsCached, setSource, setError, setCorrectedQuery]
+    [input, isLoading, setQuery, setMapData, setIsLoading, setIsCached, setSource, setError, setCorrectedQuery, setProgress]
   );
 
   return (
@@ -190,12 +253,17 @@ export default function SearchBar() {
         </button>
       </div>
 
-      {/* Loading bar */}
+      {/* Progress bar — real percentage when streaming, animated fallback */}
       {isLoading && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 overflow-hidden rounded-b-lg" style={{ background: "var(--border)" }}>
+        <div className="absolute bottom-0 left-0 right-0 h-[3px] overflow-hidden rounded-b-lg" style={{ background: "var(--border)" }}>
           <div
-            className="h-full w-1/4 rounded-full loading-bar"
-            style={{ backgroundColor: "var(--accent)" }}
+            className={`h-full rounded-full ${progress ? "" : "loading-bar w-1/4"}`}
+            style={{
+              backgroundColor: "var(--accent)",
+              ...(progress
+                ? { width: `${progress.pct}%`, transition: "width 400ms ease-out" }
+                : {}),
+            }}
           />
         </div>
       )}

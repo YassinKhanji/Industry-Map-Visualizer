@@ -29,6 +29,8 @@ export default function Home() {
   const error = useAppStore((s) => s.error);
   const query = useAppStore((s) => s.query);
   const correctedQuery = useAppStore((s) => s.correctedQuery);
+  const progress = useAppStore((s) => s.progress);
+  const isLoading = useAppStore((s) => s.isLoading);
   const darkMode = useAppStore((s) => s.darkMode);
   const setDarkMode = useAppStore((s) => s.setDarkMode);
   const hasResults = !!mapData;
@@ -88,7 +90,17 @@ export default function Home() {
 
         {/* Status indicators */}
         <div className="h-6 mt-2 flex items-center gap-2">
-          {correctedQuery && (
+          {/* Real-time progress during loading */}
+          {isLoading && progress && (
+            <span
+              className="text-[11px] font-medium animate-pulse"
+              style={{ color: "var(--accent)" }}
+            >
+              {progress.message}
+            </span>
+          )}
+          {/* Post-load indicators */}
+          {!isLoading && correctedQuery && (
             <span
               className="text-[10px]"
               style={{ color: "var(--accent, #6366f1)" }}
@@ -96,7 +108,7 @@ export default function Home() {
               Showing results for <strong>{correctedQuery}</strong>
             </span>
           )}
-          {isCached && (
+          {!isLoading && isCached && (
             <span
               className="text-[10px] px-2 py-0.5 rounded-full"
               style={{
@@ -107,7 +119,7 @@ export default function Home() {
               cached
             </span>
           )}
-          {source && !isCached && hasResults && (
+          {!isLoading && source && !isCached && hasResults && (
             <span className="text-[10px]" style={{ color: "var(--muted)" }}>
               {source === "prebuilt"
                 ? "Loaded from library"
@@ -116,7 +128,7 @@ export default function Home() {
                 : "Generated"}
             </span>
           )}
-          {query && hasResults && (
+          {!isLoading && query && hasResults && (
             <span className="text-[10px]" style={{ color: "var(--muted)", opacity: 0.6 }}>
               {mapData?.rootNodes.length} nodes
             </span>

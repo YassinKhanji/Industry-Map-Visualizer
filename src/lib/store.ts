@@ -1,17 +1,18 @@
 import { create } from "zustand";
-import type { AppState, IndustryMap } from "@/types";
+import type { AppState, IndustryMap, ProgressStep } from "@/types";
 
 export const useAppStore = create<AppState>((set) => ({
   query: "",
   mapData: null,
   isLoading: false,
-  autoExpand: true,
+  autoExpand: false,
   isCached: false,
   source: null,
   error: null,
-  darkMode: false,
+  darkMode: true,
   selectedNodeId: null,
   correctedQuery: null,
+  progress: null,
 
   setQuery: (query: string) => set({ query }),
   setMapData: (data: IndustryMap | null) => set({ mapData: data }),
@@ -23,6 +24,7 @@ export const useAppStore = create<AppState>((set) => ({
   setDarkMode: (dark: boolean) => set({ darkMode: dark }),
   setSelectedNodeId: (id: string | null) => set({ selectedNodeId: id }),
   setCorrectedQuery: (q: string | null) => set({ correctedQuery: q }),
+  setProgress: (p: ProgressStep | null) => set({ progress: p }),
   reset: () =>
     set({
       query: "",
@@ -32,5 +34,6 @@ export const useAppStore = create<AppState>((set) => ({
       source: null,
       error: null,
       correctedQuery: null,
+      progress: null,
     }),
 }));

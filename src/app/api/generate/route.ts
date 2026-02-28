@@ -56,6 +56,136 @@ function addRateLimit(ip: string) {
   rateLimit.set(ip, timestamps);
 }
 
+/* ────── SSE streaming handler for real-time progress ────── */
+async function handleStream(request: NextRequest, query: string) {
+  const encoder = new TextEncoder();
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      const send = (step: string, message: string, pct: number, extra?: Record<string, unknown>) => {
+        try {
+          const event = JSON.stringify({ step, message, pct, ...extra });
+          controller.enqueue(encoder.encode(`data: ${event}\n\n`));
+        } catch {
+          // controller may be closed
+        }
+      };
+
+      try {
+        // 1. Cache check
+        send("cache-check", "Checking cache\u2026", 5);
+        const cached = cacheGet(query);
+        if (cached) {
+          send("done", "Loaded from cache", 100, { data: cached.data, source: cached.source });
+          controller.close();
+          return;
+        }
+
+        // 2. Resolve
+        send("resolving", "Resolving industry\u2026", 15);
+        let { mode, industrySlug } = resolveMode(query);
+        let corrected: string | null = null;
+
+        // 3. Spell-check if no alias match
+        if (mode === "generate") {
+          send("spell-check", "Checking spelling\u2026", 20);
+          corrected = await correctQuery(query);
+          if (corrected) {
+            send("spell-corrected", `Did you mean \u201c${corrected}\u201d?`, 30);
+            const correctedCached = cacheGet(corrected);
+            if (correctedCached) {
+              send("done", "Loaded from cache", 100, {
+                data: correctedCached.data,
+                source: correctedCached.source,
+                corrected,
+              });
+              controller.close();
+              return;
+            }
+            const reResolved = resolveMode(corrected);
+            if (reResolved.mode !== "generate") {
+              mode = reResolved.mode;
+              industrySlug = reResolved.industrySlug;
+            }
+          }
+        }
+
+        const effectiveQuery = corrected || query;
+
+        // 4a. Prebuilt path
+        if (mode === "prebuilt" && industrySlug) {
+          send("loading-prebuilt", "Loading prebuilt data\u2026", 50);
+          const prebuilt = await getBlockAsync(industrySlug);
+          if (prebuilt) {
+            send("caching", "Caching results\u2026", 90);
+            cacheSet(query, prebuilt, "prebuilt");
+            if (corrected) cacheSet(corrected, prebuilt, "prebuilt");
+            send("done", "Complete", 100, { data: prebuilt, source: "prebuilt", corrected });
+            controller.close();
+            return;
+          }
+        }
+
+        // Rate limit
+        const ip =
+          request.headers.get("x-forwarded-for") ||
+          request.headers.get("x-real-ip") ||
+          "unknown";
+        if (!checkRateLimit(ip)) {
+          send("error", "Rate limit exceeded. Try again later.", 0);
+          controller.close();
+          return;
+        }
+
+        // 4b. LLM path
+        if (mode === "assemble") {
+          send("assembling", "Assembling map from library\u2026", 40);
+        } else {
+          send("generating", "Generating map with AI\u2026", 40);
+        }
+
+        const result = await dedup(effectiveQuery, async (): Promise<IndustryMap> => {
+          switch (mode) {
+            case "assemble": {
+              if (industrySlug) {
+                const blocks = await getBlockAsync(industrySlug);
+                if (blocks) return assembleFromBlocks(effectiveQuery, blocks);
+              }
+              return generateFromScratch(effectiveQuery);
+            }
+            default:
+              return generateFromScratch(effectiveQuery);
+          }
+        });
+
+        send("validating", "Validating map\u2026", 80);
+        send("caching", "Caching results\u2026", 90);
+        addRateLimit(ip);
+        cacheSet(query, result, mode);
+        if (corrected) cacheSet(corrected, result, mode);
+
+        send("done", "Complete", 100, { data: result, source: mode, corrected });
+      } catch (error) {
+        console.error("Stream error:", error);
+        send("error", "Generation failed", 0, {
+          data: fallbackMap(query),
+          source: "fallback",
+        });
+      }
+
+      controller.close();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    },
+  });
+}
+
 /* ────── GET handler (cacheable by browsers & CDNs) ────── */
 export async function GET(request: NextRequest) {
   try {
@@ -74,6 +204,11 @@ export async function GET(request: NextRequest) {
         { error: "Query too long (max 200 characters)" },
         { status: 400 }
       );
+    }
+
+    // Stream mode — real-time progress via SSE
+    if (searchParams.get("stream") === "1") {
+      return handleStream(request, query);
     }
 
     // 1. Check server-side cache first (memory → file)

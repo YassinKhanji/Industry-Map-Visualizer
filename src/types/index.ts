@@ -70,6 +70,13 @@ export interface FlowNodeData extends Record<string, unknown> {
   parentId?: string;
 }
 
+// ─── Progress tracking ───
+export interface ProgressStep {
+  step: string;
+  message: string;
+  pct: number;
+}
+
 // ─── Store state ───
 export interface AppState {
   query: string;
@@ -82,6 +89,7 @@ export interface AppState {
   darkMode: boolean;
   selectedNodeId: string | null;
   correctedQuery: string | null;
+  progress: ProgressStep | null;
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -92,5 +100,6 @@ export interface AppState {
   setDarkMode: (dark: boolean) => void;
   setSelectedNodeId: (id: string | null) => void;
   setCorrectedQuery: (q: string | null) => void;
+  setProgress: (p: ProgressStep | null) => void;
   reset: () => void;
 }
