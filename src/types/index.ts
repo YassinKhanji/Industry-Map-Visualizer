@@ -81,6 +81,7 @@ export interface AppState {
   error: string | null;
   darkMode: boolean;
   selectedNodeId: string | null;
+  correctedQuery: string | null;
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -90,5 +91,6 @@ export interface AppState {
   setError: (error: string | null) => void;
   setDarkMode: (dark: boolean) => void;
   setSelectedNodeId: (id: string | null) => void;
+  setCorrectedQuery: (q: string | null) => void;
   reset: () => void;
 }

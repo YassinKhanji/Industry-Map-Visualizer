@@ -82,6 +82,7 @@ export default function SearchBar() {
   const setIsCached = useAppStore((s) => s.setIsCached);
   const setSource = useAppStore((s) => s.setSource);
   const setError = useAppStore((s) => s.setError);
+  const setCorrectedQuery = useAppStore((s) => s.setCorrectedQuery);
   const isLoading = useAppStore((s) => s.isLoading);
 
   const handleSubmit = useCallback(
@@ -93,6 +94,7 @@ export default function SearchBar() {
       setQuery(trimmed);
       setError(null);
       setIsCached(false);
+      setCorrectedQuery(null);
 
       // Check localStorage cache first
       const cacheKey = `${CACHE_PREFIX}${normalize(trimmed)}`;
@@ -123,6 +125,12 @@ export default function SearchBar() {
           | "assemble"
           | "generate";
 
+        // Check for spell-correction
+        const correctedQ = res.headers.get("X-Corrected-Query");
+        if (correctedQ) {
+          setCorrectedQuery(correctedQ);
+        }
+
         setMapData(json.data);
         setSource(source);
 
@@ -134,7 +142,7 @@ export default function SearchBar() {
         setIsLoading(false);
       }
     },
-    [input, isLoading, setQuery, setMapData, setIsLoading, setIsCached, setSource, setError]
+    [input, isLoading, setQuery, setMapData, setIsLoading, setIsCached, setSource, setError, setCorrectedQuery]
   );
 
   return (

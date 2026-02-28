@@ -28,6 +28,7 @@ export default function Home() {
   const source = useAppStore((s) => s.source);
   const error = useAppStore((s) => s.error);
   const query = useAppStore((s) => s.query);
+  const correctedQuery = useAppStore((s) => s.correctedQuery);
   const darkMode = useAppStore((s) => s.darkMode);
   const setDarkMode = useAppStore((s) => s.setDarkMode);
   const hasResults = !!mapData;
@@ -87,6 +88,14 @@ export default function Home() {
 
         {/* Status indicators */}
         <div className="h-6 mt-2 flex items-center gap-2">
+          {correctedQuery && (
+            <span
+              className="text-[10px]"
+              style={{ color: "var(--accent, #6366f1)" }}
+            >
+              Showing results for <strong>{correctedQuery}</strong>
+            </span>
+          )}
           {isCached && (
             <span
               className="text-[10px] px-2 py-0.5 rounded-full"
@@ -134,7 +143,7 @@ export default function Home() {
       {/* Dark mode toggle */}
       <button
         onClick={() => setDarkMode(!darkMode)}
-        className="fixed bottom-4 left-4 z-50 w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200"
+        className="fixed bottom-[140px] left-[13px] z-50 w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200"
         style={{
           background: darkMode ? "var(--card-bg)" : "#ffffff",
           borderColor: "var(--border)",

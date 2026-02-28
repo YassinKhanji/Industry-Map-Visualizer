@@ -1,10 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
 import { resolveMode } from "@/lib/resolver";
 import { assembleFromBlocks, generateFromScratch } from "@/lib/assembler";
 import { fallbackMap } from "@/lib/parseResponse";
 import { cacheGet, cacheSet, dedup } from "@/lib/cache";
 import { getBlockAsync } from "@/data/blocks/index";
 import type { IndustryMap } from "@/types";
+
+/* ────── Lightweight AI spell-correction ────── */
+async function correctQuery(raw: string): Promise<string | null> {
+  try {
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const res = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a spell-checker for industry, product, and service names. " +
+            "Given a possibly misspelled query, return ONLY the corrected version. " +
+            "If the query is already correct or is a valid niche term, return it unchanged. " +
+            "Return just the corrected text, nothing else — no quotes, no explanation.",
+        },
+        { role: "user", content: raw },
+      ],
+      temperature: 0,
+      max_tokens: 60,
+    });
+    const corrected = res.choices[0]?.message?.content?.trim();
+    if (!corrected) return null;
+    // Only count it as a correction if it actually changed
+    if (corrected.toLowerCase() === raw.toLowerCase()) return null;
+    return corrected;
+  } catch {
+    return null; // spell-check is best-effort
+  }
+}
 
 // Simple rate limiting: Map of IP → timestamps
 const rateLimit = new Map<string, number[]>();
@@ -67,19 +98,53 @@ export async function GET(request: NextRequest) {
       "unknown";
 
     // Resolve mode to check if prebuilt (no rate limit needed for prebuilt)
-    const { mode, industrySlug } = resolveMode(query);
+    let { mode, industrySlug } = resolveMode(query);
+    let corrected: string | null = null;
+
+    // If Fuse.js can't match, try AI spell-correction and re-resolve
+    if (mode === "generate") {
+      corrected = await correctQuery(query);
+      if (corrected) {
+        // Check cache for the corrected query too
+        const correctedCached = cacheGet(corrected);
+        if (correctedCached) {
+          return NextResponse.json(
+            { data: correctedCached.data },
+            {
+              headers: {
+                "X-Source": correctedCached.source,
+                "X-Cache": "HIT",
+                "X-Corrected-Query": corrected,
+                "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+              },
+            }
+          );
+        }
+        // Re-resolve with the corrected spelling
+        const reResolved = resolveMode(corrected);
+        if (reResolved.mode !== "generate") {
+          mode = reResolved.mode;
+          industrySlug = reResolved.industrySlug;
+        }
+      }
+    }
+
+    // The effective query for generation (corrected if available)
+    const effectiveQuery = corrected || query;
 
     // For prebuilt, try the registry directly — no LLM, no rate limit
     if (mode === "prebuilt" && industrySlug) {
       const prebuilt = await getBlockAsync(industrySlug);
       if (prebuilt) {
         cacheSet(query, prebuilt, "prebuilt");
+        if (corrected) cacheSet(corrected, prebuilt, "prebuilt");
         return NextResponse.json(
           { data: prebuilt },
           {
             headers: {
               "X-Source": "prebuilt",
               "X-Cache": "MISS",
+              ...(corrected ? { "X-Corrected-Query": corrected } : {}),
               "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
             },
           }
@@ -96,27 +161,28 @@ export async function GET(request: NextRequest) {
     }
 
     // 3. Deduplicated generation
-    const result = await dedup(query, async (): Promise<IndustryMap> => {
+    const result = await dedup(effectiveQuery, async (): Promise<IndustryMap> => {
       switch (mode) {
         case "assemble": {
           if (industrySlug) {
             const blocks = await getBlockAsync(industrySlug);
             if (blocks) {
-              return assembleFromBlocks(query, blocks);
+              return assembleFromBlocks(effectiveQuery, blocks);
             }
           }
-          return generateFromScratch(query);
+          return generateFromScratch(effectiveQuery);
         }
 
         case "generate":
         default:
-          return generateFromScratch(query);
+          return generateFromScratch(effectiveQuery);
       }
     });
 
-    // 4. Cache the result
+    // 4. Cache the result (under both original and corrected keys)
     addRateLimit(ip);
     cacheSet(query, result, mode);
+    if (corrected) cacheSet(corrected, result, mode);
 
     return NextResponse.json(
       { data: result },
@@ -124,6 +190,7 @@ export async function GET(request: NextRequest) {
         headers: {
           "X-Source": mode,
           "X-Cache": "MISS",
+          ...(corrected ? { "X-Corrected-Query": corrected } : {}),
           "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
         },
       }
