@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import SearchBar from "@/components/SearchBar";
 import { useAppStore } from "@/lib/store";
@@ -8,6 +9,18 @@ import { useAppStore } from "@/lib/store";
 const MapCanvas = dynamic(() => import("@/components/MapCanvas"), {
   ssr: false,
 });
+
+/** Popular queries to prefetch on mount — warms server + browser cache */
+const PREFETCH_QUERIES = [
+  "financial services",
+  "healthcare",
+  "technology",
+  "real estate",
+  "manufacturing",
+  "retail",
+  "energy",
+  "automotive",
+];
 
 export default function Home() {
   const mapData = useAppStore((s) => s.mapData);
@@ -18,6 +31,30 @@ export default function Home() {
   const darkMode = useAppStore((s) => s.darkMode);
   const setDarkMode = useAppStore((s) => s.setDarkMode);
   const hasResults = !!mapData;
+
+  // Background prefetch — low-priority warming of server cache
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const controller = new AbortController();
+    const prefetch = async () => {
+      for (const q of PREFETCH_QUERIES) {
+        try {
+          await fetch(`/api/generate?q=${encodeURIComponent(q)}`, {
+            signal: controller.signal,
+            priority: "low" as RequestPriority,
+          });
+        } catch {
+          // Ignore — prefetch is best-effort
+        }
+      }
+    };
+    // Delay to avoid competing with initial render
+    const t = setTimeout(prefetch, 2000);
+    return () => {
+      clearTimeout(t);
+      controller.abort();
+    };
+  }, []);
 
   return (
     <div

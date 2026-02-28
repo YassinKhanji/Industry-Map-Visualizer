@@ -146,8 +146,8 @@ The map must cover ALL of these categories (include at least one root node per c
 13. systemic-oversight (if applicable)
 
 Instructions:
-- Create 8-16 root-level nodes covering the full value chain
-- Each root node should have 3-8 subNodes
+- Create 8-12 root-level nodes covering the full value chain
+- Each root node should have 3-6 subNodes
 - SubNodes can optionally have their own subNodes (max 3 levels deep)
 - Keep all labels to 1-3 words maximum
 - Define edges showing how value flows: upstream → production → processing → distribution → customer
@@ -191,8 +191,8 @@ Return ONLY valid JSON matching this structure:
         { role: "user", content: prompt },
       ],
       response_format: { type: "json_object" },
-      temperature: 0.4,
-      max_tokens: 6000,
+      temperature: 0.2,
+      max_tokens: 3000,
     });
 
     const content = response.choices[0]?.message?.content;
@@ -243,7 +243,7 @@ Example of the exact format required:
   ]
 }
 
-Now generate the complete map for "${query}" with 8-16 root nodes, each with 3-8 subNodes. Categories: upstream-inputs, core-production, processing, distribution, customer-facing, support-ops, regulation, technology, roles. Labels: 1-3 words max.`;
+Now generate the complete map for "${query}" with 8-12 root nodes, each with 3-6 subNodes. Categories: upstream-inputs, core-production, processing, distribution, customer-facing, support-ops, regulation, technology, roles. Labels: 1-3 words max.`;
 
   try {
     const response = await client.chat.completions.create({
@@ -257,7 +257,7 @@ Now generate the complete map for "${query}" with 8-16 root nodes, each with 3-8
       ],
       response_format: { type: "json_object" },
       temperature: 0.2,
-      max_tokens: 6000,
+      max_tokens: 3000,
     });
 
     const content = response.choices[0]?.message?.content;

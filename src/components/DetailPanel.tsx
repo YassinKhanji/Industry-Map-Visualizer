@@ -204,13 +204,6 @@ export default function DetailPanel() {
 
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40"
-        onClick={close}
-        style={{ background: "transparent" }}
-      />
-
       {/* Panel */}
       <div
         className="fixed top-0 right-0 h-full z-50 detail-panel-enter detail-scrollbar"

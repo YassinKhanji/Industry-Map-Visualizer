@@ -69,6 +69,11 @@ button, a, [role="button"], .react-flow__node {
   transition: opacity 300ms ease-out, transform 300ms ease-out;
 }
 
+/* Raise hovered node above all others so text/tooltips aren't clipped */
+.react-flow__node:hover {
+  z-index: 1000 !important;
+}
+
 /* React Flow edge styling */
 .react-flow__edge-path {
   stroke: var(--edge);
