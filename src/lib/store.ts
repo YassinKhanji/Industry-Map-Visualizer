@@ -9,6 +9,8 @@ export const useAppStore = create<AppState>((set) => ({
   isCached: false,
   source: null,
   error: null,
+  darkMode: false,
+  selectedNodeId: null,
 
   setQuery: (query: string) => set({ query }),
   setMapData: (data: IndustryMap | null) => set({ mapData: data }),
@@ -17,6 +19,8 @@ export const useAppStore = create<AppState>((set) => ({
   setIsCached: (cached: boolean) => set({ isCached: cached }),
   setSource: (source: AppState["source"]) => set({ source }),
   setError: (error: string | null) => set({ error }),
+  setDarkMode: (dark: boolean) => set({ darkMode: dark }),
+  setSelectedNodeId: (id: string | null) => set({ selectedNodeId: id }),
   reset: () =>
     set({
       query: "",

@@ -15,10 +15,15 @@ export default function Home() {
   const source = useAppStore((s) => s.source);
   const error = useAppStore((s) => s.error);
   const query = useAppStore((s) => s.query);
+  const darkMode = useAppStore((s) => s.darkMode);
+  const setDarkMode = useAppStore((s) => s.setDarkMode);
   const hasResults = !!mapData;
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-white">
+    <div
+      className={`h-screen w-screen flex flex-col overflow-hidden ${darkMode ? "dark" : ""}`}
+      style={{ background: "var(--background)", color: "var(--foreground)" }}
+    >
       {/* Search area */}
       <div
         className={`
@@ -29,10 +34,13 @@ export default function Home() {
       >
         {!hasResults && (
           <div className="mb-8 text-center">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+            <h1
+              className="text-2xl font-semibold mb-2"
+              style={{ color: "var(--foreground)" }}
+            >
               Industry Map Visualizer
             </h1>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
               See the full value chain behind any industry, product, or service
             </p>
           </div>
@@ -43,12 +51,18 @@ export default function Home() {
         {/* Status indicators */}
         <div className="h-6 mt-2 flex items-center gap-2">
           {isCached && (
-            <span className="text-[10px] text-gray-400 px-2 py-0.5 bg-gray-50 rounded-full">
+            <span
+              className="text-[10px] px-2 py-0.5 rounded-full"
+              style={{
+                color: "var(--muted)",
+                background: darkMode ? "rgba(255,255,255,0.05)" : "#f9fafb",
+              }}
+            >
               cached
             </span>
           )}
           {source && !isCached && hasResults && (
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px]" style={{ color: "var(--muted)" }}>
               {source === "prebuilt"
                 ? "Loaded from library"
                 : source === "assemble"
@@ -57,7 +71,7 @@ export default function Home() {
             </span>
           )}
           {query && hasResults && (
-            <span className="text-[10px] text-gray-300">
+            <span className="text-[10px]" style={{ color: "var(--muted)", opacity: 0.6 }}>
               {mapData?.rootNodes.length} nodes
             </span>
           )}
@@ -79,6 +93,29 @@ export default function Home() {
           <MapCanvas />
         </div>
       )}
+
+      {/* Dark mode toggle */}
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="fixed bottom-4 left-4 z-50 w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200"
+        style={{
+          background: darkMode ? "var(--card-bg)" : "#ffffff",
+          borderColor: "var(--border)",
+          color: "var(--foreground)",
+        }}
+        title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {darkMode ? (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="8" cy="8" r="3.5" />
+            <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M13.36 10.06A6 6 0 015.94 2.64 6 6 0 1013.36 10.06z" />
+          </svg>
+        )}
+      </button>
     </div>
   );
 }

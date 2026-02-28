@@ -9,6 +9,20 @@
   --border-hover: #d1d5db;
   --edge: #d1d5db;
   --muted: #6b7280;
+  --card-bg: #ffffff;
+  --surface: #f9fafb;
+}
+
+.dark {
+  --background: #0f1117;
+  --foreground: #e5e7eb;
+  --accent: #3b82f6;
+  --border: #1e2433;
+  --border-hover: #374151;
+  --edge: #374151;
+  --muted: #9ca3af;
+  --card-bg: #171b26;
+  --surface: #1a1f2e;
 }
 
 @theme inline {
@@ -23,6 +37,7 @@
 
 * {
   box-sizing: border-box;
+  cursor: default;
 }
 
 body {
@@ -31,6 +46,22 @@ body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   margin: 0;
   overflow: hidden;
+}
+
+input, textarea, [contenteditable] {
+  cursor: text;
+}
+
+button, a, [role="button"], .react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__pane {
+  cursor: grab;
+}
+
+.react-flow__pane:active {
+  cursor: grabbing;
 }
 
 /* React Flow node transitions */
@@ -42,6 +73,13 @@ body {
 .react-flow__edge-path {
   stroke: var(--edge);
   stroke-width: 1.2px;
+  transition: stroke 200ms ease, stroke-width 200ms ease;
+}
+
+/* Highlighted edges */
+.react-flow__edge.highlighted .react-flow__edge-path {
+  stroke: var(--accent);
+  stroke-width: 2.2px;
 }
 
 /* React Flow minimap */
@@ -65,7 +103,7 @@ body {
 }
 
 .react-flow__controls-button:hover {
-  background: #f9fafb !important;
+  background: var(--surface) !important;
 }
 
 /* Loading bar animation */
@@ -76,6 +114,31 @@ body {
 
 .loading-bar {
   animation: loading-slide 1.2s ease-in-out infinite;
+}
+
+/* Detail panel slide-in animation */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.detail-panel-enter {
+  animation: slide-in-right 200ms ease-out forwards;
+}
+
+/* Scrollbar for detail panel */
+.detail-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 4px;
+}
+
+.detail-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.detail-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
 }
 
 /* Scrollbar hide for clean look */

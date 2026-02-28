@@ -13,6 +13,7 @@ import {
 import type { Node, Edge, NodeMouseHandler } from "@xyflow/react";
 import NodeCard from "./NodeCard";
 import AutoExpandToggle from "./AutoExpandToggle";
+import DetailPanel from "./DetailPanel";
 import { buildFlowGraph, countNodesAtDepth, getIdsToDepth } from "@/lib/graphLayout";
 import { useAppStore } from "@/lib/store";
 import type { FlowNodeData } from "@/types";
@@ -22,11 +23,13 @@ const nodeTypes = { industryNode: NodeCard };
 function MapCanvasInner() {
   const mapData = useAppStore((s) => s.mapData);
   const autoExpand = useAppStore((s) => s.autoExpand);
+  const darkMode = useAppStore((s) => s.darkMode);
+  const selectedNodeId = useAppStore((s) => s.selectedNodeId);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-  const { fitView } = useReactFlow();
+  const { fitView, getNode, setCenter } = useReactFlow();
 
   // Calculate total nodes at depth 2 for the auto-expand guard
   const totalNodesAtDepth2 = useMemo(() => {
@@ -45,7 +48,7 @@ function MapCanvasInner() {
     // Determine which nodes should be expanded
     let activeExpandedIds = expandedIds;
 
-    if (autoExpand && totalNodesAtDepth2 <= 80) {
+    if (autoExpand && totalNodesAtDepth2 <= 150) {
       // Auto-expand to depth 2
       const autoIds = getIdsToDepth(mapData.rootNodes, 2);
       activeExpandedIds = new Set([...expandedIds, ...autoIds]);
@@ -65,36 +68,78 @@ function MapCanvasInner() {
     }, 50);
   }, [mapData, expandedIds, autoExpand, totalNodesAtDepth2, setNodes, setEdges, fitView]);
 
+  // Edge highlighting: add 'highlighted' class to edges connected to selectedNodeId
+  const styledEdges = useMemo(() => {
+    if (!selectedNodeId) return edges;
+    return edges.map((e) => ({
+      ...e,
+      className:
+        e.source === selectedNodeId || e.target === selectedNodeId
+          ? "highlighted"
+          : "",
+    }));
+  }, [edges, selectedNodeId]);
+
   // Handle node click: toggle expand/collapse
   const onNodeClick: NodeMouseHandler = useCallback(
     (_event, node) => {
       const data = node.data as unknown as FlowNodeData;
       if (!data.hasChildren) return;
 
+      const willExpand = !expandedIds.has(node.id);
+
       setExpandedIds((prev) => {
         const next = new Set(prev);
         if (next.has(node.id)) {
           // Collapse: remove this node and all descendants
           next.delete(node.id);
-          // Also collapse any children that were expanded
           removeDescendants(next, node.id, mapData!);
         } else {
           next.add(node.id);
         }
         return next;
       });
+
+      // Auto-pan to the expanded node after layout settles
+      if (willExpand) {
+        setTimeout(() => {
+          const n = getNode(node.id);
+          if (n) {
+            setCenter(n.position.x + 90, n.position.y + 22, {
+              duration: 400,
+              zoom: 1,
+            });
+          }
+        }, 150);
+      }
     },
-    [mapData]
+    [mapData, expandedIds, getNode, setCenter]
   );
+
+  // Collapse all
+  const handleCollapseAll = useCallback(() => {
+    setExpandedIds(new Set());
+  }, []);
+
+  // Expand essentials: just the root nodes (depth 1)
+  const handleExpandEssentials = useCallback(() => {
+    if (!mapData) return;
+    const rootIds = getIdsToDepth(mapData.rootNodes, 1);
+    setExpandedIds(new Set(rootIds));
+  }, [mapData]);
 
   if (!mapData) return null;
 
   return (
     <div className="relative w-full h-full">
-      <AutoExpandToggle totalNodesAtDepth2={totalNodesAtDepth2} />
+      <AutoExpandToggle
+        totalNodesAtDepth2={totalNodesAtDepth2}
+        onCollapseAll={handleCollapseAll}
+        onExpandEssentials={handleExpandEssentials}
+      />
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={styledEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
@@ -104,10 +149,10 @@ function MapCanvasInner() {
         minZoom={0.1}
         maxZoom={2}
         proOptions={{ hideAttribution: true }}
-        className="bg-white"
+        style={{ background: darkMode ? "var(--background)" : "#ffffff" }}
         defaultEdgeOptions={{
           type: "default",
-          style: { stroke: "#d1d5db", strokeWidth: 1.2 },
+          style: { stroke: "var(--edge)", strokeWidth: 1.2 },
         }}
       >
         <Controls
@@ -115,13 +160,14 @@ function MapCanvasInner() {
           className="!shadow-none"
         />
         <MiniMap
-          nodeColor={() => "#e5e7eb"}
-          maskColor="rgba(0, 0, 0, 0.05)"
+          nodeColor={() => darkMode ? "#374151" : "#e5e7eb"}
+          maskColor={darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.05)"}
           className="!shadow-none"
           pannable
           zoomable
         />
       </ReactFlow>
+      <DetailPanel />
     </div>
   );
 }

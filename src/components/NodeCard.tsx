@@ -1,11 +1,12 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { Handle, Position } from "@xyflow/react";
 import type { NodeProps } from "@xyflow/react";
 import type { FlowNodeData } from "@/types";
+import { useAppStore } from "@/lib/store";
 
-const CATEGORY_ACCENTS: Record<string, string> = {
+export const CATEGORY_ACCENTS: Record<string, string> = {
   "upstream-inputs": "#6366f1",
   "core-production": "#2563eb",
   "processing": "#0891b2",
@@ -21,30 +22,71 @@ const CATEGORY_ACCENTS: Record<string, string> = {
   "systemic-oversight": "#b91c1c",
 };
 
-function NodeCard({ data }: NodeProps) {
+export const CATEGORY_LABELS: Record<string, string> = {
+  "upstream-inputs": "Upstream Inputs",
+  "core-production": "Core Production",
+  "processing": "Processing",
+  "distribution": "Distribution",
+  "customer-facing": "Customer Facing",
+  "support-ops": "Support & Ops",
+  "regulation": "Regulation",
+  "technology": "Technology",
+  "roles": "Key Roles",
+  "alternative-assets": "Alternative Assets",
+  "esg-stewardship": "ESG & Stewardship",
+  "private-wealth": "Private Wealth",
+  "systemic-oversight": "Systemic Oversight",
+};
+
+function NodeCard({ data, id }: NodeProps) {
   const nodeData = data as unknown as FlowNodeData;
+  const darkMode = useAppStore((s) => s.darkMode);
+  const setSelectedNodeId = useAppStore((s) => s.setSelectedNodeId);
   const accentColor = CATEGORY_ACCENTS[nodeData.category] || "#2563eb";
+  const isLeaf = !nodeData.hasChildren;
+
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setSelectedNodeId(id);
+    },
+    [id, setSelectedNodeId]
+  );
 
   return (
     <div
-      className="group relative cursor-pointer select-none"
-      style={{ minWidth: 140 }}
+      className="group relative select-none"
+      style={{ minWidth: 140, cursor: "pointer" }}
+      onContextMenu={handleContextMenu}
     >
       <Handle
         type="target"
         position={Position.Left}
-        className="!w-1.5 !h-1.5 !bg-gray-300 !border-0 !-left-1"
+        className="!w-1.5 !h-1.5 !border-0 !-left-1"
+        style={{
+          backgroundColor: isLeaf ? "#111827" : "#d1d5db",
+        }}
       />
 
       <div
-        className="px-4 py-2.5 bg-white border border-gray-200 rounded transition-all duration-200 hover:border-gray-400"
+        className="px-4 py-2.5 rounded transition-all duration-200"
         style={{
-          borderLeftWidth: 3,
-          borderLeftColor: accentColor,
+          backgroundColor: darkMode ? "var(--card-bg)" : "#ffffff",
+          border: isLeaf
+            ? "1.5px solid #111827"
+            : darkMode
+            ? "1px solid var(--border)"
+            : "1px solid #e5e7eb",
+          borderLeftWidth: isLeaf ? 1.5 : 3,
+          borderLeftColor: isLeaf ? "#111827" : accentColor,
         }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-900 whitespace-nowrap">
+          <span
+            className="text-sm font-medium whitespace-nowrap"
+            style={{ color: darkMode ? "#e5e7eb" : "#111827" }}
+          >
             {nodeData.label}
           </span>
           {nodeData.hasChildren && (
@@ -70,7 +112,10 @@ function NodeCard({ data }: NodeProps) {
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-1.5 !h-1.5 !bg-gray-300 !border-0 !-right-1"
+        className="!w-1.5 !h-1.5 !border-0 !-right-1"
+        style={{
+          backgroundColor: isLeaf ? "#111827" : "#d1d5db",
+        }}
       />
     </div>
   );

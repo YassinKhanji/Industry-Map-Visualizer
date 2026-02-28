@@ -79,6 +79,8 @@ export interface AppState {
   isCached: boolean;
   source: "prebuilt" | "assemble" | "generate" | null;
   error: string | null;
+  darkMode: boolean;
+  selectedNodeId: string | null;
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -86,5 +88,7 @@ export interface AppState {
   setIsCached: (cached: boolean) => void;
   setSource: (source: AppState["source"]) => void;
   setError: (error: string | null) => void;
+  setDarkMode: (dark: boolean) => void;
+  setSelectedNodeId: (id: string | null) => void;
   reset: () => void;
 }

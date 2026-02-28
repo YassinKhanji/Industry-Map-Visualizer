@@ -92,14 +92,18 @@ export default function SearchBar() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Enter any industry, product, or service..."
-          className="
-            w-full px-5 py-3.5 text-base
-            bg-white border border-gray-200 rounded-lg
-            text-gray-900 placeholder-gray-400
-            outline-none transition-all duration-200
-            focus:border-gray-400
-            disabled:opacity-50
-          "
+          style={{
+            width: "100%",
+            padding: "14px 80px 14px 20px",
+            fontSize: "16px",
+            backgroundColor: "var(--card-bg, #ffffff)",
+            border: "1px solid var(--border)",
+            borderRadius: "8px",
+            color: "var(--foreground)",
+            outline: "none",
+            transition: "border-color 200ms",
+            cursor: "text",
+          }}
           disabled={isLoading}
           autoFocus
         />
@@ -111,11 +115,15 @@ export default function SearchBar() {
           className="
             absolute right-2 top-1/2 -translate-y-1/2
             px-4 py-2 text-sm font-medium
-            bg-gray-900 text-white rounded-md
+            rounded-md
             transition-all duration-200
-            hover:bg-gray-800
             disabled:opacity-30 disabled:cursor-not-allowed
           "
+          style={{
+            backgroundColor: "var(--foreground)",
+            color: "var(--background)",
+            cursor: isLoading || !input.trim() ? "not-allowed" : "pointer",
+          }}
         >
           {isLoading ? "Mapping..." : "Map it"}
         </button>
@@ -123,7 +131,7 @@ export default function SearchBar() {
 
       {/* Loading bar */}
       {isLoading && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-100 overflow-hidden rounded-b-lg">
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 overflow-hidden rounded-b-lg" style={{ background: "var(--border)" }}>
           <div
             className="h-full w-1/4 rounded-full loading-bar"
             style={{ backgroundColor: "var(--accent)" }}
