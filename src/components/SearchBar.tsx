@@ -108,94 +108,111 @@ export default function SearchBar() {
         return;
       }
 
-      // Hit API with SSE streaming for real-time progress
       setIsLoading(true);
       setProgress({ step: "starting", message: "Starting\u2026", pct: 0 });
 
       try {
-        const res = await fetch(
-          `/api/generate?q=${encodeURIComponent(trimmed)}&stream=1`
-        );
+        // ── Phase 1: SSE for real-time progress (ignore data payloads) ──
+        const sseAbort = new AbortController();
+        const sseTimeout = setTimeout(() => sseAbort.abort(), 45000);
+        let sseError: string | null = null;
 
-        if (!res.ok || !res.body) {
-          setError("Something went wrong");
-          setProgress(null);
-          return;
-        }
+        try {
+          const res = await fetch(
+            `/api/generate?q=${encodeURIComponent(trimmed)}&stream=1`,
+            { signal: sseAbort.signal }
+          );
 
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
-        let finalHandled = false;
+          if (res.ok && res.body) {
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
 
-        // Helper to process SSE chunks from buffer
-        const processChunks = (chunks: string[]) => {
-          for (const part of chunks) {
-            for (const line of part.split("\n")) {
-              if (!line.startsWith("data: ")) continue;
+            const processLine = (line: string) => {
+              if (!line.startsWith("data: ")) return;
               try {
                 const evt = JSON.parse(line.slice(6)) as {
                   step: string;
                   message: string;
                   pct: number;
-                  data?: IndustryMap;
-                  source?: string;
                   corrected?: string;
                 };
-
-                if (evt.step === "done" && evt.data) {
-                  finalHandled = true;
+                if (evt.step === "error") {
+                  sseError = evt.message;
+                } else if (evt.step === "done") {
+                  // Capture corrected query from SSE, but don't rely on data blob
                   if (evt.corrected) setCorrectedQuery(evt.corrected);
-                  const src = (evt.source || "generate") as
-                    | "prebuilt"
-                    | "assemble"
-                    | "generate";
-                  setMapData(evt.data);
-                  setSource(src);
-                  localSet(cacheKey, evt.data, src);
-                  setProgress(null);
-                } else if (evt.step === "error") {
-                  finalHandled = true;
-                  if (evt.data) {
-                    setMapData(evt.data);
-                    setSource("generate");
-                  }
-                  setError(evt.message);
-                  setProgress(null);
+                  setProgress({ step: "done", message: "Loading results\u2026", pct: 95 });
                 } else {
                   setProgress({ step: evt.step, message: evt.message, pct: evt.pct });
                 }
               } catch {
                 // skip unparseable lines
               }
+            };
+
+            // Read SSE events for progress updates only
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) {
+                buffer += decoder.decode();
+                break;
+              }
+              buffer += decoder.decode(value, { stream: true });
+              const parts = buffer.split("\n\n");
+              buffer = parts.pop() || "";
+              for (const part of parts) {
+                for (const line of part.split("\n")) processLine(line);
+              }
+            }
+            // Process any remaining buffer
+            if (buffer.trim()) {
+              for (const part of buffer.split("\n\n")) {
+                for (const line of part.split("\n")) processLine(line);
+              }
             }
           }
-        };
-
-        while (true) {
-          const { done, value } = await reader.read();
-
-          if (done) {
-            // Flush any remaining bytes from the TextDecoder
-            buffer += decoder.decode();
-            break;
-          }
-
-          buffer += decoder.decode(value, { stream: true });
-
-          // SSE events are separated by double newlines
-          const parts = buffer.split("\n\n");
-          buffer = parts.pop() || "";
-          processChunks(parts);
+        } catch {
+          // SSE failed (timeout / network) — that's OK, we'll fetch data below
         }
 
-        // Process any remaining data left in buffer after stream ends
-        if (buffer.trim()) {
-          processChunks(buffer.split("\n\n"));
+        clearTimeout(sseTimeout);
+
+        if (sseError) {
+          setError(sseError);
+          setProgress(null);
+          return;
         }
 
-        if (!finalHandled) {
-          setError("Connection lost during generation");
+        // ── Phase 2: Fetch actual data via regular GET (reliable HTTP) ──
+        // The SSE handler already ran the full pipeline and cached the result,
+        // so this GET hits server cache immediately (~1ms).
+        setProgress({ step: "fetching", message: "Fetching results\u2026", pct: 98 });
+
+        const dataRes = await fetch(
+          `/api/generate?q=${encodeURIComponent(trimmed)}`
+        );
+
+        if (!dataRes.ok) {
+          setError("Something went wrong");
+          setProgress(null);
+          return;
+        }
+
+        const json = await dataRes.json();
+        if (json.data) {
+          const src = (dataRes.headers.get("X-Source") || "generate") as
+            | "prebuilt"
+            | "assemble"
+            | "generate";
+          const corrHeader = dataRes.headers.get("X-Corrected-Query");
+          if (corrHeader) setCorrectedQuery(corrHeader);
+          setMapData(json.data);
+          setSource(src);
+          localSet(cacheKey, json.data, src);
+          setProgress(null);
+        } else {
+          setError(json.error || "No data received");
           setProgress(null);
         }
       } catch {
