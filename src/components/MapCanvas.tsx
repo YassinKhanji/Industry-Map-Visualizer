@@ -11,7 +11,7 @@ import {
   ReactFlowProvider,
 } from "@xyflow/react";
 import type { Node, Edge, NodeMouseHandler } from "@xyflow/react";
-import NodeCard from "./NodeCard";
+import NodeCard, { CATEGORY_ACCENTS } from "./NodeCard";
 import AutoExpandToggle from "./AutoExpandToggle";
 import DetailPanel from "./DetailPanel";
 import { buildFlowGraph, countNodesAtDepth, getIdsToDepth } from "@/lib/graphLayout";
@@ -160,11 +160,16 @@ function MapCanvasInner() {
           className="!shadow-none"
         />
         <MiniMap
-          nodeColor={() => darkMode ? "#374151" : "#e5e7eb"}
-          maskColor={darkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.05)"}
-          className="!shadow-none"
+          nodeColor={(node) => {
+            const cat = (node.data as Record<string, unknown>)?.category as string;
+            return CATEGORY_ACCENTS[cat] || (darkMode ? "#4b5563" : "#9ca3af");
+          }}
+          maskColor={darkMode ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0.12)"}
+          className="!shadow-none minimap-enhanced"
           pannable
           zoomable
+          style={{ width: 200, height: 140 }}
+          nodeStrokeWidth={3}
         />
       </ReactFlow>
       <DetailPanel />
