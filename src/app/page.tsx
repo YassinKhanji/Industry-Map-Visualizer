@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import SearchBar from "@/components/SearchBar";
+import TaxonomyBrowser from "@/components/TaxonomyBrowser";
 import { useAppStore } from "@/lib/store";
 
 // Dynamic import for MapCanvas to avoid SSR issues with React Flow
@@ -10,17 +10,7 @@ const MapCanvas = dynamic(() => import("@/components/MapCanvas"), {
   ssr: false,
 });
 
-/** Popular queries to prefetch on mount — warms server + browser cache */
-const PREFETCH_QUERIES = [
-  "financial services",
-  "healthcare",
-  "technology",
-  "real estate",
-  "manufacturing",
-  "retail",
-  "energy",
-  "automotive",
-];
+// No prefetch needed — Neon DB provides instant retrieval for known industries
 
 export default function Home() {
   const mapData = useAppStore((s) => s.mapData);
@@ -35,29 +25,7 @@ export default function Home() {
   const setDarkMode = useAppStore((s) => s.setDarkMode);
   const hasResults = !!mapData;
 
-  // Background prefetch — low-priority warming of server cache
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const controller = new AbortController();
-    const prefetch = async () => {
-      for (const q of PREFETCH_QUERIES) {
-        try {
-          await fetch(`/api/generate?q=${encodeURIComponent(q)}`, {
-            signal: controller.signal,
-            priority: "low" as RequestPriority,
-          });
-        } catch {
-          // Ignore — prefetch is best-effort
-        }
-      }
-    };
-    // Delay to avoid competing with initial render
-    const t = setTimeout(prefetch, 2000);
-    return () => {
-      clearTimeout(t);
-      controller.abort();
-    };
-  }, []);
+
 
   return (
     <div
@@ -87,6 +55,11 @@ export default function Home() {
         )}
 
         <SearchBar />
+
+        {/* Taxonomy drill-down browser */}
+        <div className={`w-full max-w-2xl mx-auto mt-3 transition-all duration-300 ${hasResults ? "hidden" : ""}`}>
+          <TaxonomyBrowser compact={hasResults} />
+        </div>
 
         {/* Status indicators */}
         <div className="h-6 mt-2 flex items-center gap-2">
@@ -121,11 +94,7 @@ export default function Home() {
           )}
           {!isLoading && source && !isCached && hasResults && (
             <span className="text-[10px]" style={{ color: "var(--muted)" }}>
-              {source === "prebuilt"
-                ? "Loaded from library"
-                : source === "assemble"
-                ? "Assembled from blocks"
-                : "Generated"}
+              Deep researched
             </span>
           )}
           {!isLoading && query && hasResults && (

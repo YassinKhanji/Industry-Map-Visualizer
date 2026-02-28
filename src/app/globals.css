@@ -161,3 +161,42 @@ button, a, [role="button"], .react-flow__node {
 ::-webkit-scrollbar {
   display: none;
 }
+
+/* ─── Taxonomy Browser ─── */
+
+.taxonomy-browser {
+  animation: taxonomy-slide-in 250ms ease-out;
+}
+
+@keyframes taxonomy-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.taxonomy-grid::-webkit-scrollbar {
+  display: block;
+  width: 4px;
+}
+
+.taxonomy-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.taxonomy-grid::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.taxonomy-card:hover {
+  transform: translateY(-1px);
+}
+
+.taxonomy-card:active {
+  transform: translateY(0);
+}

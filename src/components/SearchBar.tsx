@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useAppStore } from "@/lib/store";
 import type { IndustryMap } from "@/types";
 
@@ -86,12 +86,18 @@ export default function SearchBar() {
   const setProgress = useAppStore((s) => s.setProgress);
   const isLoading = useAppStore((s) => s.isLoading);
   const progress = useAppStore((s) => s.progress);
+  const triggerSearch = useAppStore((s) => s.triggerSearch);
+  const setTriggerSearch = useAppStore((s) => s.setTriggerSearch);
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const trimmed = input.trim();
-      if (!trimmed || isLoading) return;
+  /* searchingRef prevents re-entrancy */
+  const searchingRef = useRef(false);
+
+  /* Core search logic — can be called from form submit or taxonomy trigger */
+  const executeSearch = useCallback(
+    async (query: string) => {
+      const trimmed = query.trim();
+      if (!trimmed || searchingRef.current) return;
+      searchingRef.current = true;
 
       setQuery(trimmed);
       setError(null);
@@ -201,15 +207,13 @@ export default function SearchBar() {
 
         const json = await dataRes.json();
         if (json.data) {
-          const src = (dataRes.headers.get("X-Source") || "generate") as
-            | "prebuilt"
-            | "assemble"
-            | "generate";
-          const corrHeader = dataRes.headers.get("X-Corrected-Query");
-          if (corrHeader) setCorrectedQuery(corrHeader);
+          const rawSrc = dataRes.headers.get("X-Source") || "research";
+          const src = rawSrc as "prebuilt" | "assemble" | "generate";
+          const matchedIndustry = dataRes.headers.get("X-Matched-Industry");
+          if (matchedIndustry) setCorrectedQuery(matchedIndustry);
           setMapData(json.data);
           setSource(src);
-          localSet(cacheKey, json.data, src);
+          localSet(cacheKey, json.data, rawSrc);
           setProgress(null);
         } else {
           setError(json.error || "No data received");
@@ -220,10 +224,29 @@ export default function SearchBar() {
         setProgress(null);
       } finally {
         setIsLoading(false);
+        searchingRef.current = false;
       }
     },
-    [input, isLoading, setQuery, setMapData, setIsLoading, setIsCached, setSource, setError, setCorrectedQuery, setProgress]
+    [setQuery, setMapData, setIsLoading, setIsCached, setSource, setError, setCorrectedQuery, setProgress]
   );
+
+  /* Form submit handler */
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      executeSearch(input);
+    },
+    [input, executeSearch]
+  );
+
+  /* Watch triggerSearch from store (set by TaxonomyBrowser) */
+  useEffect(() => {
+    if (triggerSearch) {
+      setInput(triggerSearch);
+      setTriggerSearch(null);
+      executeSearch(triggerSearch);
+    }
+  }, [triggerSearch, setTriggerSearch, executeSearch]);
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto relative">

@@ -1,0 +1,3280 @@
+[
+  {
+    "id": "isco-1",
+    "label": "1 - Managers",
+    "children": [
+      {
+        "id": "isco-11",
+        "label": "11 - Chief Executives, Senior Officials and Legislators",
+        "children": [
+          {
+            "id": "isco-111",
+            "label": "111 - Legislators and Senior Officials",
+            "children": [
+              {
+                "id": "isco-1111",
+                "label": "1111 - Legislators",
+                "searchQuery": "Legislators"
+              },
+              {
+                "id": "isco-1112",
+                "label": "1112 - Senior Government Officials",
+                "searchQuery": "Senior Government Officials"
+              },
+              {
+                "id": "isco-1113",
+                "label": "1113 - Traditional Chiefs and Heads of Villages",
+                "searchQuery": "Traditional Chiefs and Heads of Villages"
+              },
+              {
+                "id": "isco-1114",
+                "label": "1114 - Senior Officials of Special-interest Organizations",
+                "searchQuery": "Senior Officials of Special-interest Organizations"
+              }
+            ]
+          },
+          {
+            "id": "isco-112",
+            "label": "112 - Managing Directors and Chief Executives",
+            "children": [
+              {
+                "id": "isco-1120",
+                "label": "1120 - Managing Directors and Chief Executives",
+                "searchQuery": "Managing Directors and Chief Executives"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-12",
+        "label": "12 - Administrative and Commercial Managers",
+        "children": [
+          {
+            "id": "isco-121",
+            "label": "121 - Business Services and Administration Managers",
+            "children": [
+              {
+                "id": "isco-1211",
+                "label": "1211 - Finance Managers",
+                "searchQuery": "Finance Managers"
+              },
+              {
+                "id": "isco-1212",
+                "label": "1212 - Human Resource Managers",
+                "searchQuery": "Human Resource Managers"
+              },
+              {
+                "id": "isco-1213",
+                "label": "1213 - Policy and Planning Managers",
+                "searchQuery": "Policy and Planning Managers"
+              },
+              {
+                "id": "isco-1219",
+                "label": "1219 - Business Services and Administration Managers Not Elsewhere Classified",
+                "searchQuery": "Business Services and Administration Managers Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-122",
+            "label": "122 - Sales, Marketing and Development Managers",
+            "children": [
+              {
+                "id": "isco-1221",
+                "label": "1221 - Sales and Marketing Managers",
+                "searchQuery": "Sales and Marketing Managers"
+              },
+              {
+                "id": "isco-1222",
+                "label": "1222 - Advertising and Public Relations Managers",
+                "searchQuery": "Advertising and Public Relations Managers"
+              },
+              {
+                "id": "isco-1223",
+                "label": "1223 - Research and Development Managers",
+                "searchQuery": "Research and Development Managers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-13",
+        "label": "13 - Production and Specialized Services Managers",
+        "children": [
+          {
+            "id": "isco-131",
+            "label": "131 - Production Managers in Agriculture, Forestry and Fisheries",
+            "children": [
+              {
+                "id": "isco-1311",
+                "label": "1311 - Agricultural and Forestry Production Managers",
+                "searchQuery": "Agricultural and Forestry Production Managers"
+              },
+              {
+                "id": "isco-1312",
+                "label": "1312 - Aquaculture and Fisheries Production Managers",
+                "searchQuery": "Aquaculture and Fisheries Production Managers"
+              }
+            ]
+          },
+          {
+            "id": "isco-132",
+            "label": "132 - Manufacturing, Mining, Construction and Distribution Managers",
+            "children": [
+              {
+                "id": "isco-1321",
+                "label": "1321 - Manufacturing Managers",
+                "searchQuery": "Manufacturing Managers"
+              },
+              {
+                "id": "isco-1322",
+                "label": "1322 - Mining Managers",
+                "searchQuery": "Mining Managers"
+              },
+              {
+                "id": "isco-1323",
+                "label": "1323 - Construction Managers",
+                "searchQuery": "Construction Managers"
+              },
+              {
+                "id": "isco-1324",
+                "label": "1324 - Supply, Distribution and Related Managers",
+                "searchQuery": "Supply, Distribution and Related Managers"
+              }
+            ]
+          },
+          {
+            "id": "isco-133",
+            "label": "133 - Information and Communications Technology Service managers",
+            "children": [
+              {
+                "id": "isco-1330",
+                "label": "1330 - Information and Communications Technology Service Managers",
+                "searchQuery": "Information and Communications Technology Service Managers"
+              }
+            ]
+          },
+          {
+            "id": "isco-134",
+            "label": "134 - Professional Services Managers",
+            "children": [
+              {
+                "id": "isco-1341",
+                "label": "1341 - Child Care Service Managers",
+                "searchQuery": "Child Care Service Managers"
+              },
+              {
+                "id": "isco-1342",
+                "label": "1342 - Health Service Managers",
+                "searchQuery": "Health Service Managers"
+              },
+              {
+                "id": "isco-1343",
+                "label": "1343 - Aged Care Service Managers",
+                "searchQuery": "Aged Care Service Managers"
+              },
+              {
+                "id": "isco-1344",
+                "label": "1344 - Social Welfare Managers",
+                "searchQuery": "Social Welfare Managers"
+              },
+              {
+                "id": "isco-1345",
+                "label": "1345 - Education Managers",
+                "searchQuery": "Education Managers"
+              },
+              {
+                "id": "isco-1346",
+                "label": "1346 - Financial and Insurance Services Branch managers",
+                "searchQuery": "Financial and Insurance Services Branch managers"
+              },
+              {
+                "id": "isco-1349",
+                "label": "1349 - Professional Services Managers Not Elsewhere Classified",
+                "searchQuery": "Professional Services Managers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-14",
+        "label": "14 - Hospitality, Retail and Other Services Managers",
+        "children": [
+          {
+            "id": "isco-141",
+            "label": "141 - Hotel and Restaurant Managers",
+            "children": [
+              {
+                "id": "isco-1411",
+                "label": "1411 - Hotel Managers",
+                "searchQuery": "Hotel Managers"
+              },
+              {
+                "id": "isco-1412",
+                "label": "1412 - Restaurant Managers",
+                "searchQuery": "Restaurant Managers"
+              }
+            ]
+          },
+          {
+            "id": "isco-142",
+            "label": "142 - Retail and Wholesale Trade Managers",
+            "children": [
+              {
+                "id": "isco-1420",
+                "label": "1420 - Retail and Wholesale Trade Managers",
+                "searchQuery": "Retail and Wholesale Trade Managers"
+              }
+            ]
+          },
+          {
+            "id": "isco-143",
+            "label": "143 - Other Services Managers",
+            "children": [
+              {
+                "id": "isco-1431",
+                "label": "1431 - Sports, Recreation and Cultural Centre Managers",
+                "searchQuery": "Sports, Recreation and Cultural Centre Managers"
+              },
+              {
+                "id": "isco-1439",
+                "label": "1439 - Services Managers Not Elsewhere Classified",
+                "searchQuery": "Services Managers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-2",
+    "label": "2 - Professionals",
+    "children": [
+      {
+        "id": "isco-21",
+        "label": "21 - Science and Engineering Professionals",
+        "children": [
+          {
+            "id": "isco-211",
+            "label": "211 - Physical and Earth Science Professionals",
+            "children": [
+              {
+                "id": "isco-2111",
+                "label": "2111 - Physicists and Astronomers",
+                "searchQuery": "Physicists and Astronomers"
+              },
+              {
+                "id": "isco-2112",
+                "label": "2112 - Meteorologists",
+                "searchQuery": "Meteorologists"
+              },
+              {
+                "id": "isco-2113",
+                "label": "2113 - Chemists",
+                "searchQuery": "Chemists"
+              },
+              {
+                "id": "isco-2114",
+                "label": "2114 - Geologists and geophysicists",
+                "searchQuery": "Geologists and geophysicists"
+              }
+            ]
+          },
+          {
+            "id": "isco-212",
+            "label": "212 - Mathematicians, Actuaries and Statisticians",
+            "children": [
+              {
+                "id": "isco-2120",
+                "label": "2120 - Mathematicians, Actuaries and Statisticians",
+                "searchQuery": "Mathematicians, Actuaries and Statisticians"
+              }
+            ]
+          },
+          {
+            "id": "isco-213",
+            "label": "213 - Life Science Professionals",
+            "children": [
+              {
+                "id": "isco-2131",
+                "label": "2131 - Biologists, Botanists, Zoologists and Related Professionals",
+                "searchQuery": "Biologists, Botanists, Zoologists and Related Professionals"
+              },
+              {
+                "id": "isco-2132",
+                "label": "2132 - Farming, Forestry and Fisheries Advisers",
+                "searchQuery": "Farming, Forestry and Fisheries Advisers"
+              },
+              {
+                "id": "isco-2133",
+                "label": "2133 - Environmental Protection Professionals",
+                "searchQuery": "Environmental Protection Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-214",
+            "label": "214 - Engineering Professionals (excluding Electrotechnology)",
+            "children": [
+              {
+                "id": "isco-2141",
+                "label": "2141 - Industrial and Production Engineers",
+                "searchQuery": "Industrial and Production Engineers"
+              },
+              {
+                "id": "isco-2142",
+                "label": "2142 - Civil Engineers",
+                "searchQuery": "Civil Engineers"
+              },
+              {
+                "id": "isco-2143",
+                "label": "2143 - Environmental Engineers",
+                "searchQuery": "Environmental Engineers"
+              },
+              {
+                "id": "isco-2144",
+                "label": "2144 - Mechanical Engineers",
+                "searchQuery": "Mechanical Engineers"
+              },
+              {
+                "id": "isco-2145",
+                "label": "2145 - Chemical Engineers",
+                "searchQuery": "Chemical Engineers"
+              },
+              {
+                "id": "isco-2146",
+                "label": "2146 - Mining Engineers, Metallurgists and Related Professionals",
+                "searchQuery": "Mining Engineers, Metallurgists and Related Professionals"
+              },
+              {
+                "id": "isco-2149",
+                "label": "2149 - Engineering Professionals Not Elsewhere Classified",
+                "searchQuery": "Engineering Professionals Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-215",
+            "label": "215 - Electrotechnology Engineers",
+            "children": [
+              {
+                "id": "isco-2151",
+                "label": "2151 - Electrical Engineers",
+                "searchQuery": "Electrical Engineers"
+              },
+              {
+                "id": "isco-2152",
+                "label": "2152 - Electronics Engineers",
+                "searchQuery": "Electronics Engineers"
+              },
+              {
+                "id": "isco-2153",
+                "label": "2153 - Telecommunications Engineers",
+                "searchQuery": "Telecommunications Engineers"
+              }
+            ]
+          },
+          {
+            "id": "isco-216",
+            "label": "216 - Architects, Planners, Surveyors and Designers",
+            "children": [
+              {
+                "id": "isco-2161",
+                "label": "2161 - Building Architects",
+                "searchQuery": "Building Architects"
+              },
+              {
+                "id": "isco-2162",
+                "label": "2162 - Landscape Architects",
+                "searchQuery": "Landscape Architects"
+              },
+              {
+                "id": "isco-2163",
+                "label": "2163 - Product and Garment Designers",
+                "searchQuery": "Product and Garment Designers"
+              },
+              {
+                "id": "isco-2164",
+                "label": "2164 - Town and Traffic Planners",
+                "searchQuery": "Town and Traffic Planners"
+              },
+              {
+                "id": "isco-2165",
+                "label": "2165 - Cartographers and Surveyors",
+                "searchQuery": "Cartographers and Surveyors"
+              },
+              {
+                "id": "isco-2166",
+                "label": "2166 - Graphic and Multimedia Designers",
+                "searchQuery": "Graphic and Multimedia Designers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-22",
+        "label": "22 - Health Professionals",
+        "children": [
+          {
+            "id": "isco-221",
+            "label": "221 - Medical Doctors",
+            "children": [
+              {
+                "id": "isco-2211",
+                "label": "2211 - Generalist Medical Practitioners",
+                "searchQuery": "Generalist Medical Practitioners"
+              },
+              {
+                "id": "isco-2212",
+                "label": "2212 - Specialist Medical Practitioners",
+                "searchQuery": "Specialist Medical Practitioners"
+              }
+            ]
+          },
+          {
+            "id": "isco-222",
+            "label": "222 - Nursing and Midwifery Professionals",
+            "children": [
+              {
+                "id": "isco-2221",
+                "label": "2221 - Nursing Professionals",
+                "searchQuery": "Nursing Professionals"
+              },
+              {
+                "id": "isco-2222",
+                "label": "2222 - Midwifery Professionals",
+                "searchQuery": "Midwifery Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-223",
+            "label": "223 - Traditional and Complementary Medicine Professionals",
+            "children": [
+              {
+                "id": "isco-2230",
+                "label": "2230 - Traditional and Complementary Medicine Professionals",
+                "searchQuery": "Traditional and Complementary Medicine Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-224",
+            "label": "224 - Paramedical Practitioners",
+            "children": [
+              {
+                "id": "isco-2240",
+                "label": "2240 - Paramedical Practitioners",
+                "searchQuery": "Paramedical Practitioners"
+              }
+            ]
+          },
+          {
+            "id": "isco-225",
+            "label": "225 - Veterinarians",
+            "children": [
+              {
+                "id": "isco-2250",
+                "label": "2250 - Veterinarians",
+                "searchQuery": "Veterinarians"
+              }
+            ]
+          },
+          {
+            "id": "isco-226",
+            "label": "226 - Other Health Professionals",
+            "children": [
+              {
+                "id": "isco-2261",
+                "label": "2261 - Dentists",
+                "searchQuery": "Dentists"
+              },
+              {
+                "id": "isco-2262",
+                "label": "2262 - Pharmacists",
+                "searchQuery": "Pharmacists"
+              },
+              {
+                "id": "isco-2263",
+                "label": "2263 - Environmental and Occupational Health and Hygiene Professionals",
+                "searchQuery": "Environmental and Occupational Health and Hygiene Professionals"
+              },
+              {
+                "id": "isco-2264",
+                "label": "2264 - Physiotherapists",
+                "searchQuery": "Physiotherapists"
+              },
+              {
+                "id": "isco-2265",
+                "label": "2265 - Dieticians and Nutritionists",
+                "searchQuery": "Dieticians and Nutritionists"
+              },
+              {
+                "id": "isco-2266",
+                "label": "2266 - Audiologists and Speech Therapists",
+                "searchQuery": "Audiologists and Speech Therapists"
+              },
+              {
+                "id": "isco-2267",
+                "label": "2267 - Optometrists and Ophthalmic Opticians",
+                "searchQuery": "Optometrists and Ophthalmic Opticians"
+              },
+              {
+                "id": "isco-2269",
+                "label": "2269 - Health Professionals Not Elsewhere Classified",
+                "searchQuery": "Health Professionals Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-23",
+        "label": "23 - Teaching Professionals",
+        "children": [
+          {
+            "id": "isco-231",
+            "label": "231 - University and Higher Education Teachers",
+            "children": [
+              {
+                "id": "isco-2310",
+                "label": "2310 - University and Higher Education Teachers",
+                "searchQuery": "University and Higher Education Teachers"
+              }
+            ]
+          },
+          {
+            "id": "isco-232",
+            "label": "232 - Vocational education teachers",
+            "children": [
+              {
+                "id": "isco-2320",
+                "label": "2320 - Vocational Education Teachers",
+                "searchQuery": "Vocational Education Teachers"
+              }
+            ]
+          },
+          {
+            "id": "isco-233",
+            "label": "233 - Secondary Education Teachers",
+            "children": [
+              {
+                "id": "isco-2330",
+                "label": "2330 - Secondary Education Teachers",
+                "searchQuery": "Secondary Education Teachers"
+              }
+            ]
+          },
+          {
+            "id": "isco-234",
+            "label": "234 - Primary School and Early Childhood Teachers",
+            "children": [
+              {
+                "id": "isco-2341",
+                "label": "2341 - Primary School Teachers",
+                "searchQuery": "Primary School Teachers"
+              },
+              {
+                "id": "isco-2342",
+                "label": "2342 - Early Childhood Educators",
+                "searchQuery": "Early Childhood Educators"
+              }
+            ]
+          },
+          {
+            "id": "isco-235",
+            "label": "235 - Other Teaching Professionals",
+            "children": [
+              {
+                "id": "isco-2351",
+                "label": "2351 - Education Methods Specialists",
+                "searchQuery": "Education Methods Specialists"
+              },
+              {
+                "id": "isco-2352",
+                "label": "2352 - Special Needs Teachers",
+                "searchQuery": "Special Needs Teachers"
+              },
+              {
+                "id": "isco-2353",
+                "label": "2353 - Other Language Teachers",
+                "searchQuery": "Other Language Teachers"
+              },
+              {
+                "id": "isco-2354",
+                "label": "2354 - Other Music Teachers",
+                "searchQuery": "Other Music Teachers"
+              },
+              {
+                "id": "isco-2355",
+                "label": "2355 - Other Arts Teachers",
+                "searchQuery": "Other Arts Teachers"
+              },
+              {
+                "id": "isco-2356",
+                "label": "2356 - Information Technology Trainers",
+                "searchQuery": "Information Technology Trainers"
+              },
+              {
+                "id": "isco-2359",
+                "label": "2359 - Teaching Professionals Not Elsewhere Classified",
+                "searchQuery": "Teaching Professionals Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-24",
+        "label": "24 - Business and Administration Professionals",
+        "children": [
+          {
+            "id": "isco-241",
+            "label": "241 - Finance Professionals",
+            "children": [
+              {
+                "id": "isco-2411",
+                "label": "2411 - Accountants",
+                "searchQuery": "Accountants"
+              },
+              {
+                "id": "isco-2412",
+                "label": "2412 - Financial and Investment Advisers",
+                "searchQuery": "Financial and Investment Advisers"
+              },
+              {
+                "id": "isco-2413",
+                "label": "2413 - Financial Analysts",
+                "searchQuery": "Financial Analysts"
+              }
+            ]
+          },
+          {
+            "id": "isco-242",
+            "label": "242 - Administration Professionals",
+            "children": [
+              {
+                "id": "isco-2421",
+                "label": "2421 - Management and Organization Analysts",
+                "searchQuery": "Management and Organization Analysts"
+              },
+              {
+                "id": "isco-2422",
+                "label": "2422 - Policy Administration Professionals",
+                "searchQuery": "Policy Administration Professionals"
+              },
+              {
+                "id": "isco-2423",
+                "label": "2423 - Personnel and Careers Professionals",
+                "searchQuery": "Personnel and Careers Professionals"
+              },
+              {
+                "id": "isco-2424",
+                "label": "2424 - Training and Staff Development Professionals",
+                "searchQuery": "Training and Staff Development Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-243",
+            "label": "243 - Sales, Marketing and Public Relations Professionals",
+            "children": [
+              {
+                "id": "isco-2431",
+                "label": "2431 - Advertising and Marketing Professionals",
+                "searchQuery": "Advertising and Marketing Professionals"
+              },
+              {
+                "id": "isco-2432",
+                "label": "2432 - Public Relations Professionals",
+                "searchQuery": "Public Relations Professionals"
+              },
+              {
+                "id": "isco-2433",
+                "label": "2433 - Technical and Medical Sales Professionals (excluding ICT)",
+                "searchQuery": "Technical and Medical Sales Professionals (excluding ICT)"
+              },
+              {
+                "id": "isco-2434",
+                "label": "2434 - Information and Communications Technology Sales Professionals",
+                "searchQuery": "Information and Communications Technology Sales Professionals"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-25",
+        "label": "25 - Information and Communications Technology Professionals",
+        "children": [
+          {
+            "id": "isco-251",
+            "label": "251 - Software and Applications Developers and Analysts",
+            "children": [
+              {
+                "id": "isco-2511",
+                "label": "2511 - Systems Analysts",
+                "searchQuery": "Systems Analysts"
+              },
+              {
+                "id": "isco-2512",
+                "label": "2512 - Software Developers",
+                "searchQuery": "Software Developers"
+              },
+              {
+                "id": "isco-2513",
+                "label": "2513 - Web and Multimedia Developers",
+                "searchQuery": "Web and Multimedia Developers"
+              },
+              {
+                "id": "isco-2514",
+                "label": "2514 - Applications Programmers",
+                "searchQuery": "Applications Programmers"
+              },
+              {
+                "id": "isco-2519",
+                "label": "2519 - Software and Applications Developers and Analysts Not Elsewhere Classified",
+                "searchQuery": "Software and Applications Developers and Analysts Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-252",
+            "label": "252 - Database and Network Professionals",
+            "children": [
+              {
+                "id": "isco-2521",
+                "label": "2521 - Database Designers and Administrators",
+                "searchQuery": "Database Designers and Administrators"
+              },
+              {
+                "id": "isco-2522",
+                "label": "2522 - Systems Aministrators",
+                "searchQuery": "Systems Aministrators"
+              },
+              {
+                "id": "isco-2523",
+                "label": "2523 - Computer Network Professionals",
+                "searchQuery": "Computer Network Professionals"
+              },
+              {
+                "id": "isco-2529",
+                "label": "2529 - Database and Network Professionals Not Elsewhere Classified",
+                "searchQuery": "Database and Network Professionals Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-26",
+        "label": "26 - Legal, Social and Cultural Professionals",
+        "children": [
+          {
+            "id": "isco-261",
+            "label": "261 - Legal Professionals",
+            "children": [
+              {
+                "id": "isco-2611",
+                "label": "2611 - Lawyers",
+                "searchQuery": "Lawyers"
+              },
+              {
+                "id": "isco-2612",
+                "label": "2612 - Judges",
+                "searchQuery": "Judges"
+              },
+              {
+                "id": "isco-2619",
+                "label": "2619 - Legal Professionals Not Elsewhere Classified",
+                "searchQuery": "Legal Professionals Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-262",
+            "label": "262 - Librarians, Archivists and Curators",
+            "children": [
+              {
+                "id": "isco-2621",
+                "label": "2621 - Archivists and Curators",
+                "searchQuery": "Archivists and Curators"
+              },
+              {
+                "id": "isco-2622",
+                "label": "2622 - Librarians and Related Information Professionals",
+                "searchQuery": "Librarians and Related Information Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-263",
+            "label": "263 - Social and Religious Professionals",
+            "children": [
+              {
+                "id": "isco-2631",
+                "label": "2631 - Economists",
+                "searchQuery": "Economists"
+              },
+              {
+                "id": "isco-2632",
+                "label": "2632 - Sociologists, Anthropologists and Related Professionals",
+                "searchQuery": "Sociologists, Anthropologists and Related Professionals"
+              },
+              {
+                "id": "isco-2633",
+                "label": "2633 - Philosophers, Historians and Political Scientists",
+                "searchQuery": "Philosophers, Historians and Political Scientists"
+              },
+              {
+                "id": "isco-2634",
+                "label": "2634 - Psychologists",
+                "searchQuery": "Psychologists"
+              },
+              {
+                "id": "isco-2635",
+                "label": "2635 - Social Work and Counselling Professionals",
+                "searchQuery": "Social Work and Counselling Professionals"
+              },
+              {
+                "id": "isco-2636",
+                "label": "2636 - Religious Professionals",
+                "searchQuery": "Religious Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-264",
+            "label": "264 - Authors, Journalists and Linguists",
+            "children": [
+              {
+                "id": "isco-2641",
+                "label": "2641 - Authors and Related Writers",
+                "searchQuery": "Authors and Related Writers"
+              },
+              {
+                "id": "isco-2642",
+                "label": "2642 - Journalists",
+                "searchQuery": "Journalists"
+              },
+              {
+                "id": "isco-2643",
+                "label": "2643 - Translators, Interpreters and Other Linguists",
+                "searchQuery": "Translators, Interpreters and Other Linguists"
+              }
+            ]
+          },
+          {
+            "id": "isco-265",
+            "label": "265 - Creative and Performing Artists",
+            "children": [
+              {
+                "id": "isco-2651",
+                "label": "2651 - Visual Artists",
+                "searchQuery": "Visual Artists"
+              },
+              {
+                "id": "isco-2652",
+                "label": "2652 - Musicians, Singers and Composers",
+                "searchQuery": "Musicians, Singers and Composers"
+              },
+              {
+                "id": "isco-2653",
+                "label": "2653 - Dancers and Choreographers",
+                "searchQuery": "Dancers and Choreographers"
+              },
+              {
+                "id": "isco-2654",
+                "label": "2654 - Film, Stage and Related Directors and Producers",
+                "searchQuery": "Film, Stage and Related Directors and Producers"
+              },
+              {
+                "id": "isco-2655",
+                "label": "2655 - Actors",
+                "searchQuery": "Actors"
+              },
+              {
+                "id": "isco-2656",
+                "label": "2656 - Announcers on Radio, Television and Other Media",
+                "searchQuery": "Announcers on Radio, Television and Other Media"
+              },
+              {
+                "id": "isco-2659",
+                "label": "2659 - Creative and Performing Artists Not Elsewhere Classified",
+                "searchQuery": "Creative and Performing Artists Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-3",
+    "label": "3 - Technicians and Associate Professionals",
+    "children": [
+      {
+        "id": "isco-31",
+        "label": "31 - Science and Engineering Associate Professionals",
+        "children": [
+          {
+            "id": "isco-311",
+            "label": "311 - Physical and Engineering Science Technicians",
+            "children": [
+              {
+                "id": "isco-3111",
+                "label": "3111 - Chemical and Physical Science Technicians",
+                "searchQuery": "Chemical and Physical Science Technicians"
+              },
+              {
+                "id": "isco-3112",
+                "label": "3112 - Civil Engineering Technicians",
+                "searchQuery": "Civil Engineering Technicians"
+              },
+              {
+                "id": "isco-3113",
+                "label": "3113 - Electrical Engineering Technicians",
+                "searchQuery": "Electrical Engineering Technicians"
+              },
+              {
+                "id": "isco-3114",
+                "label": "3114 - Electronics Engineering Technicians",
+                "searchQuery": "Electronics Engineering Technicians"
+              },
+              {
+                "id": "isco-3115",
+                "label": "3115 - Mechanical Engineering Technicians",
+                "searchQuery": "Mechanical Engineering Technicians"
+              },
+              {
+                "id": "isco-3116",
+                "label": "3116 - Chemical Engineering Technicians",
+                "searchQuery": "Chemical Engineering Technicians"
+              },
+              {
+                "id": "isco-3117",
+                "label": "3117 - Mining and metallurgical technicians",
+                "searchQuery": "Mining and metallurgical technicians"
+              },
+              {
+                "id": "isco-3118",
+                "label": "3118 - Draughtspersons",
+                "searchQuery": "Draughtspersons"
+              },
+              {
+                "id": "isco-3119",
+                "label": "3119 - Physical and Engineering Science Technicians Not Elsewhere Classified",
+                "searchQuery": "Physical and Engineering Science Technicians Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-312",
+            "label": "312 - Mining, Manufacturing and Construction Supervisors",
+            "children": [
+              {
+                "id": "isco-3121",
+                "label": "3121 - Mining Supervisors",
+                "searchQuery": "Mining Supervisors"
+              },
+              {
+                "id": "isco-3122",
+                "label": "3122 - Manufacturing Supervisors",
+                "searchQuery": "Manufacturing Supervisors"
+              },
+              {
+                "id": "isco-3123",
+                "label": "3123 - Construction Supervisors",
+                "searchQuery": "Construction Supervisors"
+              }
+            ]
+          },
+          {
+            "id": "isco-313",
+            "label": "313 - Process Control Technicians",
+            "children": [
+              {
+                "id": "isco-3131",
+                "label": "3131 - Power Production Plant Operators",
+                "searchQuery": "Power Production Plant Operators"
+              },
+              {
+                "id": "isco-3132",
+                "label": "3132 - Incinerator and Water Treatment Plant Operators",
+                "searchQuery": "Incinerator and Water Treatment Plant Operators"
+              },
+              {
+                "id": "isco-3133",
+                "label": "3133 - Chemical Processing Plant Controllers",
+                "searchQuery": "Chemical Processing Plant Controllers"
+              },
+              {
+                "id": "isco-3134",
+                "label": "3134 - Petroleum and Natural Gas Refining Plant Operators",
+                "searchQuery": "Petroleum and Natural Gas Refining Plant Operators"
+              },
+              {
+                "id": "isco-3135",
+                "label": "3135 - Metal Production Process Controllers",
+                "searchQuery": "Metal Production Process Controllers"
+              },
+              {
+                "id": "isco-3139",
+                "label": "3139 - Process Control Technicians Not Elsewhere Classified",
+                "searchQuery": "Process Control Technicians Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-314",
+            "label": "314 - Life Science Technicians and Related Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3141",
+                "label": "3141 - Life Science Technicians (excluding Medical)",
+                "searchQuery": "Life Science Technicians (excluding Medical)"
+              },
+              {
+                "id": "isco-3142",
+                "label": "3142 - Agricultural Technicians",
+                "searchQuery": "Agricultural Technicians"
+              },
+              {
+                "id": "isco-3143",
+                "label": "3143 - Forestry Technicians",
+                "searchQuery": "Forestry Technicians"
+              }
+            ]
+          },
+          {
+            "id": "isco-315",
+            "label": "315 - Ship and Aircraft Controllers and Technicians",
+            "children": [
+              {
+                "id": "isco-3151",
+                "label": "3151 - Ships' Engineers",
+                "searchQuery": "Ships' Engineers"
+              },
+              {
+                "id": "isco-3152",
+                "label": "3152 - Ships' Deck Officers and Pilots",
+                "searchQuery": "Ships' Deck Officers and Pilots"
+              },
+              {
+                "id": "isco-3153",
+                "label": "3153 - Aircraft Pilots and Related Associate Professionals",
+                "searchQuery": "Aircraft Pilots and Related Associate Professionals"
+              },
+              {
+                "id": "isco-3154",
+                "label": "3154 - Air Traffic Controllers",
+                "searchQuery": "Air Traffic Controllers"
+              },
+              {
+                "id": "isco-3155",
+                "label": "3155 - Air Traffic Safety Electronics Technicians",
+                "searchQuery": "Air Traffic Safety Electronics Technicians"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-32",
+        "label": "32 - Health Associate Professionals",
+        "children": [
+          {
+            "id": "isco-321",
+            "label": "321 - Medical and Pharmaceutical Technicians",
+            "children": [
+              {
+                "id": "isco-3211",
+                "label": "3211 - Medical Imaging and Therapeutic Equipment Technicians",
+                "searchQuery": "Medical Imaging and Therapeutic Equipment Technicians"
+              },
+              {
+                "id": "isco-3212",
+                "label": "3212 - Medical and Pathology Laboratory Technicians",
+                "searchQuery": "Medical and Pathology Laboratory Technicians"
+              },
+              {
+                "id": "isco-3213",
+                "label": "3213 - Pharmaceutical Technicians and Assistants",
+                "searchQuery": "Pharmaceutical Technicians and Assistants"
+              },
+              {
+                "id": "isco-3214",
+                "label": "3214 - Medical and Dental Prosthetic Technicians",
+                "searchQuery": "Medical and Dental Prosthetic Technicians"
+              }
+            ]
+          },
+          {
+            "id": "isco-322",
+            "label": "322 - Nursing and Midwifery Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3221",
+                "label": "3221 - Nursing Associate Professionals",
+                "searchQuery": "Nursing Associate Professionals"
+              },
+              {
+                "id": "isco-3222",
+                "label": "3222 - Midwifery Associate Professionals",
+                "searchQuery": "Midwifery Associate Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-323",
+            "label": "323 - Traditional and Complementary Medicine Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3230",
+                "label": "3230 - Traditional and Complementary Medicine Associate Professionals",
+                "searchQuery": "Traditional and Complementary Medicine Associate Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-324",
+            "label": "324 - Veterinary Technicians and Assistants",
+            "children": [
+              {
+                "id": "isco-3240",
+                "label": "3240 - Veterinary Technicians and Assistants",
+                "searchQuery": "Veterinary Technicians and Assistants"
+              }
+            ]
+          },
+          {
+            "id": "isco-325",
+            "label": "325 - Other Health Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3251",
+                "label": "3251 - Dental Assistants and Therapists",
+                "searchQuery": "Dental Assistants and Therapists"
+              },
+              {
+                "id": "isco-3252",
+                "label": "3252 - Medical Records and Health Information Technicians",
+                "searchQuery": "Medical Records and Health Information Technicians"
+              },
+              {
+                "id": "isco-3253",
+                "label": "3253 - Community Health Workers",
+                "searchQuery": "Community Health Workers"
+              },
+              {
+                "id": "isco-3254",
+                "label": "3254 - Dispensing Opticians",
+                "searchQuery": "Dispensing Opticians"
+              },
+              {
+                "id": "isco-3255",
+                "label": "3255 - Physiotherapy Technicians and Assistants",
+                "searchQuery": "Physiotherapy Technicians and Assistants"
+              },
+              {
+                "id": "isco-3256",
+                "label": "3256 - Medical Assistants",
+                "searchQuery": "Medical Assistants"
+              },
+              {
+                "id": "isco-3257",
+                "label": "3257 - Environmental and Occupational Health Inspectors and Associates",
+                "searchQuery": "Environmental and Occupational Health Inspectors and Associates"
+              },
+              {
+                "id": "isco-3258",
+                "label": "3258 - Ambulance Workers",
+                "searchQuery": "Ambulance Workers"
+              },
+              {
+                "id": "isco-3259",
+                "label": "3259 - Health Associate Professionals Not Elsewhere Classified",
+                "searchQuery": "Health Associate Professionals Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-33",
+        "label": "33 - Business and Administration Associate Professionals",
+        "children": [
+          {
+            "id": "isco-331",
+            "label": "331 - Financial and Mathematical Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3311",
+                "label": "3311 - Securities and Finance Dealers and Brokers",
+                "searchQuery": "Securities and Finance Dealers and Brokers"
+              },
+              {
+                "id": "isco-3312",
+                "label": "3312 - Credit and Loans Officers",
+                "searchQuery": "Credit and Loans Officers"
+              },
+              {
+                "id": "isco-3313",
+                "label": "3313 - Accounting Associate Professionals",
+                "searchQuery": "Accounting Associate Professionals"
+              },
+              {
+                "id": "isco-3314",
+                "label": "3314 - Statistical, Mathematical and Related Associate Professionals",
+                "searchQuery": "Statistical, Mathematical and Related Associate Professionals"
+              },
+              {
+                "id": "isco-3315",
+                "label": "3315 - Valuers and Loss Assessors",
+                "searchQuery": "Valuers and Loss Assessors"
+              }
+            ]
+          },
+          {
+            "id": "isco-332",
+            "label": "332 - Sales and Purchasing Agents and Brokers",
+            "children": [
+              {
+                "id": "isco-3321",
+                "label": "3321 - Insurance Representatives",
+                "searchQuery": "Insurance Representatives"
+              },
+              {
+                "id": "isco-3322",
+                "label": "3322 - Commercial Sales Representatives",
+                "searchQuery": "Commercial Sales Representatives"
+              },
+              {
+                "id": "isco-3323",
+                "label": "3323 - Buyers",
+                "searchQuery": "Buyers"
+              },
+              {
+                "id": "isco-3324",
+                "label": "3324 - Trade Brokers",
+                "searchQuery": "Trade Brokers"
+              }
+            ]
+          },
+          {
+            "id": "isco-333",
+            "label": "333 - Business Services Agents",
+            "children": [
+              {
+                "id": "isco-3331",
+                "label": "3331 - Clearing and Forwarding Aents",
+                "searchQuery": "Clearing and Forwarding Aents"
+              },
+              {
+                "id": "isco-3332",
+                "label": "3332 - Conference and Event Planners",
+                "searchQuery": "Conference and Event Planners"
+              },
+              {
+                "id": "isco-3333",
+                "label": "3333 - Employment agents and contractors",
+                "searchQuery": "Employment agents and contractors"
+              },
+              {
+                "id": "isco-3334",
+                "label": "3334 - Real Estate Agents and Property Managers",
+                "searchQuery": "Real Estate Agents and Property Managers"
+              },
+              {
+                "id": "isco-3339",
+                "label": "3339 - Business Services Agents Not Elsewhere Classified",
+                "searchQuery": "Business Services Agents Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-334",
+            "label": "334 - Administrative and Specialized Secretaries",
+            "children": [
+              {
+                "id": "isco-3341",
+                "label": "3341 - Office Supervisors",
+                "searchQuery": "Office Supervisors"
+              },
+              {
+                "id": "isco-3342",
+                "label": "3342 - Legal Secretaries",
+                "searchQuery": "Legal Secretaries"
+              },
+              {
+                "id": "isco-3343",
+                "label": "3343 - Administrative and Executive Secretaries",
+                "searchQuery": "Administrative and Executive Secretaries"
+              },
+              {
+                "id": "isco-3344",
+                "label": "3344 - Medical Secretaries",
+                "searchQuery": "Medical Secretaries"
+              }
+            ]
+          },
+          {
+            "id": "isco-335",
+            "label": "335 - Government Regulatory  Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3351",
+                "label": "3351 - Customs and Border Inspectors",
+                "searchQuery": "Customs and Border Inspectors"
+              },
+              {
+                "id": "isco-3352",
+                "label": "3352 - Government Tax and Excise Officials",
+                "searchQuery": "Government Tax and Excise Officials"
+              },
+              {
+                "id": "isco-3353",
+                "label": "3353 - Government Social Benefits Officials",
+                "searchQuery": "Government Social Benefits Officials"
+              },
+              {
+                "id": "isco-3354",
+                "label": "3354 - Government Licensing Officials",
+                "searchQuery": "Government Licensing Officials"
+              },
+              {
+                "id": "isco-3355",
+                "label": "3355 - Police Inspectors and Detectives",
+                "searchQuery": "Police Inspectors and Detectives"
+              },
+              {
+                "id": "isco-3359",
+                "label": "3359 - Government Regulatory AssociatePprofessionals Not Elsewhere Classified",
+                "searchQuery": "Government Regulatory AssociatePprofessionals Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-34",
+        "label": "34 - Legal, Social, Cultural and Related Associate Professionals",
+        "children": [
+          {
+            "id": "isco-341",
+            "label": "341 - Legal, Social and Religious Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3411",
+                "label": "3411 - Legal and Related Associate Professionals",
+                "searchQuery": "Legal and Related Associate Professionals"
+              },
+              {
+                "id": "isco-3412",
+                "label": "3412 - Social Work Associate Professionals",
+                "searchQuery": "Social Work Associate Professionals"
+              },
+              {
+                "id": "isco-3413",
+                "label": "3413 - Religious Associate Professionals",
+                "searchQuery": "Religious Associate Professionals"
+              }
+            ]
+          },
+          {
+            "id": "isco-342",
+            "label": "342 - Sports and Fitness Workers",
+            "children": [
+              {
+                "id": "isco-3421",
+                "label": "3421 - Athletes and Sports Players",
+                "searchQuery": "Athletes and Sports Players"
+              },
+              {
+                "id": "isco-3422",
+                "label": "3422 - Sports Coaches, Instructors and Officials",
+                "searchQuery": "Sports Coaches, Instructors and Officials"
+              },
+              {
+                "id": "isco-3423",
+                "label": "3423 - Fitness and Recreation Instructors and Programme Leaders",
+                "searchQuery": "Fitness and Recreation Instructors and Programme Leaders"
+              }
+            ]
+          },
+          {
+            "id": "isco-343",
+            "label": "343 - Artistic, Cultural and Culinary Associate Professionals",
+            "children": [
+              {
+                "id": "isco-3431",
+                "label": "3431 - Photographers",
+                "searchQuery": "Photographers"
+              },
+              {
+                "id": "isco-3432",
+                "label": "3432 - Interior Designers and Decorators",
+                "searchQuery": "Interior Designers and Decorators"
+              },
+              {
+                "id": "isco-3433",
+                "label": "3433 - Gallery, Museum and Library Technicians",
+                "searchQuery": "Gallery, Museum and Library Technicians"
+              },
+              {
+                "id": "isco-3434",
+                "label": "3434 - Chefs",
+                "searchQuery": "Chefs"
+              },
+              {
+                "id": "isco-3435",
+                "label": "3435 - Other Artistic and Cultural Associate Professionals",
+                "searchQuery": "Other Artistic and Cultural Associate Professionals"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-35",
+        "label": "35 - Information and Communications Technicians",
+        "children": [
+          {
+            "id": "isco-351",
+            "label": "351 - Information and Communications Technology Operations and User Support Technicians",
+            "children": [
+              {
+                "id": "isco-3511",
+                "label": "3511 - Information and Communications Technology Operations Technicians",
+                "searchQuery": "Information and Communications Technology Operations Technicians"
+              },
+              {
+                "id": "isco-3512",
+                "label": "3512 - Information and Communications Technology User Support Technicians",
+                "searchQuery": "Information and Communications Technology User Support Technicians"
+              },
+              {
+                "id": "isco-3513",
+                "label": "3513 - Computer Network and Systems Technicians",
+                "searchQuery": "Computer Network and Systems Technicians"
+              },
+              {
+                "id": "isco-3514",
+                "label": "3514 - Web Technicians",
+                "searchQuery": "Web Technicians"
+              }
+            ]
+          },
+          {
+            "id": "isco-352",
+            "label": "352 - Telecommunications and Broadcasting Technicians",
+            "children": [
+              {
+                "id": "isco-3521",
+                "label": "3521 - Broadcasting and Audio-visual Technicians",
+                "searchQuery": "Broadcasting and Audio-visual Technicians"
+              },
+              {
+                "id": "isco-3522",
+                "label": "3522 - Telecommunications Engineering Technicians",
+                "searchQuery": "Telecommunications Engineering Technicians"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-4",
+    "label": "4 - Clerical Support Workers",
+    "children": [
+      {
+        "id": "isco-41",
+        "label": "41 - General and Keyboard Clerks",
+        "children": [
+          {
+            "id": "isco-411",
+            "label": "411 - General Office Clerks",
+            "children": [
+              {
+                "id": "isco-4110",
+                "label": "4110 - General Office Clerks",
+                "searchQuery": "General Office Clerks"
+              }
+            ]
+          },
+          {
+            "id": "isco-412",
+            "label": "412 - Secretaries (general)",
+            "children": [
+              {
+                "id": "isco-4120",
+                "label": "4120 - Secretaries (general)",
+                "searchQuery": "Secretaries (general)"
+              }
+            ]
+          },
+          {
+            "id": "isco-413",
+            "label": "413 - Keyboard Operators",
+            "children": [
+              {
+                "id": "isco-4131",
+                "label": "4131 - Typists and Word Processing Operators",
+                "searchQuery": "Typists and Word Processing Operators"
+              },
+              {
+                "id": "isco-4132",
+                "label": "4132 - Data Entry Clerks",
+                "searchQuery": "Data Entry Clerks"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-42",
+        "label": "42 - Customer Services Clerks",
+        "children": [
+          {
+            "id": "isco-421",
+            "label": "421 - Tellers, Money Collectors and Related Clerks",
+            "children": [
+              {
+                "id": "isco-4211",
+                "label": "4211 - Bank Tellers and Related Clerks",
+                "searchQuery": "Bank Tellers and Related Clerks"
+              },
+              {
+                "id": "isco-4212",
+                "label": "4212 - Bookmakers, Croupiers and Related Gaming Workers",
+                "searchQuery": "Bookmakers, Croupiers and Related Gaming Workers"
+              },
+              {
+                "id": "isco-4213",
+                "label": "4213 - Pawnbrokers and Money-lenders",
+                "searchQuery": "Pawnbrokers and Money-lenders"
+              },
+              {
+                "id": "isco-4214",
+                "label": "4214 - Debt Collectors and Related Workers",
+                "searchQuery": "Debt Collectors and Related Workers"
+              }
+            ]
+          },
+          {
+            "id": "isco-422",
+            "label": "422 - Client Information Workers",
+            "children": [
+              {
+                "id": "isco-4221",
+                "label": "4221 - Travel Consultants and Clerks",
+                "searchQuery": "Travel Consultants and Clerks"
+              },
+              {
+                "id": "isco-4222",
+                "label": "4222 - Contact Centre Information Clerks",
+                "searchQuery": "Contact Centre Information Clerks"
+              },
+              {
+                "id": "isco-4223",
+                "label": "4223 - Telephone Switchboard Operators",
+                "searchQuery": "Telephone Switchboard Operators"
+              },
+              {
+                "id": "isco-4224",
+                "label": "4224 - Hotel Receptionists",
+                "searchQuery": "Hotel Receptionists"
+              },
+              {
+                "id": "isco-4225",
+                "label": "4225 - Inquiry Clerks",
+                "searchQuery": "Inquiry Clerks"
+              },
+              {
+                "id": "isco-4226",
+                "label": "4226 - Receptionists (general)",
+                "searchQuery": "Receptionists (general)"
+              },
+              {
+                "id": "isco-4227",
+                "label": "4227 - Survey and Market Research Interviewers",
+                "searchQuery": "Survey and Market Research Interviewers"
+              },
+              {
+                "id": "isco-4229",
+                "label": "4229 - Client Information Workers Not Elsewhere Classified",
+                "searchQuery": "Client Information Workers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-43",
+        "label": "43 - Numerical and Material Recording Clerks",
+        "children": [
+          {
+            "id": "isco-431",
+            "label": "431 - Numerical Clerks",
+            "children": [
+              {
+                "id": "isco-4311",
+                "label": "4311 - Accounting and Bookkeeping Clerks",
+                "searchQuery": "Accounting and Bookkeeping Clerks"
+              },
+              {
+                "id": "isco-4312",
+                "label": "4312 - Statistical, Finance and Insurance Clerks",
+                "searchQuery": "Statistical, Finance and Insurance Clerks"
+              },
+              {
+                "id": "isco-4313",
+                "label": "4313 - Payroll Clerks",
+                "searchQuery": "Payroll Clerks"
+              }
+            ]
+          },
+          {
+            "id": "isco-432",
+            "label": "432 - Material Recording and Transport Clerks",
+            "children": [
+              {
+                "id": "isco-4321",
+                "label": "4321 - Stock Clerks",
+                "searchQuery": "Stock Clerks"
+              },
+              {
+                "id": "isco-4322",
+                "label": "4322 - Production Clerks",
+                "searchQuery": "Production Clerks"
+              },
+              {
+                "id": "isco-4323",
+                "label": "4323 - Transport Clerks",
+                "searchQuery": "Transport Clerks"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-44",
+        "label": "44 - Other Clerical Support Workers",
+        "children": [
+          {
+            "id": "isco-441",
+            "label": "441 - Other Clerical Support Workers",
+            "children": [
+              {
+                "id": "isco-4411",
+                "label": "4411 - Library Clerks",
+                "searchQuery": "Library Clerks"
+              },
+              {
+                "id": "isco-4412",
+                "label": "4412 - Mail Carriers and Sorting Clerks",
+                "searchQuery": "Mail Carriers and Sorting Clerks"
+              },
+              {
+                "id": "isco-4413",
+                "label": "4413 - Coding, Proofreading and Related Clerks",
+                "searchQuery": "Coding, Proofreading and Related Clerks"
+              },
+              {
+                "id": "isco-4414",
+                "label": "4414 - Scribes and Related Workers",
+                "searchQuery": "Scribes and Related Workers"
+              },
+              {
+                "id": "isco-4415",
+                "label": "4415 - Filing and Copying Clerks",
+                "searchQuery": "Filing and Copying Clerks"
+              },
+              {
+                "id": "isco-4416",
+                "label": "4416 - Personnel Clerks",
+                "searchQuery": "Personnel Clerks"
+              },
+              {
+                "id": "isco-4419",
+                "label": "4419 - Clerical Support Workers Not Elsewhere Classified",
+                "searchQuery": "Clerical Support Workers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-5",
+    "label": "5 - Service and Sales Workers",
+    "children": [
+      {
+        "id": "isco-51",
+        "label": "51 - Personal Service Workers",
+        "children": [
+          {
+            "id": "isco-511",
+            "label": "511 - Travel Attendants, Conductors and Guides",
+            "children": [
+              {
+                "id": "isco-5111",
+                "label": "5111 - Travel Attendants and Travel Stewards",
+                "searchQuery": "Travel Attendants and Travel Stewards"
+              },
+              {
+                "id": "isco-5112",
+                "label": "5112 - Transport Conductors",
+                "searchQuery": "Transport Conductors"
+              },
+              {
+                "id": "isco-5113",
+                "label": "5113 - Travel Guides",
+                "searchQuery": "Travel Guides"
+              }
+            ]
+          },
+          {
+            "id": "isco-512",
+            "label": "512 - Cooks",
+            "children": [
+              {
+                "id": "isco-5120",
+                "label": "5120 - Cooks",
+                "searchQuery": "Cooks"
+              }
+            ]
+          },
+          {
+            "id": "isco-513",
+            "label": "513 - Waiters and Bartenders",
+            "children": [
+              {
+                "id": "isco-5131",
+                "label": "5131 - Waiters",
+                "searchQuery": "Waiters"
+              },
+              {
+                "id": "isco-5132",
+                "label": "5132 - Bartenders",
+                "searchQuery": "Bartenders"
+              }
+            ]
+          },
+          {
+            "id": "isco-514",
+            "label": "514 - Hairdressers, Beauticians and Related Workers",
+            "children": [
+              {
+                "id": "isco-5141",
+                "label": "5141 - Hairdressers",
+                "searchQuery": "Hairdressers"
+              },
+              {
+                "id": "isco-5142",
+                "label": "5142 - Beauticians and Related Workers",
+                "searchQuery": "Beauticians and Related Workers"
+              }
+            ]
+          },
+          {
+            "id": "isco-515",
+            "label": "515 - Building and Housekeeping Supervisors",
+            "children": [
+              {
+                "id": "isco-5151",
+                "label": "5151 - Cleaning and Housekeeping Supervisors in Offices, Hotels and Other Establishments",
+                "searchQuery": "Cleaning and Housekeeping Supervisors in Offices, Hotels and Other Establishments"
+              },
+              {
+                "id": "isco-5152",
+                "label": "5152 - Domestic Housekeepers",
+                "searchQuery": "Domestic Housekeepers"
+              },
+              {
+                "id": "isco-5153",
+                "label": "5153 - Building Caretakers",
+                "searchQuery": "Building Caretakers"
+              }
+            ]
+          },
+          {
+            "id": "isco-516",
+            "label": "516 - Other Personal Services Workers",
+            "children": [
+              {
+                "id": "isco-5161",
+                "label": "5161 - Astrologers, Fortune-tellers and Related Workers",
+                "searchQuery": "Astrologers, Fortune-tellers and Related Workers"
+              },
+              {
+                "id": "isco-5162",
+                "label": "5162 - Companions and Valets",
+                "searchQuery": "Companions and Valets"
+              },
+              {
+                "id": "isco-5163",
+                "label": "5163 - Undertakers and Embalmers",
+                "searchQuery": "Undertakers and Embalmers"
+              },
+              {
+                "id": "isco-5164",
+                "label": "5164 - Pet Groomers and Animal Care Workers",
+                "searchQuery": "Pet Groomers and Animal Care Workers"
+              },
+              {
+                "id": "isco-5165",
+                "label": "5165 - Driving Instructors",
+                "searchQuery": "Driving Instructors"
+              },
+              {
+                "id": "isco-5169",
+                "label": "5169 - Personal Services Workers Not Elsewhere Classified",
+                "searchQuery": "Personal Services Workers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-52",
+        "label": "52 - Sales Workers",
+        "children": [
+          {
+            "id": "isco-521",
+            "label": "521 - Street and Market Salespersons",
+            "children": [
+              {
+                "id": "isco-5211",
+                "label": "5211 - Stall and Market Salespersons",
+                "searchQuery": "Stall and Market Salespersons"
+              },
+              {
+                "id": "isco-5212",
+                "label": "5212 - Street Food Salespersons",
+                "searchQuery": "Street Food Salespersons"
+              }
+            ]
+          },
+          {
+            "id": "isco-522",
+            "label": "522 - Shop Aalespersons",
+            "children": [
+              {
+                "id": "isco-5221",
+                "label": "5221 - Shopkeepers",
+                "searchQuery": "Shopkeepers"
+              },
+              {
+                "id": "isco-5222",
+                "label": "5222 - Shop Supervisors",
+                "searchQuery": "Shop Supervisors"
+              },
+              {
+                "id": "isco-5223",
+                "label": "5223 - Shop Sales Assistants",
+                "searchQuery": "Shop Sales Assistants"
+              }
+            ]
+          },
+          {
+            "id": "isco-523",
+            "label": "523 - Cashiers and Ticket Clerks",
+            "children": [
+              {
+                "id": "isco-5230",
+                "label": "5230 - Cashiers and Ticket Clerks",
+                "searchQuery": "Cashiers and Ticket Clerks"
+              }
+            ]
+          },
+          {
+            "id": "isco-524",
+            "label": "524 - Other Sales Workers",
+            "children": [
+              {
+                "id": "isco-5241",
+                "label": "5241 - Fashion and Other Models",
+                "searchQuery": "Fashion and Other Models"
+              },
+              {
+                "id": "isco-5242",
+                "label": "5242 - Sales Demonstrators",
+                "searchQuery": "Sales Demonstrators"
+              },
+              {
+                "id": "isco-5243",
+                "label": "5243 - Door-to-door Salespersons",
+                "searchQuery": "Door-to-door Salespersons"
+              },
+              {
+                "id": "isco-5244",
+                "label": "5244 - Contact Centre Salespersons",
+                "searchQuery": "Contact Centre Salespersons"
+              },
+              {
+                "id": "isco-5245",
+                "label": "5245 - Service Station Attendants",
+                "searchQuery": "Service Station Attendants"
+              },
+              {
+                "id": "isco-5246",
+                "label": "5246 - Food Service Counter Attendants",
+                "searchQuery": "Food Service Counter Attendants"
+              },
+              {
+                "id": "isco-5249",
+                "label": "5249 - Sales Workers Not Elsewhere Classified",
+                "searchQuery": "Sales Workers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-53",
+        "label": "53 - Personal Care Workers",
+        "children": [
+          {
+            "id": "isco-531",
+            "label": "531 - Child Care Workers and Teachers' Aides",
+            "children": [
+              {
+                "id": "isco-5311",
+                "label": "5311 - Child Care Workers",
+                "searchQuery": "Child Care Workers"
+              },
+              {
+                "id": "isco-5312",
+                "label": "5312 - Teachers' Aides",
+                "searchQuery": "Teachers' Aides"
+              }
+            ]
+          },
+          {
+            "id": "isco-532",
+            "label": "532 - Personal Care Workers in Health Services",
+            "children": [
+              {
+                "id": "isco-5321",
+                "label": "5321 - Health Care Assistants",
+                "searchQuery": "Health Care Assistants"
+              },
+              {
+                "id": "isco-5322",
+                "label": "5322 - Home-based Personal Care Workers",
+                "searchQuery": "Home-based Personal Care Workers"
+              },
+              {
+                "id": "isco-5329",
+                "label": "5329 - Personal Care Workers in Health Services Not Elsewhere Classified",
+                "searchQuery": "Personal Care Workers in Health Services Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-54",
+        "label": "54 - Protective Services Workers",
+        "children": [
+          {
+            "id": "isco-541",
+            "label": "541 - Protective Services Workers",
+            "children": [
+              {
+                "id": "isco-5411",
+                "label": "5411 - Fire Fighters",
+                "searchQuery": "Fire Fighters"
+              },
+              {
+                "id": "isco-5412",
+                "label": "5412 - Police Officers",
+                "searchQuery": "Police Officers"
+              },
+              {
+                "id": "isco-5413",
+                "label": "5413 - Prison Guards",
+                "searchQuery": "Prison Guards"
+              },
+              {
+                "id": "isco-5414",
+                "label": "5414 - Security Guards",
+                "searchQuery": "Security Guards"
+              },
+              {
+                "id": "isco-5419",
+                "label": "5419 - Protective Services Workers Not Elsewhere Classified",
+                "searchQuery": "Protective Services Workers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-6",
+    "label": "6 - Skilled Agricultural, Forestry and Fishery Workers",
+    "children": [
+      {
+        "id": "isco-61",
+        "label": "61 - Market-oriented Skilled Agricultural Workers",
+        "children": [
+          {
+            "id": "isco-611",
+            "label": "611 - Market Gardeners and Crop Growers",
+            "children": [
+              {
+                "id": "isco-6111",
+                "label": "6111 - Field Crop and Vegetable Growers",
+                "searchQuery": "Field Crop and Vegetable Growers"
+              },
+              {
+                "id": "isco-6112",
+                "label": "6112 - Tree and Shrub Crop Growers",
+                "searchQuery": "Tree and Shrub Crop Growers"
+              },
+              {
+                "id": "isco-6113",
+                "label": "6113 - Gardeners, Horticultural and Nursery Growers",
+                "searchQuery": "Gardeners, Horticultural and Nursery Growers"
+              },
+              {
+                "id": "isco-6114",
+                "label": "6114 - Mixed Crop Growers",
+                "searchQuery": "Mixed Crop Growers"
+              }
+            ]
+          },
+          {
+            "id": "isco-612",
+            "label": "612 - Animal Producers",
+            "children": [
+              {
+                "id": "isco-6121",
+                "label": "6121 - Livestock and Dairy Producers",
+                "searchQuery": "Livestock and Dairy Producers"
+              },
+              {
+                "id": "isco-6122",
+                "label": "6122 - Poultry Producers",
+                "searchQuery": "Poultry Producers"
+              },
+              {
+                "id": "isco-6123",
+                "label": "6123 - Apiarists and Sericulturists",
+                "searchQuery": "Apiarists and Sericulturists"
+              },
+              {
+                "id": "isco-6129",
+                "label": "6129 - Animal Producers Not Elsewhere Classified",
+                "searchQuery": "Animal Producers Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-613",
+            "label": "613 - Mixed Crop and Animal Producers",
+            "children": [
+              {
+                "id": "isco-6130",
+                "label": "6130 - Mixed Crop and Animal Producers",
+                "searchQuery": "Mixed Crop and Animal Producers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-62",
+        "label": "62 - Market-Oriented Skilled Forestry, Fishery and Hunting Workers",
+        "children": [
+          {
+            "id": "isco-621",
+            "label": "621 - Forestry and Related Workers",
+            "children": [
+              {
+                "id": "isco-6210",
+                "label": "6210 - Forestry and Related Workers",
+                "searchQuery": "Forestry and Related Workers"
+              }
+            ]
+          },
+          {
+            "id": "isco-622",
+            "label": "622 - Fishery Workers, Hunters and Trappers",
+            "children": [
+              {
+                "id": "isco-6221",
+                "label": "6221 - Aquaculture Workers",
+                "searchQuery": "Aquaculture Workers"
+              },
+              {
+                "id": "isco-6222",
+                "label": "6222 - Inland and Coastal Waters Fishery Workers",
+                "searchQuery": "Inland and Coastal Waters Fishery Workers"
+              },
+              {
+                "id": "isco-6223",
+                "label": "6223 - Deep-sea Fishery Workers",
+                "searchQuery": "Deep-sea Fishery Workers"
+              },
+              {
+                "id": "isco-6224",
+                "label": "6224 - Hunters and Trappers",
+                "searchQuery": "Hunters and Trappers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-63",
+        "label": "63 - Subsistence Farmers, Fishers, Hunters and Gatherers",
+        "children": [
+          {
+            "id": "isco-631",
+            "label": "631 - Subsistence Crop Farmers",
+            "children": [
+              {
+                "id": "isco-6310",
+                "label": "6310 - Subsistence Crop Farmers",
+                "searchQuery": "Subsistence Crop Farmers"
+              }
+            ]
+          },
+          {
+            "id": "isco-632",
+            "label": "632 - Subsistence Livestock Farmers",
+            "children": [
+              {
+                "id": "isco-6320",
+                "label": "6320 - Subsistence Livestock Farmers",
+                "searchQuery": "Subsistence Livestock Farmers"
+              }
+            ]
+          },
+          {
+            "id": "isco-633",
+            "label": "633 - Subsistence Mixed Crop and Livestock Farmers",
+            "children": [
+              {
+                "id": "isco-6330",
+                "label": "6330 - Subsistence Mixed Crop and Livestock Farmers",
+                "searchQuery": "Subsistence Mixed Crop and Livestock Farmers"
+              }
+            ]
+          },
+          {
+            "id": "isco-634",
+            "label": "634 - Subsistence Fishers, Hunters, Trappers and Gatherers",
+            "children": [
+              {
+                "id": "isco-6340",
+                "label": "6340 - Subsistence Fishers, Hunters, Trappers and Gatherers",
+                "searchQuery": "Subsistence Fishers, Hunters, Trappers and Gatherers"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-7",
+    "label": "7 - Craft and Related Trades Workers",
+    "children": [
+      {
+        "id": "isco-71",
+        "label": "71 - Building and Related Trades Workers (excluding Electricians)",
+        "children": [
+          {
+            "id": "isco-711",
+            "label": "711 - Building Frame and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7111",
+                "label": "7111 - House Builders",
+                "searchQuery": "House Builders"
+              },
+              {
+                "id": "isco-7112",
+                "label": "7112 - Bricklayers and Related Workers",
+                "searchQuery": "Bricklayers and Related Workers"
+              },
+              {
+                "id": "isco-7113",
+                "label": "7113 - Stonemasons, Stone Cutters, Splitters and Carvers",
+                "searchQuery": "Stonemasons, Stone Cutters, Splitters and Carvers"
+              },
+              {
+                "id": "isco-7114",
+                "label": "7114 - Concrete Placers, Concrete Finishers and Related Workers",
+                "searchQuery": "Concrete Placers, Concrete Finishers and Related Workers"
+              },
+              {
+                "id": "isco-7115",
+                "label": "7115 - Carpenters and Joiners",
+                "searchQuery": "Carpenters and Joiners"
+              },
+              {
+                "id": "isco-7119",
+                "label": "7119 - Building Frame and Related Trades Workers Not Elsewhere Classified",
+                "searchQuery": "Building Frame and Related Trades Workers Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-712",
+            "label": "712 - Building Finishers and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7121",
+                "label": "7121 - Roofers",
+                "searchQuery": "Roofers"
+              },
+              {
+                "id": "isco-7122",
+                "label": "7122 - Floor Layers and Tile Setters",
+                "searchQuery": "Floor Layers and Tile Setters"
+              },
+              {
+                "id": "isco-7123",
+                "label": "7123 - Plasterers",
+                "searchQuery": "Plasterers"
+              },
+              {
+                "id": "isco-7124",
+                "label": "7124 - Insulation Workers",
+                "searchQuery": "Insulation Workers"
+              },
+              {
+                "id": "isco-7125",
+                "label": "7125 - Glaziers",
+                "searchQuery": "Glaziers"
+              },
+              {
+                "id": "isco-7126",
+                "label": "7126 - Plumbers and Pipe Fitters",
+                "searchQuery": "Plumbers and Pipe Fitters"
+              },
+              {
+                "id": "isco-7127",
+                "label": "7127 - Air Conditioning and Refrigeration Mechanics",
+                "searchQuery": "Air Conditioning and Refrigeration Mechanics"
+              }
+            ]
+          },
+          {
+            "id": "isco-713",
+            "label": "713 - Painters, Building Structure Cleaners and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7131",
+                "label": "7131 - Painters and Related Workers",
+                "searchQuery": "Painters and Related Workers"
+              },
+              {
+                "id": "isco-7132",
+                "label": "7132 - Spray Painters and Varnishers",
+                "searchQuery": "Spray Painters and Varnishers"
+              },
+              {
+                "id": "isco-7133",
+                "label": "7133 - Building Structure Cleaners",
+                "searchQuery": "Building Structure Cleaners"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-72",
+        "label": "72 - Metal, Machinery and Related Trades Workers",
+        "children": [
+          {
+            "id": "isco-721",
+            "label": "721 - Sheet and Structural Metal Workers, Moulders and Welders, and Related Workers",
+            "children": [
+              {
+                "id": "isco-7211",
+                "label": "7211 - Metal Moulders and Coremakers",
+                "searchQuery": "Metal Moulders and Coremakers"
+              },
+              {
+                "id": "isco-7212",
+                "label": "7212 - Welders and Flame Cutters",
+                "searchQuery": "Welders and Flame Cutters"
+              },
+              {
+                "id": "isco-7213",
+                "label": "7213 - Sheet Metal Workers",
+                "searchQuery": "Sheet Metal Workers"
+              },
+              {
+                "id": "isco-7214",
+                "label": "7214 - Structural Metal Preparers and Erectors",
+                "searchQuery": "Structural Metal Preparers and Erectors"
+              },
+              {
+                "id": "isco-7215",
+                "label": "7215 - Riggers and Cable Splicers",
+                "searchQuery": "Riggers and Cable Splicers"
+              }
+            ]
+          },
+          {
+            "id": "isco-722",
+            "label": "722 - Blacksmiths, Toolmakers and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7221",
+                "label": "7221 - Blacksmiths, Hammersmiths and Forging Press Workers",
+                "searchQuery": "Blacksmiths, Hammersmiths and Forging Press Workers"
+              },
+              {
+                "id": "isco-7222",
+                "label": "7222 - Toolmakers and Related Workers",
+                "searchQuery": "Toolmakers and Related Workers"
+              },
+              {
+                "id": "isco-7223",
+                "label": "7223 - Metal Working Machine Tool Setters and  Operators",
+                "searchQuery": "Metal Working Machine Tool Setters and  Operators"
+              },
+              {
+                "id": "isco-7224",
+                "label": "7224 - Metal Polishers, Wheel Grinders and Tool Sharpeners",
+                "searchQuery": "Metal Polishers, Wheel Grinders and Tool Sharpeners"
+              }
+            ]
+          },
+          {
+            "id": "isco-723",
+            "label": "723 - Machinery Mechanics and Repairers",
+            "children": [
+              {
+                "id": "isco-7231",
+                "label": "7231 - Motor Vehicle Mechanics and Repairers",
+                "searchQuery": "Motor Vehicle Mechanics and Repairers"
+              },
+              {
+                "id": "isco-7232",
+                "label": "7232 - Aircraft Engine Mechanics and Repairers",
+                "searchQuery": "Aircraft Engine Mechanics and Repairers"
+              },
+              {
+                "id": "isco-7233",
+                "label": "7233 - Agricultural and Industrial Machinery Mechanics and Repairers",
+                "searchQuery": "Agricultural and Industrial Machinery Mechanics and Repairers"
+              },
+              {
+                "id": "isco-7234",
+                "label": "7234 - Bicycle and Related Repairers",
+                "searchQuery": "Bicycle and Related Repairers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-73",
+        "label": "73 - Handicraft and Printing Workers",
+        "children": [
+          {
+            "id": "isco-731",
+            "label": "731 - Handicraft Workers",
+            "children": [
+              {
+                "id": "isco-7311",
+                "label": "7311 - Precision-instrument Makers and Repairers",
+                "searchQuery": "Precision-instrument Makers and Repairers"
+              },
+              {
+                "id": "isco-7312",
+                "label": "7312 - Musical Instrument Makers and Tuners",
+                "searchQuery": "Musical Instrument Makers and Tuners"
+              },
+              {
+                "id": "isco-7313",
+                "label": "7313 - Jewellery and Precious Metal Workers",
+                "searchQuery": "Jewellery and Precious Metal Workers"
+              },
+              {
+                "id": "isco-7314",
+                "label": "7314 - Potters and Related Workers",
+                "searchQuery": "Potters and Related Workers"
+              },
+              {
+                "id": "isco-7315",
+                "label": "7315 - Glass Makers, Cutters, Grinders and Finishers",
+                "searchQuery": "Glass Makers, Cutters, Grinders and Finishers"
+              },
+              {
+                "id": "isco-7316",
+                "label": "7316 - Sign Writers, Decorative Painters, Engravers and Etchers",
+                "searchQuery": "Sign Writers, Decorative Painters, Engravers and Etchers"
+              },
+              {
+                "id": "isco-7317",
+                "label": "7317 - Handicraft Workers in Wood, Basketry and Related Materials",
+                "searchQuery": "Handicraft Workers in Wood, Basketry and Related Materials"
+              },
+              {
+                "id": "isco-7318",
+                "label": "7318 - Handicraft Workers in Textile, Leather and Related Materials",
+                "searchQuery": "Handicraft Workers in Textile, Leather and Related Materials"
+              },
+              {
+                "id": "isco-7319",
+                "label": "7319 - Handicraft Workers Not Elsewhere Classified",
+                "searchQuery": "Handicraft Workers Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-732",
+            "label": "732 - Printing Trades Workers",
+            "children": [
+              {
+                "id": "isco-7321",
+                "label": "7321 - Pre-press Technicians",
+                "searchQuery": "Pre-press Technicians"
+              },
+              {
+                "id": "isco-7322",
+                "label": "7322 - Printers",
+                "searchQuery": "Printers"
+              },
+              {
+                "id": "isco-7323",
+                "label": "7323 - Print Finishing and Binding Workers",
+                "searchQuery": "Print Finishing and Binding Workers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-74",
+        "label": "74 - Electrical and Electronics Trades Workers",
+        "children": [
+          {
+            "id": "isco-741",
+            "label": "741 - Electrical Equipment Installers and Repairers",
+            "children": [
+              {
+                "id": "isco-7411",
+                "label": "7411 - Building and Related Electricians",
+                "searchQuery": "Building and Related Electricians"
+              },
+              {
+                "id": "isco-7412",
+                "label": "7412 - Electrical Mechanics and Fitters",
+                "searchQuery": "Electrical Mechanics and Fitters"
+              },
+              {
+                "id": "isco-7413",
+                "label": "7413 - Electrical Line Installers and Repairers",
+                "searchQuery": "Electrical Line Installers and Repairers"
+              }
+            ]
+          },
+          {
+            "id": "isco-742",
+            "label": "742 - Electronics and Telecommunications Installers and Repairers",
+            "children": [
+              {
+                "id": "isco-7421",
+                "label": "7421 - Electronics Mechanics and Servicers",
+                "searchQuery": "Electronics Mechanics and Servicers"
+              },
+              {
+                "id": "isco-7422",
+                "label": "7422 - Information and Communications Technology Installers and Servicers",
+                "searchQuery": "Information and Communications Technology Installers and Servicers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-75",
+        "label": "75 - Food Processing, Woodworking, Garment and Other Craft and Related Trades Workers",
+        "children": [
+          {
+            "id": "isco-751",
+            "label": "751 - Food Processing and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7511",
+                "label": "7511 - Butchers, Fishmongers and Related Food Preparers",
+                "searchQuery": "Butchers, Fishmongers and Related Food Preparers"
+              },
+              {
+                "id": "isco-7512",
+                "label": "7512 - Bakers, Pastry-cooks and Confectionery Makers",
+                "searchQuery": "Bakers, Pastry-cooks and Confectionery Makers"
+              },
+              {
+                "id": "isco-7513",
+                "label": "7513 - Dairy Products Makers",
+                "searchQuery": "Dairy Products Makers"
+              },
+              {
+                "id": "isco-7514",
+                "label": "7514 - Fruit, Vegetable and Related Preservers",
+                "searchQuery": "Fruit, Vegetable and Related Preservers"
+              },
+              {
+                "id": "isco-7515",
+                "label": "7515 - Food and Beverage Tasters and Graders",
+                "searchQuery": "Food and Beverage Tasters and Graders"
+              },
+              {
+                "id": "isco-7516",
+                "label": "7516 - Tobacco Preparers and Tobacco Products Makers",
+                "searchQuery": "Tobacco Preparers and Tobacco Products Makers"
+              }
+            ]
+          },
+          {
+            "id": "isco-752",
+            "label": "752 - Wood Treaters, Cabinet-makers and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7521",
+                "label": "7521 - Wood Treaters",
+                "searchQuery": "Wood Treaters"
+              },
+              {
+                "id": "isco-7522",
+                "label": "7522 - Cabinet-makers and Related Workers",
+                "searchQuery": "Cabinet-makers and Related Workers"
+              },
+              {
+                "id": "isco-7523",
+                "label": "7523 - Woodworking Machine Tool Setters and Operators",
+                "searchQuery": "Woodworking Machine Tool Setters and Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-753",
+            "label": "753 - Garment and Related Trades Workers",
+            "children": [
+              {
+                "id": "isco-7531",
+                "label": "7531 - Tailors, Dressmakers, Furriers and Hatters",
+                "searchQuery": "Tailors, Dressmakers, Furriers and Hatters"
+              },
+              {
+                "id": "isco-7532",
+                "label": "7532 - Garment and Related Patternmakers and Cutters",
+                "searchQuery": "Garment and Related Patternmakers and Cutters"
+              },
+              {
+                "id": "isco-7533",
+                "label": "7533 - Sewing, Embroidery and Related Workers",
+                "searchQuery": "Sewing, Embroidery and Related Workers"
+              },
+              {
+                "id": "isco-7534",
+                "label": "7534 - Upholsterers and Related Workers",
+                "searchQuery": "Upholsterers and Related Workers"
+              },
+              {
+                "id": "isco-7535",
+                "label": "7535 - Pelt Dressers, Tanners and Fellmongers",
+                "searchQuery": "Pelt Dressers, Tanners and Fellmongers"
+              },
+              {
+                "id": "isco-7536",
+                "label": "7536 - Shoemakers and Related Workers",
+                "searchQuery": "Shoemakers and Related Workers"
+              }
+            ]
+          },
+          {
+            "id": "isco-754",
+            "label": "754 - Other Craft and Related Workers",
+            "children": [
+              {
+                "id": "isco-7541",
+                "label": "7541 - Underwater Divers",
+                "searchQuery": "Underwater Divers"
+              },
+              {
+                "id": "isco-7542",
+                "label": "7542 - Shotfirers and Blasters",
+                "searchQuery": "Shotfirers and Blasters"
+              },
+              {
+                "id": "isco-7543",
+                "label": "7543 - Product Graders and Testers (except Foods and Beverages)",
+                "searchQuery": "Product Graders and Testers (except Foods and Beverages)"
+              },
+              {
+                "id": "isco-7544",
+                "label": "7544 - Fumigators and Other Pest and Weed Controllers",
+                "searchQuery": "Fumigators and Other Pest and Weed Controllers"
+              },
+              {
+                "id": "isco-7549",
+                "label": "7549 - Craft and Related Workers not Elsewhere Classified",
+                "searchQuery": "Craft and Related Workers not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-8",
+    "label": "8 - Plant and Machine Operators, and Assemblers",
+    "children": [
+      {
+        "id": "isco-81",
+        "label": "81 - Stationary Plant and Machine Operators",
+        "children": [
+          {
+            "id": "isco-811",
+            "label": "811 - Mining and Mineral Processing Plant Operators",
+            "children": [
+              {
+                "id": "isco-8111",
+                "label": "8111 - Miners and Quarriers",
+                "searchQuery": "Miners and Quarriers"
+              },
+              {
+                "id": "isco-8112",
+                "label": "8112 - Mineral and Stone Processing Plant Operators",
+                "searchQuery": "Mineral and Stone Processing Plant Operators"
+              },
+              {
+                "id": "isco-8113",
+                "label": "8113 - Well Drillers and Borers and Related Workers",
+                "searchQuery": "Well Drillers and Borers and Related Workers"
+              },
+              {
+                "id": "isco-8114",
+                "label": "8114 - Cement, Stone and Other Mineral Products Machine Operators",
+                "searchQuery": "Cement, Stone and Other Mineral Products Machine Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-812",
+            "label": "812 - Metal Processing and Finishing Plant Operators",
+            "children": [
+              {
+                "id": "isco-8121",
+                "label": "8121 - Metal Processing Plant Operators",
+                "searchQuery": "Metal Processing Plant Operators"
+              },
+              {
+                "id": "isco-8122",
+                "label": "8122 - Metal Finishing, Plating and Coating Machine Operators",
+                "searchQuery": "Metal Finishing, Plating and Coating Machine Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-813",
+            "label": "813 - Chemical and Photographic Products Plant and Machine Operators",
+            "children": [
+              {
+                "id": "isco-8131",
+                "label": "8131 - Chemical Products Plant and Machine Operators",
+                "searchQuery": "Chemical Products Plant and Machine Operators"
+              },
+              {
+                "id": "isco-8132",
+                "label": "8132 - Photographic Products Machine Operators",
+                "searchQuery": "Photographic Products Machine Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-814",
+            "label": "814 - Rubber, Plastic and Paper Products Machine Operators",
+            "children": [
+              {
+                "id": "isco-8141",
+                "label": "8141 - Rubber Products Machine Operators",
+                "searchQuery": "Rubber Products Machine Operators"
+              },
+              {
+                "id": "isco-8142",
+                "label": "8142 - Plastic Products Machine Operators",
+                "searchQuery": "Plastic Products Machine Operators"
+              },
+              {
+                "id": "isco-8143",
+                "label": "8143 - Paper Products Machine Operators",
+                "searchQuery": "Paper Products Machine Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-815",
+            "label": "815 - Textile, Fur and Leather Products Machine Operators",
+            "children": [
+              {
+                "id": "isco-8151",
+                "label": "8151 - Fibre Preparing, Spinning and Winding Machine Operators",
+                "searchQuery": "Fibre Preparing, Spinning and Winding Machine Operators"
+              },
+              {
+                "id": "isco-8152",
+                "label": "8152 - Weaving and Knitting Machine Operators",
+                "searchQuery": "Weaving and Knitting Machine Operators"
+              },
+              {
+                "id": "isco-8153",
+                "label": "8153 - Sewing Machine Operators",
+                "searchQuery": "Sewing Machine Operators"
+              },
+              {
+                "id": "isco-8154",
+                "label": "8154 - Bleaching, Dyeing and Fabric Cleaning Machine Operators",
+                "searchQuery": "Bleaching, Dyeing and Fabric Cleaning Machine Operators"
+              },
+              {
+                "id": "isco-8155",
+                "label": "8155 - Fur and Leather Preparing Machine Operators",
+                "searchQuery": "Fur and Leather Preparing Machine Operators"
+              },
+              {
+                "id": "isco-8156",
+                "label": "8156 - Shoemaking and Related Machine Operators",
+                "searchQuery": "Shoemaking and Related Machine Operators"
+              },
+              {
+                "id": "isco-8157",
+                "label": "8157 - Laundry Machine Operators",
+                "searchQuery": "Laundry Machine Operators"
+              },
+              {
+                "id": "isco-8159",
+                "label": "8159 - Textile, Fur and Leather Products Machine Operators Not Elsewhere Classified",
+                "searchQuery": "Textile, Fur and Leather Products Machine Operators Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-816",
+            "label": "816 - Food and Related Products Machine Operators",
+            "children": [
+              {
+                "id": "isco-8160",
+                "label": "8160 - Food and Related Products Machine Operators",
+                "searchQuery": "Food and Related Products Machine Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-817",
+            "label": "817 - Wood Processing and Papermaking Plant Operators",
+            "children": [
+              {
+                "id": "isco-8171",
+                "label": "8171 - Pulp and Papermaking Plant Operators",
+                "searchQuery": "Pulp and Papermaking Plant Operators"
+              },
+              {
+                "id": "isco-8172",
+                "label": "8172 - Wood Processing Plant Operators",
+                "searchQuery": "Wood Processing Plant Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-818",
+            "label": "818 - Other Stationary Plant and Machine Operators",
+            "children": [
+              {
+                "id": "isco-8181",
+                "label": "8181 - Glass and Ceramics Plant Operators",
+                "searchQuery": "Glass and Ceramics Plant Operators"
+              },
+              {
+                "id": "isco-8182",
+                "label": "8182 - Steam Engine and Boiler Operators",
+                "searchQuery": "Steam Engine and Boiler Operators"
+              },
+              {
+                "id": "isco-8183",
+                "label": "8183 - Packing, Bottling and Labelling Machine Operators",
+                "searchQuery": "Packing, Bottling and Labelling Machine Operators"
+              },
+              {
+                "id": "isco-8189",
+                "label": "8189 - Stationary Plant and Machine Operators Not Elsewhere Classified",
+                "searchQuery": "Stationary Plant and Machine Operators Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-82",
+        "label": "82 - Assemblers",
+        "children": [
+          {
+            "id": "isco-821",
+            "label": "821 - Assemblers",
+            "children": [
+              {
+                "id": "isco-8211",
+                "label": "8211 - Mechanical Machinery Assemblers",
+                "searchQuery": "Mechanical Machinery Assemblers"
+              },
+              {
+                "id": "isco-8212",
+                "label": "8212 - Electrical and Electronic Equipment Assemblers",
+                "searchQuery": "Electrical and Electronic Equipment Assemblers"
+              },
+              {
+                "id": "isco-8219",
+                "label": "8219 - Assemblers Not Elsewhere Classified",
+                "searchQuery": "Assemblers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-83",
+        "label": "83 - Drivers and Mobile Plant Operators",
+        "children": [
+          {
+            "id": "isco-831",
+            "label": "831 - Locomotive Engine Drivers and Related Workers",
+            "children": [
+              {
+                "id": "isco-8311",
+                "label": "8311 - Locomotive Engine Drivers",
+                "searchQuery": "Locomotive Engine Drivers"
+              },
+              {
+                "id": "isco-8312",
+                "label": "8312 - Railway Brake, Signal and Switch Operators",
+                "searchQuery": "Railway Brake, Signal and Switch Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-832",
+            "label": "832 - Car, Van and Motorcycle Drivers",
+            "children": [
+              {
+                "id": "isco-8321",
+                "label": "8321 - Motorcycle Drivers",
+                "searchQuery": "Motorcycle Drivers"
+              },
+              {
+                "id": "isco-8322",
+                "label": "8322 - Car, Taxi and Van Drivers",
+                "searchQuery": "Car, Taxi and Van Drivers"
+              }
+            ]
+          },
+          {
+            "id": "isco-833",
+            "label": "833 - Heavy Truck and Bus Drivers",
+            "children": [
+              {
+                "id": "isco-8331",
+                "label": "8331 - Bus and Tram Drivers",
+                "searchQuery": "Bus and Tram Drivers"
+              },
+              {
+                "id": "isco-8332",
+                "label": "8332 - Heavy Truck and Lorry Drivers",
+                "searchQuery": "Heavy Truck and Lorry Drivers"
+              }
+            ]
+          },
+          {
+            "id": "isco-834",
+            "label": "834 - Mobile Plant Operators",
+            "children": [
+              {
+                "id": "isco-8341",
+                "label": "8341 - Mobile Farm and Forestry Plant Operators",
+                "searchQuery": "Mobile Farm and Forestry Plant Operators"
+              },
+              {
+                "id": "isco-8342",
+                "label": "8342 - Earthmoving and Related Plant Operators",
+                "searchQuery": "Earthmoving and Related Plant Operators"
+              },
+              {
+                "id": "isco-8343",
+                "label": "8343 - Crane, hoist and related plant operators",
+                "searchQuery": "Crane, hoist and related plant operators"
+              },
+              {
+                "id": "isco-8344",
+                "label": "8344 - Lifting Truck Operators",
+                "searchQuery": "Lifting Truck Operators"
+              }
+            ]
+          },
+          {
+            "id": "isco-835",
+            "label": "835 - Ships' Deck Crews and Related Workers",
+            "children": [
+              {
+                "id": "isco-8350",
+                "label": "8350 - Ships' Deck Crews and Related Workers",
+                "searchQuery": "Ships' Deck Crews and Related Workers"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-9",
+    "label": "9 - Elementary Occupations",
+    "children": [
+      {
+        "id": "isco-91",
+        "label": "91 - Cleaners and Helpers",
+        "children": [
+          {
+            "id": "isco-911",
+            "label": "911 - Domestic, Hotel and Office Cleaners and Helpers",
+            "children": [
+              {
+                "id": "isco-9111",
+                "label": "9111 - Domestic Cleaners and Helpers",
+                "searchQuery": "Domestic Cleaners and Helpers"
+              },
+              {
+                "id": "isco-9112",
+                "label": "9112 - Cleaners and Helpers in Offices, Hotels and Other Establishments",
+                "searchQuery": "Cleaners and Helpers in Offices, Hotels and Other Establishments"
+              }
+            ]
+          },
+          {
+            "id": "isco-912",
+            "label": "912 - Vehicle, Window, Laundry and Other Hand Cleaning Workers",
+            "children": [
+              {
+                "id": "isco-9121",
+                "label": "9121 - Hand Launderers and Pressers",
+                "searchQuery": "Hand Launderers and Pressers"
+              },
+              {
+                "id": "isco-9122",
+                "label": "9122 - Vehicle Cleaners",
+                "searchQuery": "Vehicle Cleaners"
+              },
+              {
+                "id": "isco-9123",
+                "label": "9123 - Window Cleaners",
+                "searchQuery": "Window Cleaners"
+              },
+              {
+                "id": "isco-9129",
+                "label": "9129 - Other Cleaning Workers",
+                "searchQuery": "Other Cleaning Workers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-92",
+        "label": "92 - Agricultural, Forestry and Fishery Labourers",
+        "children": [
+          {
+            "id": "isco-921",
+            "label": "921 - Agricultural, Forestry and Fishery Labourers",
+            "children": [
+              {
+                "id": "isco-9211",
+                "label": "9211 - Crop Farm Labourers",
+                "searchQuery": "Crop Farm Labourers"
+              },
+              {
+                "id": "isco-9212",
+                "label": "9212 - Livestock Farm Labourers",
+                "searchQuery": "Livestock Farm Labourers"
+              },
+              {
+                "id": "isco-9213",
+                "label": "9213 - Mixed Crop and Livestock Farm Labourers",
+                "searchQuery": "Mixed Crop and Livestock Farm Labourers"
+              },
+              {
+                "id": "isco-9214",
+                "label": "9214 - Garden and Horticultural Labourers",
+                "searchQuery": "Garden and Horticultural Labourers"
+              },
+              {
+                "id": "isco-9215",
+                "label": "9215 - Forestry Labourers",
+                "searchQuery": "Forestry Labourers"
+              },
+              {
+                "id": "isco-9216",
+                "label": "9216 - Fishery and Aquaculture Labourers",
+                "searchQuery": "Fishery and Aquaculture Labourers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-93",
+        "label": "93 - Labourers in Mining, Construction, Manufacturing and Transport",
+        "children": [
+          {
+            "id": "isco-931",
+            "label": "931 - Mining and Construction Labourers",
+            "children": [
+              {
+                "id": "isco-9311",
+                "label": "9311 - Mining and Quarrying Labourers",
+                "searchQuery": "Mining and Quarrying Labourers"
+              },
+              {
+                "id": "isco-9312",
+                "label": "9312 - Civil Engineering Labourers",
+                "searchQuery": "Civil Engineering Labourers"
+              },
+              {
+                "id": "isco-9313",
+                "label": "9313 - Building Construction Labourers",
+                "searchQuery": "Building Construction Labourers"
+              }
+            ]
+          },
+          {
+            "id": "isco-932",
+            "label": "932 - Manufacturing Labourers",
+            "children": [
+              {
+                "id": "isco-9321",
+                "label": "9321 - Hand Packers",
+                "searchQuery": "Hand Packers"
+              },
+              {
+                "id": "isco-9329",
+                "label": "9329 - Manufacturing Labourers Not Elsewhere Classified",
+                "searchQuery": "Manufacturing Labourers Not Elsewhere Classified"
+              }
+            ]
+          },
+          {
+            "id": "isco-933",
+            "label": "933 - Transport and Storage Labourers",
+            "children": [
+              {
+                "id": "isco-9331",
+                "label": "9331 - Hand and Pedal Vehicle Drivers",
+                "searchQuery": "Hand and Pedal Vehicle Drivers"
+              },
+              {
+                "id": "isco-9332",
+                "label": "9332 - Drivers of Animal-drawn Vehicles and Machinery",
+                "searchQuery": "Drivers of Animal-drawn Vehicles and Machinery"
+              },
+              {
+                "id": "isco-9333",
+                "label": "9333 - Freight Handlers",
+                "searchQuery": "Freight Handlers"
+              },
+              {
+                "id": "isco-9334",
+                "label": "9334 - Shelf Fillers",
+                "searchQuery": "Shelf Fillers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-94",
+        "label": "94 - Food Preparation Assistants",
+        "children": [
+          {
+            "id": "isco-941",
+            "label": "941 - Food Preparation Assistants",
+            "children": [
+              {
+                "id": "isco-9411",
+                "label": "9411 - Fast Food Preparers",
+                "searchQuery": "Fast Food Preparers"
+              },
+              {
+                "id": "isco-9412",
+                "label": "9412 - Kitchen Helpers",
+                "searchQuery": "Kitchen Helpers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-95",
+        "label": "95 - Street and Related Sales and Service Workers",
+        "children": [
+          {
+            "id": "isco-951",
+            "label": "951 - Street and Related Service Workers",
+            "children": [
+              {
+                "id": "isco-9510",
+                "label": "9510 - Street and Related Service Workers",
+                "searchQuery": "Street and Related Service Workers"
+              }
+            ]
+          },
+          {
+            "id": "isco-952",
+            "label": "952 - Street Vendors (excluding Food)",
+            "children": [
+              {
+                "id": "isco-9520",
+                "label": "9520 - Street Vendors (excluding Food)",
+                "searchQuery": "Street Vendors (excluding Food)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-96",
+        "label": "96 - Refuse Workers and Other Elementary Workers",
+        "children": [
+          {
+            "id": "isco-961",
+            "label": "961 - Refuse Workers",
+            "children": [
+              {
+                "id": "isco-9611",
+                "label": "9611 - Garbage and Recycling Collectors",
+                "searchQuery": "Garbage and Recycling Collectors"
+              },
+              {
+                "id": "isco-9612",
+                "label": "9612 - Refuse Sorters",
+                "searchQuery": "Refuse Sorters"
+              },
+              {
+                "id": "isco-9613",
+                "label": "9613 - Sweepers and Related Labourers",
+                "searchQuery": "Sweepers and Related Labourers"
+              }
+            ]
+          },
+          {
+            "id": "isco-962",
+            "label": "962 - Other Elementary Workers",
+            "children": [
+              {
+                "id": "isco-9621",
+                "label": "9621 - Messengers, Package Deliverers and Luggage Porters",
+                "searchQuery": "Messengers, Package Deliverers and Luggage Porters"
+              },
+              {
+                "id": "isco-9622",
+                "label": "9622 - Odd Job Persons",
+                "searchQuery": "Odd Job Persons"
+              },
+              {
+                "id": "isco-9623",
+                "label": "9623 - Meter Readers and Vending-machine Collectors",
+                "searchQuery": "Meter Readers and Vending-machine Collectors"
+              },
+              {
+                "id": "isco-9624",
+                "label": "9624 - Water and Firewood Collectors",
+                "searchQuery": "Water and Firewood Collectors"
+              },
+              {
+                "id": "isco-9629",
+                "label": "9629 - Elementary Workers Not Elsewhere Classified",
+                "searchQuery": "Elementary Workers Not Elsewhere Classified"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "isco-0",
+    "label": "0 - Armed Forces Occupations",
+    "children": [
+      {
+        "id": "isco-01",
+        "label": "01 - Commissioned Armed forces Officers",
+        "children": [
+          {
+            "id": "isco-011",
+            "label": "011 - Commissioned Armed Forces Officers",
+            "children": [
+              {
+                "id": "isco-0110",
+                "label": "0110 - Commissioned Armed Forces Officers",
+                "searchQuery": "Commissioned Armed Forces Officers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-02",
+        "label": "02 - Non-commissioned Armed Forces Officers",
+        "children": [
+          {
+            "id": "isco-021",
+            "label": "021 - Non-commissioned Armed Forces Officers",
+            "children": [
+              {
+                "id": "isco-0210",
+                "label": "0210 - Non-commissioned Armed Forces Officers",
+                "searchQuery": "Non-commissioned Armed Forces Officers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "isco-03",
+        "label": "03 - Armed Forces Occupations, Other Ranks",
+        "children": [
+          {
+            "id": "isco-031",
+            "label": "031 - Armed Forces Occupations, Other Ranks",
+            "children": [
+              {
+                "id": "isco-0310",
+                "label": "0310 - Armed Forces Occupations, Other Ranks",
+                "searchQuery": "Armed Forces Occupations, Other Ranks"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

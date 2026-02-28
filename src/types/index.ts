@@ -90,6 +90,7 @@ export interface AppState {
   selectedNodeId: string | null;
   correctedQuery: string | null;
   progress: ProgressStep | null;
+  triggerSearch: string | null;
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -101,5 +102,6 @@ export interface AppState {
   setSelectedNodeId: (id: string | null) => void;
   setCorrectedQuery: (q: string | null) => void;
   setProgress: (p: ProgressStep | null) => void;
+  setTriggerSearch: (q: string | null) => void;
   reset: () => void;
 }

@@ -13,6 +13,7 @@ export const useAppStore = create<AppState>((set) => ({
   selectedNodeId: null,
   correctedQuery: null,
   progress: null,
+  triggerSearch: null,
 
   setQuery: (query: string) => set({ query }),
   setMapData: (data: IndustryMap | null) => set({ mapData: data }),
@@ -25,6 +26,7 @@ export const useAppStore = create<AppState>((set) => ({
   setSelectedNodeId: (id: string | null) => set({ selectedNodeId: id }),
   setCorrectedQuery: (q: string | null) => set({ correctedQuery: q }),
   setProgress: (p: ProgressStep | null) => set({ progress: p }),
+  setTriggerSearch: (q: string | null) => set({ triggerSearch: q }),
   reset: () =>
     set({
       query: "",
@@ -35,5 +37,6 @@ export const useAppStore = create<AppState>((set) => ({
       error: null,
       correctedQuery: null,
       progress: null,
+      triggerSearch: null,
     }),
 }));
