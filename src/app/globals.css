@@ -81,12 +81,6 @@ button, a, [role="button"], .react-flow__node {
   transition: stroke 200ms ease, stroke-width 200ms ease;
 }
 
-/* Highlighted edges */
-.react-flow__edge.highlighted .react-flow__edge-path {
-  stroke: var(--accent);
-  stroke-width: 2.2px;
-}
-
 /* React Flow minimap */
 .react-flow__minimap {
   border: 1px solid var(--border) !important;

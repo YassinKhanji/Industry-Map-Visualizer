@@ -32,6 +32,7 @@ function NodeCard({ data, id }: NodeProps) {
   const nodeData = data as unknown as FlowNodeData;
   const darkMode = useAppStore((s) => s.darkMode);
   const setSelectedNodeId = useAppStore((s) => s.setSelectedNodeId);
+  const setHoveredNodeId = useAppStore((s) => s.setHoveredNodeId);
   const accentColor = CATEGORY_ACCENTS[nodeData.category] || "#2563eb";
   const isLeaf = !nodeData.hasChildren;
 
@@ -44,11 +45,16 @@ function NodeCard({ data, id }: NodeProps) {
     [id, setSelectedNodeId]
   );
 
+  const handleMouseEnter = useCallback(() => setHoveredNodeId(id), [id, setHoveredNodeId]);
+  const handleMouseLeave = useCallback(() => setHoveredNodeId(null), [setHoveredNodeId]);
+
   return (
     <div
       className="group relative select-none"
       style={{ minWidth: 140, cursor: "pointer" }}
       onContextMenu={handleContextMenu}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <Handle
         type="target"

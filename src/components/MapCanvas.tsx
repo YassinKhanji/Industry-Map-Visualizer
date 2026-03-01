@@ -25,6 +25,7 @@ function MapCanvasInner() {
   const autoExpand = useAppStore((s) => s.autoExpand);
   const darkMode = useAppStore((s) => s.darkMode);
   const selectedNodeId = useAppStore((s) => s.selectedNodeId);
+  const hoveredNodeId = useAppStore((s) => s.hoveredNodeId);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
@@ -68,17 +69,26 @@ function MapCanvasInner() {
     }, 50);
   }, [mapData, expandedIds, autoExpand, totalNodesAtDepth2, setNodes, setEdges, fitView]);
 
-  // Edge highlighting: add 'highlighted' class to edges connected to selectedNodeId
+  // Edge highlighting: color edges with the accent color of the active (hovered or selected) node
   const styledEdges = useMemo(() => {
-    if (!selectedNodeId) return edges;
-    return edges.map((e) => ({
-      ...e,
-      className:
-        e.source === selectedNodeId || e.target === selectedNodeId
-          ? "highlighted"
-          : "",
-    }));
-  }, [edges, selectedNodeId]);
+    const activeId = hoveredNodeId || selectedNodeId;
+    if (!activeId) return edges;
+
+    // Look up the category of the active node to get its accent color
+    const activeNode = nodes.find((n) => n.id === activeId);
+    const activeCategory = (activeNode?.data as unknown as FlowNodeData)?.category;
+    const accent = CATEGORY_ACCENTS[activeCategory] || "#2563eb";
+
+    return edges.map((e) => {
+      const isConnected = e.source === activeId || e.target === activeId;
+      if (!isConnected) return e;
+      return {
+        ...e,
+        style: { ...e.style, stroke: accent, strokeWidth: 2.2 },
+        zIndex: 10,
+      };
+    });
+  }, [edges, nodes, hoveredNodeId, selectedNodeId]);
 
   // Handle node click: toggle expand/collapse
   const onNodeClick: NodeMouseHandler = useCallback(

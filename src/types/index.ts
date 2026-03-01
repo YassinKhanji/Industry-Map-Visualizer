@@ -212,6 +212,7 @@ export interface AppState {
   error: string | null;
   darkMode: boolean;
   selectedNodeId: string | null;
+  hoveredNodeId: string | null;
   correctedQuery: string | null;
   progress: ProgressStep | null;
   triggerSearch: string | null;
@@ -224,6 +225,7 @@ export interface AppState {
   setError: (error: string | null) => void;
   setDarkMode: (dark: boolean) => void;
   setSelectedNodeId: (id: string | null) => void;
+  setHoveredNodeId: (id: string | null) => void;
   setCorrectedQuery: (q: string | null) => void;
   setProgress: (p: ProgressStep | null) => void;
   setTriggerSearch: (q: string | null) => void;
