@@ -566,19 +566,21 @@ export default function DetailPanel() {
         transition: isDragging.current ? "none" : "width 0.25s ease",
       }}
     >
-      {/* Drag handle on left edge */}
+      {/* Drag handle on left edge – full height, wide hit area */}
       <div
         onMouseDown={onMouseDown}
-        className="resize-handle absolute top-0 left-0 h-full z-20"
+        className="resize-handle group absolute top-0 left-[-4px] h-full z-20 flex items-center"
         style={{
-          width: 5,
+          width: 12,
           cursor: "col-resize",
         }}
       >
+        {/* Thin accent line that appears on hover */}
         <div
-          className="resize-indicator absolute top-0 left-0 h-full transition-opacity"
+          className="resize-indicator absolute left-[4px] top-0 h-full transition-opacity"
           style={{
             width: 3,
+            borderRadius: 2,
             background: "var(--accent)",
             opacity: 0,
           }}

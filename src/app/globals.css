@@ -146,6 +146,18 @@ button, a, [role="button"], .react-flow__node {
   opacity: 0.6 !important;
 }
 
+/* Profile match card hover */
+.profile-match-card {
+  position: relative;
+}
+.profile-match-card:hover {
+  filter: brightness(1.25);
+  transform: translateX(2px);
+}
+.profile-match-card:active {
+  transform: scale(0.98);
+}
+
 /* Scrollbar for detail panel */
 .detail-scrollbar::-webkit-scrollbar {
   display: block;

@@ -97,6 +97,7 @@ export function buildFlowGraph(
             type: "default",
             style: { stroke: parentAccent, strokeWidth: 1.5 },
             animated: false,
+            data: { edgeType: "expansion" },
           });
         }
         addNodes(block.subNodes, depth + 1, block.id);
@@ -117,6 +118,7 @@ export function buildFlowGraph(
         type: "default",
         style: { stroke: "var(--edge-dim)", strokeWidth: 1 },
         animated: false,
+        data: { edgeType: "essential" },
       });
     }
   }

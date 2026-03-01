@@ -331,7 +331,7 @@ export default function UserProfilePanel() {
                   setFocusNodeId(m.id);
                   setActiveDetailTab("details");
                 }}
-                className="w-full text-left px-3 py-2.5 rounded-lg transition-all duration-200 text-sm"
+                className="profile-match-card w-full text-left px-3 py-2.5 rounded-lg transition-all duration-200 text-sm"
                 style={{
                   background: isActive
                     ? darkMode ? "rgba(245,158,11,0.18)" : "rgba(245,158,11,0.12)"
@@ -343,9 +343,10 @@ export default function UserProfilePanel() {
                     ? "0 0 8px rgba(245,158,11,0.2)"
                     : "none",
                   cursor: "pointer",
+                  display: "block",
                 }}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 pointer-events-none">
                   <span
                     className="shrink-0 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full"
                     style={{
@@ -361,9 +362,18 @@ export default function UserProfilePanel() {
                   >
                     {m.id}
                   </span>
+                  {/* Arrow indicator */}
+                  <svg
+                    className="ml-auto shrink-0 opacity-50"
+                    width="12" height="12" viewBox="0 0 16 16" fill="none"
+                    stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                    style={{ color: darkMode ? "#fbbf24" : "#d97706" }}
+                  >
+                    <path d="M6 3l5 5-5 5" />
+                  </svg>
                 </div>
                 <p
-                  className="text-[11px] mt-1 ml-7 leading-relaxed"
+                  className="text-[11px] mt-1 ml-7 leading-relaxed pointer-events-none"
                   style={{ color: muted }}
                 >
                   {m.reason}

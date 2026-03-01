@@ -14,7 +14,7 @@ import type { Node, Edge, NodeMouseHandler } from "@xyflow/react";
 import NodeCard, { CATEGORY_ACCENTS } from "./NodeCard";
 import AutoExpandToggle from "./AutoExpandToggle";
 import DetailPanel from "./DetailPanel";
-import { buildFlowGraph, countNodesAtDepth, getIdsToDepth } from "@/lib/graphLayout";
+import { buildFlowGraph, getIdsToDepth } from "@/lib/graphLayout";
 import { useAppStore } from "@/lib/store";
 import type { FlowNodeData, IndustryBlock } from "@/types";
 
@@ -34,7 +34,6 @@ function findBlockById(nodes: IndustryBlock[], id: string): IndustryBlock | unde
 
 function MapCanvasInner() {
   const mapData = useAppStore((s) => s.mapData);
-  const autoExpand = useAppStore((s) => s.autoExpand);
   const darkMode = useAppStore((s) => s.darkMode);
   const selectedNodeId = useAppStore((s) => s.selectedNodeId);
   const hoveredNodeId = useAppStore((s) => s.hoveredNodeId);
@@ -46,13 +45,7 @@ function MapCanvasInner() {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const { fitView, getNode, setCenter } = useReactFlow();
 
-  // Calculate total nodes at depth 2 for the auto-expand guard
-  const totalNodesAtDepth2 = useMemo(() => {
-    if (!mapData) return 0;
-    return countNodesAtDepth(mapData.rootNodes, 2);
-  }, [mapData]);
-
-  // Build graph when mapData, expandedIds, or autoExpand changes
+  // Build graph when mapData or expandedIds changes
   useEffect(() => {
     if (!mapData) {
       setNodes([]);
@@ -60,18 +53,9 @@ function MapCanvasInner() {
       return;
     }
 
-    // Determine which nodes should be expanded
-    let activeExpandedIds = expandedIds;
-
-    if (autoExpand && totalNodesAtDepth2 <= 150) {
-      // Auto-expand to depth 2
-      const autoIds = getIdsToDepth(mapData.rootNodes, 2);
-      activeExpandedIds = new Set([...expandedIds, ...autoIds]);
-    }
-
     const { nodes: newNodes, edges: newEdges } = buildFlowGraph(
       mapData,
-      activeExpandedIds
+      expandedIds
     );
 
     setNodes(newNodes);
@@ -81,23 +65,39 @@ function MapCanvasInner() {
     setTimeout(() => {
       fitView({ duration: 400, padding: 0.15 });
     }, 50);
-  }, [mapData, expandedIds, autoExpand, totalNodesAtDepth2, setNodes, setEdges, fitView]);
+  }, [mapData, expandedIds, setNodes, setEdges, fitView]);
 
   // Edge highlighting: brighten edges connected to the active (hovered or selected) node
   const styledEdges = useMemo(() => {
-    const activeId = hoveredNodeId || selectedNodeId;
-    if (!activeId) return edges;
-
     const highlightColor = darkMode ? "#ffffff" : "#111827";
 
     return edges.map((e) => {
-      const isConnected = e.source === activeId || e.target === activeId;
-      if (!isConnected) return e;
-      return {
-        ...e,
-        style: { ...e.style, stroke: highlightColor, strokeWidth: 2 },
-        zIndex: 10,
-      };
+      const edgeType = (e.data as Record<string, unknown>)?.edgeType;
+
+      // Hovered node: highlight ALL connected edges
+      if (hoveredNodeId && (e.source === hoveredNodeId || e.target === hoveredNodeId)) {
+        return {
+          ...e,
+          style: { ...e.style, stroke: highlightColor, strokeWidth: 2 },
+          zIndex: 10,
+        };
+      }
+
+      // Selected node: highlight only essential (non-expansion) edges
+      if (
+        selectedNodeId &&
+        !hoveredNodeId &&
+        edgeType === "essential" &&
+        (e.source === selectedNodeId || e.target === selectedNodeId)
+      ) {
+        return {
+          ...e,
+          style: { ...e.style, stroke: highlightColor, strokeWidth: 2 },
+          zIndex: 10,
+        };
+      }
+
+      return e;
     });
   }, [edges, darkMode, hoveredNodeId, selectedNodeId]);
 
@@ -162,6 +162,13 @@ function MapCanvasInner() {
     [mapData, expandedIds, fitView]
   );
 
+  // Expand all: add every node with children to the expanded set
+  const handleExpandAll = useCallback(() => {
+    if (!mapData) return;
+    const allIds = getIdsToDepth(mapData.rootNodes, 100); // large depth = all levels
+    setExpandedIds(allIds);
+  }, [mapData]);
+
   // Collapse all
   const handleCollapseAll = useCallback(() => {
     setExpandedIds(new Set());
@@ -172,7 +179,7 @@ function MapCanvasInner() {
   return (
     <div className="relative w-full h-full">
       <AutoExpandToggle
-        totalNodesAtDepth2={totalNodesAtDepth2}
+        onExpandAll={handleExpandAll}
         onCollapseAll={handleCollapseAll}
       />
       {/* Hint */}
