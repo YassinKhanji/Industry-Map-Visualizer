@@ -2,10 +2,10 @@ import dagre from "@dagrejs/dagre";
 import type { Node, Edge } from "@xyflow/react";
 import type { IndustryMap, IndustryBlock, FlowNodeData } from "@/types";
 
-const NODE_WIDTH = 180;
-const NODE_HEIGHT = 44;
-const RANK_SEP = 80;
-const NODE_SEP = 30;
+const NODE_WIDTH = 190;
+const NODE_HEIGHT = 46;
+const RANK_SEP = 100;
+const NODE_SEP = 35;
 
 /**
  * Convert IndustryMap data into React Flow nodes and edges,
@@ -45,6 +45,13 @@ export function buildFlowGraph(
           label: block.label,
           category: block.category,
           description: block.description,
+          objective: block.objective,
+          revenueModel: block.revenueModel,
+          keyTools: block.keyTools,
+          keyActors: block.keyActors,
+          painPoints: block.painPoints,
+          costDrivers: block.costDrivers,
+          regulatoryNotes: block.regulatoryNotes,
           hasChildren,
           isExpanded,
           depth,

@@ -1,30 +1,54 @@
 import { z } from "zod/v4";
 
-// ─── Category enum ───
+// ─── 8 Universal Value-Chain Categories ───
 export const CategoryEnum = z.enum([
-  "upstream-inputs",
-  "core-production",
+  "capital",
+  "inputs",
+  "production",
   "processing",
   "distribution",
-  "customer-facing",
-  "support-ops",
-  "regulation",
-  "technology",
-  "roles",
-  "alternative-assets",
-  "esg-stewardship",
-  "private-wealth",
-  "systemic-oversight",
+  "customer",
+  "compliance",
+  "infrastructure",
 ]);
 
 export type Category = z.infer<typeof CategoryEnum>;
 
-// ─── IndustryBlock (recursive) ───
+// ─── 9 Economic Engine Archetypes ───
+export const ArchetypeEnum = z.enum([
+  "asset-manufacturing",
+  "asset-aggregation",
+  "labor-leverage-service",
+  "marketplace-coordination",
+  "saas-automation",
+  "infrastructure-utility",
+  "licensing-ip",
+  "brokerage-intermediation",
+  "asset-ownership-leasing",
+]);
+
+export type Archetype = z.infer<typeof ArchetypeEnum>;
+
+// ─── IndustryBlock (recursive, enriched) ───
 export interface IndustryBlock {
   id: string;
   label: string;
   category: Category;
   description?: string;
+  /** What this actor/function is trying to achieve */
+  objective?: string;
+  /** How this actor generates income */
+  revenueModel?: string;
+  /** Real tools, platforms, systems used */
+  keyTools?: string[];
+  /** Known friction points, bottlenecks, inefficiencies */
+  painPoints?: string[];
+  /** Applicable regulations, standards, licenses */
+  regulatoryNotes?: string;
+  /** What drives operating costs */
+  costDrivers?: string[];
+  /** Real company or organization examples */
+  keyActors?: string[];
   subNodes?: IndustryBlock[];
 }
 
@@ -35,6 +59,13 @@ export const IndustryBlockSchema: z.ZodType<IndustryBlock> = z.lazy(() =>
     label: z.string(),
     category: CategoryEnum,
     description: z.string().optional(),
+    objective: z.string().optional(),
+    revenueModel: z.string().optional(),
+    keyTools: z.array(z.string()).optional(),
+    painPoints: z.array(z.string()).optional(),
+    regulatoryNotes: z.string().optional(),
+    costDrivers: z.array(z.string()).optional(),
+    keyActors: z.array(z.string()).optional(),
     subNodes: z.array(IndustryBlockSchema).optional(),
   })
 );
@@ -50,6 +81,8 @@ export type MapEdge = z.infer<typeof EdgeSchema>;
 // ─── IndustryMap (top-level response) ───
 export const IndustryMapSchema = z.object({
   industry: z.string(),
+  archetype: ArchetypeEnum.optional(),
+  jurisdiction: z.string().optional(),
   rootNodes: z.array(IndustryBlockSchema),
   edges: z.array(EdgeSchema),
 });
@@ -64,6 +97,13 @@ export interface FlowNodeData extends Record<string, unknown> {
   label: string;
   category: Category;
   description?: string;
+  objective?: string;
+  revenueModel?: string;
+  keyTools?: string[];
+  painPoints?: string[];
+  regulatoryNotes?: string;
+  costDrivers?: string[];
+  keyActors?: string[];
   hasChildren: boolean;
   isExpanded: boolean;
   depth: number;

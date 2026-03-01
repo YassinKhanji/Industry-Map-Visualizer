@@ -1,197 +1,316 @@
 import OpenAI from "openai";
 import { IndustryMapSchema } from "@/types";
-import type { IndustryMap, IndustryBlock, MapEdge, Category } from "@/types";
+import type {
+  IndustryMap,
+  IndustryBlock,
+  MapEdge,
+  Category,
+  Archetype,
+} from "@/types";
+import { ARCHETYPE_PROFILES, getArchetypeProfile } from "./archetypes";
 
 /**
- * Deep Research Pipeline
+ * Deep Research Pipeline — Industry Reverse-Engineering Engine
  *
- * Step A: Structure Agent (gpt-4.1) → Root node skeleton
- * Step B: Detail Agents (gpt-4.1-mini × N, parallel) → Sub-nodes for each root
- * Step C: Edge Agent (gpt-4.1-mini) → Meaningful connections
- * Step D: Assemble + validate
+ * Step A: Archetype Classifier   (gpt-4.1-mini, 1 call)
+ * Step B: Structure Agent        (gpt-4.1, 1 call) → 10-16 enriched root nodes
+ * Step C: Detail Agents          (gpt-4.1-mini × N, parallel) → 3-level subtrees per root
+ * Step D: Edge Agent             (gpt-4.1-mini, 1 call) → cross-root connections
+ * Step E: Assemble + validate
  */
 
 const VALID_CATEGORIES: Category[] = [
-  "upstream-inputs",
-  "core-production",
+  "capital",
+  "inputs",
+  "production",
   "processing",
   "distribution",
-  "customer-facing",
-  "support-ops",
-  "regulation",
-  "technology",
-  "roles",
-  "alternative-assets",
-  "esg-stewardship",
-  "private-wealth",
-  "systemic-oversight",
+  "customer",
+  "compliance",
+  "infrastructure",
 ];
+
+const NODE_METADATA_SCHEMA = `Each node MUST include:
+- "id": lowercase kebab-case (unique, descriptive)
+- "label": human-readable name (2-5 words)
+- "category": one of: ${VALID_CATEGORIES.join(", ")}
+- "description": one-sentence factual description (15-30 words)
+- "objective": what this actor/function is trying to achieve (1 sentence)
+- "revenueModel": how this actor generates income (1 sentence, use "N/A" if non-revenue)
+- "keyTools": array of 2-4 real tools, platforms, or systems (e.g. "SAP ERP", "Bloomberg Terminal")
+- "keyActors": array of 2-4 real companies or organizations active here
+- "painPoints": array of 2-3 known friction points, bottlenecks, or inefficiencies
+- "costDrivers": array of 2-3 major operating cost categories
+- "regulatoryNotes": one sentence on applicable regulations, standards, or licenses (use "None specific" if minimal)`;
 
 function getClient(): OpenAI {
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }
 
-// ─── Step A: Structure Agent ───
-
-interface RootNodeSkeleton {
-  id: string;
-  label: string;
-  category: Category;
-  description: string;
+function sanitizeCategory(cat: string, fallback: Category = "production"): Category {
+  return VALID_CATEGORIES.includes(cat as Category)
+    ? (cat as Category)
+    : fallback;
 }
 
-async function researchStructure(query: string): Promise<{
+// ─── Step A: Archetype Classifier ───
+
+interface ClassificationResult {
+  archetype: Archetype;
   industryName: string;
-  roots: RootNodeSkeleton[];
-}> {
+  jurisdiction: string;
+}
+
+async function classifyArchetype(query: string): Promise<ClassificationResult> {
   const client = getClient();
+  const archetypeList = Object.entries(ARCHETYPE_PROFILES)
+    .map(([key, p]) => `"${key}": ${p.description}`)
+    .join("\n");
 
   const res = await client.chat.completions.create({
-    model: "gpt-4.1",
-    temperature: 0.3,
-    max_tokens: 4000,
+    model: "gpt-4.1-mini",
+    temperature: 0.1,
+    max_tokens: 500,
     response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
-        content: `You are an industry research expert who maps the full value chain of any industry, product, or service.
+        content: `You are an economic engine classifier. Given a product, service, or industry query, determine:
 
-Given a query, produce a JSON object with:
-- "industryName": A professional display name for this industry/product/service
-- "roots": An array of 10-16 root nodes representing the major segments of the value chain
+1. Which economic archetype best describes how this industry generates value.
+2. A professional industry display name.
+3. The primary jurisdiction (country or "Global" if not location-specific).
 
-Each root node must have:
-- "id": lowercase kebab-case identifier (e.g., "upstream-inputs")
-- "label": Human-readable name (2-4 words)
-- "category": One of: ${VALID_CATEGORIES.join(", ")}
-- "description": One-sentence description of this segment's role (15-30 words)
+Available archetypes:
+${archetypeList}
 
-Guidelines:
-- Cover the FULL value chain from raw inputs → production → processing → distribution → customer
-- Include support functions (operations, regulation, technology)
-- Use specific, domain-relevant names (not generic like "Other")
-- Ensure every category is used at least once where relevant
-- Order nodes logically along the value chain
+Return JSON:
+{
+  "archetype": "<archetype-key>",
+  "industryName": "<Professional Industry Name>",
+  "jurisdiction": "<Country or Global>"
+}
 
-Return ONLY valid JSON. No markdown, no explanation.`,
+Pick the SINGLE best-fit archetype. If the query mentions a specific country/region, use that as jurisdiction.
+Return ONLY valid JSON.`,
       },
-      {
-        role: "user",
-        content: query,
-      },
+      { role: "user", content: query },
     ],
   });
 
   const raw = res.choices[0]?.message?.content || "{}";
-  const parsed = JSON.parse(raw) as {
-    industryName: string;
-    roots: RootNodeSkeleton[];
-  };
+  const parsed = JSON.parse(raw) as ClassificationResult;
 
-  // Validate categories
-  parsed.roots = parsed.roots.map((r) => ({
-    ...r,
-    category: VALID_CATEGORIES.includes(r.category) ? r.category : "core-production",
-  }));
+  // Validate archetype
+  if (!ARCHETYPE_PROFILES[parsed.archetype]) {
+    parsed.archetype = "asset-manufacturing"; // safe default
+  }
 
   return parsed;
 }
 
-// ─── Step B: Detail Agents (parallel) ───
+// ─── Step B: Structure Agent (with archetype template) ───
 
-interface DetailedSubNode {
+interface RootNodeEnriched {
   id: string;
   label: string;
   category: Category;
   description: string;
+  objective: string;
+  revenueModel: string;
+  keyTools: string[];
+  keyActors: string[];
+  painPoints: string[];
+  costDrivers: string[];
+  regulatoryNotes: string;
 }
 
-async function researchNodeDetails(
+async function researchStructure(
+  query: string,
+  archetype: Archetype,
+  industryName: string,
+  jurisdiction: string
+): Promise<RootNodeEnriched[]> {
+  const client = getClient();
+  const profile = getArchetypeProfile(archetype)!;
+
+  const res = await client.chat.completions.create({
+    model: "gpt-4.1",
+    temperature: 0.3,
+    max_tokens: 8000,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `You are an industry reverse-engineering expert building a structural map of "${industryName}" (jurisdiction: ${jurisdiction}).
+
+${profile.promptTemplate}
+
+Produce a JSON object with:
+- "roots": array of 10-16 root nodes representing the major segments of the value chain
+
+${NODE_METADATA_SCHEMA}
+
+Guidelines:
+- Cover the FULL value chain: capital → inputs → production → processing → distribution → customer
+- Include compliance and infrastructure nodes
+- Use specific, domain-relevant names (never "Other" or "Miscellaneous")
+- Order nodes logically along the value chain flow
+- All actors, tools, and pain points must be real and specific to this industry
+- Think like a McKinsey analyst mapping the industry for a founder entering this space
+
+Return ONLY valid JSON: { "roots": [...] }`,
+      },
+      { role: "user", content: query },
+    ],
+  });
+
+  const raw = res.choices[0]?.message?.content || '{"roots":[]}';
+  const parsed = JSON.parse(raw) as { roots: RootNodeEnriched[] };
+
+  return (parsed.roots || []).map((r) => ({
+    ...r,
+    category: sanitizeCategory(r.category),
+    keyTools: r.keyTools || [],
+    keyActors: r.keyActors || [],
+    painPoints: r.painPoints || [],
+    costDrivers: r.costDrivers || [],
+    regulatoryNotes: r.regulatoryNotes || "None specific",
+  }));
+}
+
+// ─── Step C: Detail Agents (parallel, producing multi-level sub-trees) ───
+
+interface SubTreeNode {
+  id: string;
+  label: string;
+  category: Category;
+  description: string;
+  objective?: string;
+  revenueModel?: string;
+  keyTools?: string[];
+  keyActors?: string[];
+  painPoints?: string[];
+  costDrivers?: string[];
+  regulatoryNotes?: string;
+  subNodes?: SubTreeNode[];
+}
+
+async function researchSubTree(
   query: string,
   industryName: string,
-  rootNode: RootNodeSkeleton
-): Promise<DetailedSubNode[]> {
+  jurisdiction: string,
+  archetypeKey: Archetype,
+  root: RootNodeEnriched
+): Promise<SubTreeNode[]> {
   const client = getClient();
 
   const res = await client.chat.completions.create({
     model: "gpt-4.1-mini",
     temperature: 0.3,
-    max_tokens: 3000,
+    max_tokens: 6000,
     response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
-        content: `You are a deep industry research agent specializing in "${industryName}".
+        content: `You are a deep industry research agent for "${industryName}" (${jurisdiction}).
+Archetype: ${archetypeKey}.
 
-Given a root segment of the value chain, produce detailed sub-nodes with real-world specifics.
+Given a root VALUE CHAIN segment, produce a 3-level deep sub-tree:
+- Level 1: 4-8 direct children (sub-segments)
+- Level 2: Each Level-1 node has 2-5 children (specific functions/actors)
+- Level 3: (optional) Key Level-2 nodes may have 1-3 leaf children for critical details
 
-Return a JSON object with:
-- "subNodes": Array of 4-9 sub-nodes
+Return JSON:
+{
+  "subNodes": [
+    {
+      ... node fields ...,
+      "subNodes": [
+        {
+          ... node fields ...,
+          "subNodes": [ ... optional leaf nodes ... ]
+        }
+      ]
+    }
+  ]
+}
 
-Each sub-node must have:
-- "id": lowercase kebab-case, unique, descriptive (e.g., "nav-calculation", "broker-dealers")
-- "label": Human-readable name (2-4 words)
-- "category": "${rootNode.category}" (same as parent)
-- "description": Specific, factual description (15-30 words). Include real company names, tools, standards, or regulations where relevant.
+${NODE_METADATA_SCHEMA}
 
 Guidelines:
-- Be SPECIFIC to the "${query}" domain — not generic
-- Include real examples: company names (Bloomberg, Salesforce), standards (ISO, GAAP), tools, regulations
-- Each sub-node should represent a distinct function, role, or entity
-- No duplicates, no generic filler nodes
-- Order from most fundamental to most specialized
+- Be SPECIFIC to "${query}" — no generic filler
+- Include real companies, tools, standards, regulations specific to ${jurisdiction} where relevant
+- Each node must represent a distinct function, role, or entity
+- IDs must be globally unique — prefix with parent context (e.g. "${root.id}-supply-chain")
+- Deeper nodes should be more specific and actionable
+- Pain points at leaf level = opportunity signals for founders
 
 Return ONLY valid JSON.`,
       },
       {
         role: "user",
-        content: `Root segment: "${rootNode.label}" — ${rootNode.description}`,
+        content: `Root segment: "${root.label}" (${root.category}) — ${root.description}
+Objective: ${root.objective}
+Revenue model: ${root.revenueModel}`,
       },
     ],
   });
 
   const raw = res.choices[0]?.message?.content || '{"subNodes":[]}';
-  const parsed = JSON.parse(raw) as { subNodes: DetailedSubNode[] };
+  const parsed = JSON.parse(raw) as { subNodes: SubTreeNode[] };
 
-  return (parsed.subNodes || []).map((n) => ({
-    ...n,
-    category: VALID_CATEGORIES.includes(n.category) ? n.category : rootNode.category,
-  }));
+  // Recursively sanitize categories
+  function sanitizeTree(nodes: SubTreeNode[], fallback: Category): SubTreeNode[] {
+    return (nodes || []).map((n) => ({
+      ...n,
+      category: sanitizeCategory(n.category, fallback),
+      keyTools: n.keyTools || [],
+      keyActors: n.keyActors || [],
+      painPoints: n.painPoints || [],
+      costDrivers: n.costDrivers || [],
+      regulatoryNotes: n.regulatoryNotes || "",
+      subNodes: n.subNodes ? sanitizeTree(n.subNodes, sanitizeCategory(n.category, fallback)) : undefined,
+    }));
+  }
+
+  return sanitizeTree(parsed.subNodes, root.category);
 }
 
-// ─── Step C: Edge Agent ───
+// ─── Step D: Edge Agent ───
 
 async function researchEdges(
   industryName: string,
-  rootNodes: Array<{ id: string; label: string }>
+  archetype: Archetype,
+  rootNodes: Array<{ id: string; label: string; category: string }>
 ): Promise<MapEdge[]> {
   const client = getClient();
+  const profile = getArchetypeProfile(archetype)!;
 
-  const nodeList = rootNodes.map((n) => `"${n.id}" (${n.label})`).join("\n");
+  const nodeList = rootNodes.map((n) => `"${n.id}" (${n.label} [${n.category}])`).join("\n");
 
   const res = await client.chat.completions.create({
     model: "gpt-4.1-mini",
     temperature: 0.2,
-    max_tokens: 2000,
+    max_tokens: 3000,
     response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
-        content: `You are an industry analyst mapping the relationships between segments of the "${industryName}" value chain.
+        content: `You are an industry analyst mapping relationships between root segments of the "${industryName}" value chain.
+Archetype: ${archetype}.
+Flow pattern: ${profile.edgeFlowHint}
 
-Given root nodes, produce edges showing how value, data, or materials flow between them.
+Given root nodes, produce edges showing how value, data, materials, or money flow between them.
 
-Return a JSON object with:
-- "edges": Array of { "source": "<id>", "target": "<id>" }
+Return JSON: { "edges": [{ "source": "<id>", "target": "<id>" }] }
 
 Guidelines:
-- Create 15-30 meaningful edges showing real value chain flows
-- Flow generally goes: upstream → production → processing → distribution → customer
-- Support, regulation, and technology nodes connect to multiple segments
-- No self-loops (source !== target)
-- No duplicate edges
-- Every node should have at least one connection
-- Prefer directional flow (upstream to downstream) but cross-connections are fine
+- Create 15-30 meaningful directed edges
+- Follow the archetype flow pattern described above
+- Compliance and infrastructure nodes connect to multiple segments
+- No self-loops, no duplicate edges
+- Every node must have at least one connection
 
 Available nodes:
 ${nodeList}
@@ -208,7 +327,6 @@ Return ONLY valid JSON.`,
   const raw = res.choices[0]?.message?.content || '{"edges":[]}';
   const parsed = JSON.parse(raw) as { edges: MapEdge[] };
 
-  // Validate edges — only keep those referencing valid node IDs
   const validIds = new Set(rootNodes.map((n) => n.id));
   return (parsed.edges || []).filter(
     (e) =>
@@ -218,7 +336,7 @@ Return ONLY valid JSON.`,
   );
 }
 
-// ─── Step D: Assemble ───
+// ─── Step E: Assemble ───
 
 export interface ResearchProgress {
   step: string;
@@ -227,10 +345,47 @@ export interface ResearchProgress {
 }
 
 /**
+ * Build an IndustryBlock tree from root + subtree results.
+ */
+function buildBlock(root: RootNodeEnriched, subTree: SubTreeNode[]): IndustryBlock {
+  function convertSubTree(nodes: SubTreeNode[]): IndustryBlock[] {
+    return nodes.map((n) => ({
+      id: n.id,
+      label: n.label,
+      category: n.category,
+      description: n.description,
+      objective: n.objective,
+      revenueModel: n.revenueModel,
+      keyTools: n.keyTools,
+      keyActors: n.keyActors,
+      painPoints: n.painPoints,
+      costDrivers: n.costDrivers,
+      regulatoryNotes: n.regulatoryNotes,
+      subNodes: n.subNodes && n.subNodes.length > 0 ? convertSubTree(n.subNodes) : undefined,
+    }));
+  }
+
+  return {
+    id: root.id,
+    label: root.label,
+    category: root.category,
+    description: root.description,
+    objective: root.objective,
+    revenueModel: root.revenueModel,
+    keyTools: root.keyTools,
+    keyActors: root.keyActors,
+    painPoints: root.painPoints,
+    costDrivers: root.costDrivers,
+    regulatoryNotes: root.regulatoryNotes,
+    subNodes: subTree.length > 0 ? convertSubTree(subTree) : undefined,
+  };
+}
+
+/**
  * Run the full deep research pipeline.
  * @param query - User's search query
  * @param onProgress - Callback for real-time progress updates
- * @returns Validated IndustryMap
+ * @returns Validated IndustryMap with archetype, jurisdiction, and rich per-node metadata
  */
 export async function deepResearch(
   query: string,
@@ -240,49 +395,54 @@ export async function deepResearch(
     if (onProgress) onProgress({ step, message, pct });
   };
 
-  // Step A: Structure
+  // Step A: Classify archetype
+  report("classify", "Classifying economic engine archetype\u2026", 5);
+  const { archetype, industryName, jurisdiction } = await classifyArchetype(query);
+  const profile = getArchetypeProfile(archetype)!;
+  report("classify-done", `${profile.label} \u2014 ${jurisdiction}`, 12);
+
+  // Step B: Structure (enriched root nodes)
   report("structure", "Researching industry structure\u2026", 15);
-  const { industryName, roots } = await researchStructure(query);
-  report("structure-done", `Mapped ${roots.length} segments`, 30);
+  const roots = await researchStructure(query, archetype, industryName, jurisdiction);
+  report("structure-done", `Mapped ${roots.length} segments`, 28);
 
-  // Step B: Details (all in parallel)
-  report("details", `Researching ${roots.length} segments in parallel\u2026`, 35);
+  // Step C: Detail sub-trees (all in parallel)
+  report("details", `Deep-diving ${roots.length} segments in parallel\u2026`, 30);
 
-  const detailResults = await Promise.all(
+  const subTreeResults = await Promise.all(
     roots.map(async (root, i) => {
-      const subNodes = await researchNodeDetails(query, industryName, root);
+      const subTree = await researchSubTree(
+        query,
+        industryName,
+        jurisdiction,
+        archetype,
+        root
+      );
       report(
         "detail-progress",
         `Researched ${root.label} (${i + 1}/${roots.length})`,
-        35 + Math.round(((i + 1) / roots.length) * 35)
+        30 + Math.round(((i + 1) / roots.length) * 40)
       );
-      return { root, subNodes };
+      return { root, subTree };
     })
   );
 
-  // Step C: Edges
+  // Step D: Edges (root-to-root connections)
   report("edges", "Mapping value chain connections\u2026", 75);
-  const edges = await researchEdges(industryName, roots);
+  const edges = await researchEdges(industryName, archetype, roots);
   report("edges-done", `Found ${edges.length} connections`, 85);
 
-  // Assemble
+  // Step E: Assemble
   report("assembling", "Assembling final map\u2026", 90);
 
-  const rootNodes: IndustryBlock[] = detailResults.map(({ root, subNodes }) => ({
-    id: root.id,
-    label: root.label,
-    category: root.category,
-    description: root.description,
-    subNodes: subNodes.map((sn) => ({
-      id: sn.id,
-      label: sn.label,
-      category: sn.category,
-      description: sn.description,
-    })),
-  }));
+  const rootNodes: IndustryBlock[] = subTreeResults.map(({ root, subTree }) =>
+    buildBlock(root, subTree)
+  );
 
   const map: IndustryMap = {
     industry: industryName,
+    archetype,
+    jurisdiction,
     rootNodes,
     edges,
   };
@@ -293,7 +453,6 @@ export async function deepResearch(
     IndustryMapSchema.parse(map);
   } catch (e) {
     console.error("Zod validation failed, returning unvalidated map:", e);
-    // Still return the map — it's close enough and the UI can render it
   }
 
   return map;

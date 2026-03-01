@@ -189,6 +189,8 @@ export async function GET(request: NextRequest) {
         headers: {
           "X-Source": "research",
           "X-Cache": "MISS",
+          "X-Archetype": result.archetype || "unknown",
+          "X-Jurisdiction": result.jurisdiction || "Global",
           "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
         },
       }

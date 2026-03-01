@@ -7,35 +7,25 @@ import type { FlowNodeData } from "@/types";
 import { useAppStore } from "@/lib/store";
 
 export const CATEGORY_ACCENTS: Record<string, string> = {
-  "upstream-inputs": "#6366f1",
-  "core-production": "#2563eb",
-  "processing": "#0891b2",
-  "distribution": "#059669",
-  "customer-facing": "#d97706",
-  "support-ops": "#6b7280",
-  "regulation": "#dc2626",
-  "technology": "#7c3aed",
-  "roles": "#4f46e5",
-  "alternative-assets": "#0d9488",
-  "esg-stewardship": "#16a34a",
-  "private-wealth": "#ca8a04",
-  "systemic-oversight": "#b91c1c",
+  capital: "#6366f1",
+  inputs: "#2563eb",
+  production: "#0891b2",
+  processing: "#059669",
+  distribution: "#d97706",
+  customer: "#e11d48",
+  compliance: "#dc2626",
+  infrastructure: "#7c3aed",
 };
 
 export const CATEGORY_LABELS: Record<string, string> = {
-  "upstream-inputs": "Upstream Inputs",
-  "core-production": "Core Production",
-  "processing": "Processing",
-  "distribution": "Distribution",
-  "customer-facing": "Customer Facing",
-  "support-ops": "Support & Ops",
-  "regulation": "Regulation",
-  "technology": "Technology",
-  "roles": "Key Roles",
-  "alternative-assets": "Alternative Assets",
-  "esg-stewardship": "ESG & Stewardship",
-  "private-wealth": "Private Wealth",
-  "systemic-oversight": "Systemic Oversight",
+  capital: "Capital",
+  inputs: "Inputs",
+  production: "Production",
+  processing: "Processing",
+  distribution: "Distribution",
+  customer: "Customer",
+  compliance: "Compliance",
+  infrastructure: "Infrastructure",
 };
 
 function NodeCard({ data, id }: NodeProps) {
@@ -100,10 +90,10 @@ function NodeCard({ data, id }: NodeProps) {
           )}
         </div>
 
-        {/* Tooltip on hover */}
-        {nodeData.description && (
+        {/* Tooltip on hover — show objective if available, else description */}
+        {(nodeData.objective || nodeData.description) && (
           <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-900 text-white text-xs rounded max-w-[220px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-normal leading-relaxed">
-            {nodeData.description}
+            {nodeData.objective || nodeData.description}
             <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900 rotate-45" />
           </div>
         )}
