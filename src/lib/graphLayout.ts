@@ -4,8 +4,9 @@ import type { IndustryMap, IndustryBlock, FlowNodeData } from "@/types";
 
 const NODE_WIDTH = 190;
 const NODE_HEIGHT = 46;
-const RANK_SEP = 200;
-const NODE_SEP = 80;
+const RANK_SEP = 220;
+const NODE_SEP = 110;
+const EDGE_SEP = 25;
 
 /**
  * Convert IndustryMap data into React Flow nodes and edges,
@@ -72,6 +73,8 @@ export function buildFlowGraph(
           isExpanded,
           depth,
           parentId,
+          sourceHandleCount: 0,
+          targetHandleCount: 0,
         },
       });
 
@@ -82,7 +85,7 @@ export function buildFlowGraph(
             id: `${block.id}->${child.id}`,
             source: block.id,
             target: child.id,
-            type: "default",
+            type: "smoothstep",
             style: { stroke: "#d1d5db", strokeWidth: 1 },
             animated: false,
           });
@@ -102,7 +105,7 @@ export function buildFlowGraph(
         id: `${edge.source}->${edge.target}`,
         source: edge.source,
         target: edge.target,
-        type: "default",
+        type: "smoothstep",
         style: { stroke: "#d1d5db", strokeWidth: 1.2 },
         animated: false,
       });
@@ -126,6 +129,7 @@ function applyDagreLayout(
     rankdir: "LR",
     ranksep: RANK_SEP,
     nodesep: NODE_SEP,
+    edgesep: EDGE_SEP,
     marginx: 40,
     marginy: 40,
   });
@@ -150,6 +154,41 @@ function applyDagreLayout(
       },
     };
   });
+
+  // ── Assign handles sorted by connected-node Y position ──
+  // This fans edges out naturally: top handles → top nodes, bottom → bottom
+  const posMap = new Map<string, { x: number; y: number }>();
+  for (const node of layoutedNodes) {
+    posMap.set(node.id, node.position);
+  }
+
+  // Group edges by source (outgoing) and target (incoming)
+  const outgoing = new Map<string, Edge[]>();
+  const incoming = new Map<string, Edge[]>();
+  for (const edge of edges) {
+    if (!outgoing.has(edge.source)) outgoing.set(edge.source, []);
+    outgoing.get(edge.source)!.push(edge);
+    if (!incoming.has(edge.target)) incoming.set(edge.target, []);
+    incoming.get(edge.target)!.push(edge);
+  }
+
+  // Sort outgoing edges by target Y, assign sourceHandle
+  for (const [, nodeEdges] of outgoing) {
+    nodeEdges.sort((a, b) => (posMap.get(a.target)?.y ?? 0) - (posMap.get(b.target)?.y ?? 0));
+    nodeEdges.forEach((edge, i) => { edge.sourceHandle = `source-${i}`; });
+  }
+
+  // Sort incoming edges by source Y, assign targetHandle
+  for (const [, nodeEdges] of incoming) {
+    nodeEdges.sort((a, b) => (posMap.get(a.source)?.y ?? 0) - (posMap.get(b.source)?.y ?? 0));
+    nodeEdges.forEach((edge, i) => { edge.targetHandle = `target-${i}`; });
+  }
+
+  // Attach handle counts to node data
+  for (const node of layoutedNodes) {
+    (node.data as FlowNodeData).sourceHandleCount = outgoing.get(node.id)?.length ?? 0;
+    (node.data as FlowNodeData).targetHandleCount = incoming.get(node.id)?.length ?? 0;
+  }
 
   return { nodes: layoutedNodes, edges };
 }

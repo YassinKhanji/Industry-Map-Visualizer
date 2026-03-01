@@ -189,6 +189,8 @@ export interface FlowNodeData extends Record<string, unknown> {
   isExpanded: boolean;
   depth: number;
   parentId?: string;
+  sourceHandleCount: number;
+  targetHandleCount: number;
 }
 
 // ─── Progress tracking ───
