@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { useAppStore } from "@/lib/store";
 import type { IndustryBlock, IndustryMap, ChatMessage } from "@/types";
 
@@ -272,7 +273,15 @@ export default function NodeChatPanel() {
                     }
               }
             >
-              {msg.content || (
+              {msg.content ? (
+                msg.role === "assistant" ? (
+                  <div className="chat-markdown">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.content
+                )
+              ) : (
                 <span className="chat-typing">
                   <span className="chat-typing-dot" />
                   <span className="chat-typing-dot" />

@@ -2,6 +2,17 @@ import dagre from "@dagrejs/dagre";
 import type { Node, Edge } from "@xyflow/react";
 import type { IndustryMap, IndustryBlock, FlowNodeData } from "@/types";
 
+const CATEGORY_ACCENTS: Record<string, string> = {
+  capital: "#6366f1",
+  inputs: "#2563eb",
+  production: "#0891b2",
+  processing: "#059669",
+  distribution: "#d97706",
+  customer: "#e11d48",
+  compliance: "#dc2626",
+  infrastructure: "#7c3aed",
+};
+
 const NODE_WIDTH = 190;
 const NODE_HEIGHT = 46;
 const RANK_SEP = 200;
@@ -77,13 +88,14 @@ export function buildFlowGraph(
 
       // If expanded, add children and edges from parent to children
       if (hasChildren && isExpanded && block.subNodes) {
+        const parentAccent = CATEGORY_ACCENTS[block.category] || "var(--edge-dim)";
         for (const child of block.subNodes) {
           flowEdges.push({
             id: `${block.id}->${child.id}`,
             source: block.id,
             target: child.id,
             type: "default",
-            style: { stroke: "var(--edge-dim)", strokeWidth: 1 },
+            style: { stroke: parentAccent, strokeWidth: 1.5 },
             animated: false,
           });
         }
