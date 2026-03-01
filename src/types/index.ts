@@ -201,6 +201,12 @@ export interface ProgressStep {
   pct: number;
 }
 
+// ─── Profile match result ───
+export interface ProfileMatch {
+  id: string;
+  reason: string;
+}
+
 // ─── Store state ───
 export interface AppState {
   query: string;
@@ -216,6 +222,11 @@ export interface AppState {
   correctedQuery: string | null;
   progress: ProgressStep | null;
   triggerSearch: string | null;
+  // Profile matcher
+  userProfile: string;
+  highlightedNodeIds: string[];
+  profileHighlightOn: boolean;
+  profilePanelOpen: boolean;
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -229,6 +240,10 @@ export interface AppState {
   setCorrectedQuery: (q: string | null) => void;
   setProgress: (p: ProgressStep | null) => void;
   setTriggerSearch: (q: string | null) => void;
+  setUserProfile: (profile: string) => void;
+  setHighlightedNodeIds: (ids: string[]) => void;
+  setProfileHighlightOn: (on: boolean) => void;
+  setProfilePanelOpen: (open: boolean) => void;
   updateNode: (nodeId: string, patch: Partial<IndustryBlock>) => void;
   reset: () => void;
 }

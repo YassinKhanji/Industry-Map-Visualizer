@@ -103,6 +103,8 @@ export default function SearchBar() {
   const progress = useAppStore((s) => s.progress);
   const triggerSearch = useAppStore((s) => s.triggerSearch);
   const setTriggerSearch = useAppStore((s) => s.setTriggerSearch);
+  const setHighlightedNodeIds = useAppStore((s) => s.setHighlightedNodeIds);
+  const setProfileHighlightOn = useAppStore((s) => s.setProfileHighlightOn);
 
   /* searchingRef prevents re-entrancy */
   const searchingRef = useRef(false);
@@ -118,6 +120,8 @@ export default function SearchBar() {
       setError(null);
       setIsCached(false);
       setCorrectedQuery(null);
+      setHighlightedNodeIds([]);
+      setProfileHighlightOn(false);
 
       // Check localStorage cache first
       const cacheKey = `${CACHE_PREFIX}${normalize(trimmed)}`;

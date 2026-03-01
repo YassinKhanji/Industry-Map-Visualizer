@@ -24,6 +24,10 @@ export const useAppStore = create<AppState>((set) => ({
   correctedQuery: null,
   progress: null,
   triggerSearch: null,
+  userProfile: "",
+  highlightedNodeIds: [],
+  profileHighlightOn: false,
+  profilePanelOpen: false,
 
   setQuery: (query: string) => set({ query }),
   setMapData: (data: IndustryMap | null) => set({ mapData: data }),
@@ -38,6 +42,10 @@ export const useAppStore = create<AppState>((set) => ({
   setCorrectedQuery: (q: string | null) => set({ correctedQuery: q }),
   setProgress: (p: ProgressStep | null) => set({ progress: p }),
   setTriggerSearch: (q: string | null) => set({ triggerSearch: q }),
+  setUserProfile: (profile: string) => set({ userProfile: profile }),
+  setHighlightedNodeIds: (ids: string[]) => set({ highlightedNodeIds: ids }),
+  setProfileHighlightOn: (on: boolean) => set({ profileHighlightOn: on }),
+  setProfilePanelOpen: (open: boolean) => set({ profilePanelOpen: open }),
   updateNode: (nodeId: string, patch: Partial<IndustryBlock>) =>
     set((state) => {
       if (!state.mapData) return state;
@@ -59,5 +67,8 @@ export const useAppStore = create<AppState>((set) => ({
       correctedQuery: null,
       progress: null,
       triggerSearch: null,
+      highlightedNodeIds: [],
+      profileHighlightOn: false,
+      profilePanelOpen: false,
     }),
 }));

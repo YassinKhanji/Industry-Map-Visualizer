@@ -200,3 +200,12 @@ button, a, [role="button"], .react-flow__node {
 .taxonomy-card:active {
   transform: translateY(0);
 }
+
+/* Profile panel slide-in animation */
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+.profile-panel-enter {
+  animation: slide-in-left 0.2s ease-out;
+}

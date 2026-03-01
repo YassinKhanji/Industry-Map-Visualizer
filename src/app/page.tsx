@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import SearchBar from "@/components/SearchBar";
 import TaxonomyBrowser from "@/components/TaxonomyBrowser";
+import UserProfilePanel from "@/components/UserProfilePanel";
 import { useAppStore } from "@/lib/store";
 
 // Dynamic import for MapCanvas to avoid SSR issues with React Flow
@@ -23,6 +24,8 @@ export default function Home() {
   const isLoading = useAppStore((s) => s.isLoading);
   const darkMode = useAppStore((s) => s.darkMode);
   const setDarkMode = useAppStore((s) => s.setDarkMode);
+  const profilePanelOpen = useAppStore((s) => s.profilePanelOpen);
+  const setProfilePanelOpen = useAppStore((s) => s.setProfilePanelOpen);
   const hasResults = !!mapData;
 
 
@@ -143,6 +146,30 @@ export default function Home() {
           </svg>
         )}
       </button>
+
+      {/* Profile matcher button — only when map is visible */}
+      {hasResults && (
+        <button
+          onClick={() => setProfilePanelOpen(!profilePanelOpen)}
+          className="fixed bottom-[184px] left-[13px] z-50 w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200"
+          style={{
+            background: profilePanelOpen
+              ? darkMode ? "rgba(245,158,11,0.15)" : "rgba(245,158,11,0.1)"
+              : darkMode ? "var(--card-bg)" : "#ffffff",
+            borderColor: profilePanelOpen ? "#f59e0b" : "var(--border)",
+            color: profilePanelOpen ? "#f59e0b" : "var(--foreground)",
+          }}
+          title="Profile Matcher"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="8" cy="5" r="3" />
+            <path d="M2 14c0-3.31 2.69-5 6-5s6 1.69 6 5" fill="currentColor" />
+          </svg>
+        </button>
+      )}
+
+      {/* Profile matcher panel */}
+      {hasResults && profilePanelOpen && <UserProfilePanel />}
     </div>
   );
 }

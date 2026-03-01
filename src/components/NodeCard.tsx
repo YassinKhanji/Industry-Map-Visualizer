@@ -33,8 +33,11 @@ function NodeCard({ data, id }: NodeProps) {
   const darkMode = useAppStore((s) => s.darkMode);
   const setSelectedNodeId = useAppStore((s) => s.setSelectedNodeId);
   const setHoveredNodeId = useAppStore((s) => s.setHoveredNodeId);
+  const highlightedNodeIds = useAppStore((s) => s.highlightedNodeIds);
+  const profileHighlightOn = useAppStore((s) => s.profileHighlightOn);
   const accentColor = CATEGORY_ACCENTS[nodeData.category] || "#2563eb";
   const isLeaf = !nodeData.hasChildren;
+  const isHighlighted = profileHighlightOn && highlightedNodeIds.includes(id);
 
   const handleContextMenu = useCallback(
     (e: React.MouseEvent) => {
@@ -76,6 +79,9 @@ function NodeCard({ data, id }: NodeProps) {
             : "1px solid #e5e7eb",
           borderLeftWidth: isLeaf ? 1.5 : 3,
           borderLeftColor: isLeaf ? "#111827" : accentColor,
+          ...(isHighlighted
+            ? { boxShadow: "0 0 0 2px #f59e0b, 0 0 12px rgba(245,158,11,0.35)" }
+            : {}),
         }}
       >
         <div className="flex items-center gap-2">
