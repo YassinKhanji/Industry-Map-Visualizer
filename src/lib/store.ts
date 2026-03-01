@@ -1,5 +1,14 @@
 import { create } from "zustand";
-import type { AppState, IndustryMap, ProgressStep } from "@/types";
+import type { AppState, IndustryMap, IndustryBlock, ProgressStep } from "@/types";
+
+// Recursively patch a node by ID inside a block tree
+function patchNode(nodes: IndustryBlock[], id: string, patch: Partial<IndustryBlock>): IndustryBlock[] {
+  return nodes.map((n) => {
+    if (n.id === id) return { ...n, ...patch };
+    if (n.subNodes) return { ...n, subNodes: patchNode(n.subNodes, id, patch) };
+    return n;
+  });
+}
 
 export const useAppStore = create<AppState>((set) => ({
   query: "",
@@ -27,6 +36,16 @@ export const useAppStore = create<AppState>((set) => ({
   setCorrectedQuery: (q: string | null) => set({ correctedQuery: q }),
   setProgress: (p: ProgressStep | null) => set({ progress: p }),
   setTriggerSearch: (q: string | null) => set({ triggerSearch: q }),
+  updateNode: (nodeId: string, patch: Partial<IndustryBlock>) =>
+    set((state) => {
+      if (!state.mapData) return state;
+      return {
+        mapData: {
+          ...state.mapData,
+          rootNodes: patchNode(state.mapData.rootNodes, nodeId, patch),
+        },
+      };
+    }),
   reset: () =>
     set({
       query: "",

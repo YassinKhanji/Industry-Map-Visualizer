@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAppStore } from "@/lib/store";
 import { CATEGORY_ACCENTS, CATEGORY_LABELS } from "./NodeCard";
 import type { IndustryBlock, MapEdge } from "@/types";
@@ -140,6 +140,10 @@ export default function DetailPanel() {
   const setSelectedNodeId = useAppStore((s) => s.setSelectedNodeId);
   const mapData = useAppStore((s) => s.mapData);
   const darkMode = useAppStore((s) => s.darkMode);
+  const updateNode = useAppStore((s) => s.updateNode);
+
+  const [enriching, setEnriching] = useState(false);
+  const [enrichError, setEnrichError] = useState<string | null>(null);
 
   const close = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
 
@@ -192,6 +196,7 @@ export default function DetailPanel() {
   const catLabel = CATEGORY_LABELS[block.category] || block.category;
   const subCount = block.subNodes?.length || 0;
   const muted = "var(--muted)";
+  const isEnriched = !!block.enrichedAt;
 
   // Archetype info from map-level data
   const archetypeKey = mapData?.archetype;
@@ -199,6 +204,45 @@ export default function DetailPanel() {
     ? ARCHETYPE_PROFILES[archetypeKey]
     : undefined;
   const jurisdiction = mapData?.jurisdiction;
+
+  const handleEnrich = async () => {
+    if (enriching || !mapData) return;
+    setEnriching(true);
+    setEnrichError(null);
+    try {
+      const res = await fetch("/api/enrich", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nodeId: block.id,
+          label: block.label,
+          category: block.category,
+          description: block.description,
+          objective: block.objective,
+          industry: mapData.industry,
+          jurisdiction: mapData.jurisdiction,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Request failed" }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      updateNode(block.id, {
+        keyActors: data.keyActors,
+        keyTools: data.keyTools,
+        painPoints: data.painPoints,
+        costDrivers: data.costDrivers,
+        regulatoryNotes: data.regulatoryNotes,
+        opportunities: data.opportunities,
+        enrichedAt: new Date().toISOString(),
+      });
+    } catch (err: any) {
+      setEnrichError(err.message || "Enrichment failed");
+    } finally {
+      setEnriching(false);
+    }
+  };
 
   return (
     <div
@@ -285,6 +329,54 @@ export default function DetailPanel() {
       </div>
 
       <div className="px-5 py-4 space-y-5">
+        {/* Find Opportunities button */}
+        <button
+          onClick={handleEnrich}
+          disabled={enriching}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
+          style={{
+            background: enriching
+              ? darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6"
+              : isEnriched
+              ? darkMode ? "rgba(22,163,74,0.12)" : "rgba(22,163,74,0.08)"
+              : `${accent}18`,
+            color: enriching
+              ? (darkMode ? "#9ca3af" : "#6b7280")
+              : isEnriched ? "#16a34a" : accent,
+            border: `1px solid ${enriching ? "transparent" : isEnriched ? "rgba(22,163,74,0.25)" : `${accent}30`}`,
+            cursor: enriching ? "wait" : "pointer",
+            opacity: enriching ? 0.7 : 1,
+          }}
+        >
+          {enriching ? (
+            <>
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Searching the web...
+            </>
+          ) : isEnriched ? (
+            <>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 8.5l3.5 3.5 6.5-7" />
+              </svg>
+              Enriched — click to refresh
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="7" cy="7" r="5" />
+                <path d="M11 11l3.5 3.5" />
+              </svg>
+              Find Opportunities
+            </>
+          )}
+        </button>
+        {enrichError && (
+          <p className="text-xs text-red-500 -mt-3">{enrichError}</p>
+        )}
+
         {/* Description */}
         {block.description && (
           <p
@@ -356,6 +448,56 @@ export default function DetailPanel() {
               accent={accent}
               highlight
             />
+          </div>
+        )}
+
+        {/* Business Opportunities (from web enrichment) */}
+        {block.opportunities && block.opportunities.length > 0 && (
+          <div>
+            <SectionHeading muted={muted}>
+              Opportunities{" "}
+              <span className="normal-case font-normal tracking-normal">
+                — web-verified
+              </span>
+            </SectionHeading>
+            <div className="space-y-3">
+              {block.opportunities.map((opp, i) => (
+                <div
+                  key={i}
+                  className="px-3 py-2.5 rounded-lg text-sm"
+                  style={{
+                    background: darkMode
+                      ? "rgba(245,158,11,0.06)"
+                      : "rgba(245,158,11,0.05)",
+                    border: `1px solid ${darkMode ? "rgba(245,158,11,0.15)" : "rgba(245,158,11,0.2)"}`,
+                  }}
+                >
+                  <div
+                    className="font-medium mb-1"
+                    style={{ color: "#f59e0b" }}
+                  >
+                    {opp.title}
+                  </div>
+                  <p
+                    className="text-xs leading-relaxed"
+                    style={{ color: darkMode ? "#d1d5db" : "#374151" }}
+                  >
+                    {opp.description}
+                  </p>
+                  {opp.sourceUrl && (
+                    <a
+                      href={opp.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-1.5 text-[11px] hover:underline"
+                      style={{ color: darkMode ? "#60a5fa" : "#2563eb" }}
+                    >
+                      Source →
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

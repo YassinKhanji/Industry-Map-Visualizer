@@ -49,6 +49,10 @@ export interface IndustryBlock {
   costDrivers?: string[];
   /** Real company or organization examples */
   keyActors?: string[];
+  /** Business opportunities / inefficiencies found via web search */
+  opportunities?: { title: string; description: string; sourceUrl?: string }[];
+  /** ISO date when node was web-enriched */
+  enrichedAt?: string;
   subNodes?: IndustryBlock[];
 }
 
@@ -66,6 +70,12 @@ export const IndustryBlockSchema: z.ZodType<IndustryBlock> = z.lazy(() =>
     regulatoryNotes: z.string().optional(),
     costDrivers: z.array(z.string()).optional(),
     keyActors: z.array(z.string()).optional(),
+    opportunities: z.array(z.object({
+      title: z.string(),
+      description: z.string(),
+      sourceUrl: z.string().optional(),
+    })).optional(),
+    enrichedAt: z.string().optional(),
     subNodes: z.array(IndustryBlockSchema).optional(),
   })
 );
@@ -104,6 +114,8 @@ export interface FlowNodeData extends Record<string, unknown> {
   regulatoryNotes?: string;
   costDrivers?: string[];
   keyActors?: string[];
+  opportunities?: { title: string; description: string; sourceUrl?: string }[];
+  enrichedAt?: string;
   hasChildren: boolean;
   isExpanded: boolean;
   depth: number;
@@ -143,5 +155,6 @@ export interface AppState {
   setCorrectedQuery: (q: string | null) => void;
   setProgress: (p: ProgressStep | null) => void;
   setTriggerSearch: (q: string | null) => void;
+  updateNode: (nodeId: string, patch: Partial<IndustryBlock>) => void;
   reset: () => void;
 }
