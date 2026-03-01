@@ -101,13 +101,24 @@ Return ONLY valid JSON.`;
       text: { format: { type: "text" } },
     });
 
-    // Extract text output
+    // Extract text output and url_citation annotations
     let outputText = "";
+    const citationMap = new Map<string, string>(); // url -> title
     if (response.output) {
       for (const item of response.output) {
         if (item.type === "message" && item.content) {
           for (const block of item.content) {
-            if (block.type === "output_text") outputText += block.text;
+            if (block.type === "output_text") {
+              outputText += block.text;
+              // Extract url_citation annotations from this block
+              if (Array.isArray(block.annotations)) {
+                for (const ann of block.annotations) {
+                  if (ann.type === "url_citation" && ann.url) {
+                    citationMap.set(ann.url, ann.title || new URL(ann.url).hostname);
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -119,6 +130,9 @@ Return ONLY valid JSON.`;
 
     const raw = extractJSON(outputText);
 
+    // Deduplicated sources from web search citations
+    const sources = Array.from(citationMap.entries()).map(([url, title]) => ({ url, title }));
+
     const result = {
       demandTrend: typeof raw.demandTrend === "string" ? raw.demandTrend : "data unavailable",
       competitiveSaturation: typeof raw.competitiveSaturation === "string" ? raw.competitiveSaturation : "data unavailable",
@@ -128,6 +142,7 @@ Return ONLY valid JSON.`;
       disruptionRisk: typeof raw.disruptionRisk === "string" ? raw.disruptionRisk : "data unavailable",
       marginProfile: typeof raw.marginProfile === "string" ? raw.marginProfile : "data unavailable",
       clientSwitchingCosts: typeof raw.clientSwitchingCosts === "string" ? raw.clientSwitchingCosts : "data unavailable",
+      sources,
     };
 
     return NextResponse.json(result);

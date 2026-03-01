@@ -303,6 +303,11 @@ export default function DetailPanel() {
         regulatoryNotes: research.regulatoryNotes,
       });
 
+      // Track sources from Agent 1
+      const allSources: { url: string; title: string }[] = [
+        ...(Array.isArray(research.sources) ? research.sources : []),
+      ];
+
       // ── Stage 2: Analysis ──
       setEnrichStage("analyzing");
       const analyzeRes = await fetch("/api/enrich/analyze", {
@@ -357,6 +362,11 @@ export default function DetailPanel() {
           : "medium") as "low" | "medium" | "high",
       });
 
+      // Collect sources from Agent 2
+      if (Array.isArray(analysis.sources)) {
+        allSources.push(...analysis.sources);
+      }
+
       // ── Stage 3: Scoring ──
       setEnrichStage("scoring");
       const scoreRes = await fetch("/api/enrich/score", {
@@ -399,11 +409,25 @@ export default function DetailPanel() {
           ? vcpVal
           : "midstream") as "upstream" | "midstream" | "downstream",
         opportunities: Array.isArray(scoring.opportunities)
-          ? scoring.opportunities.map((opp: string) => ({
-              title: opp.substring(0, 60) + (opp.length > 60 ? "..." : ""),
-              description: opp,
-            }))
+          ? scoring.opportunities.map((opp: any) => {
+              // Support both object format (new) and plain string (legacy)
+              const desc = typeof opp === "string" ? opp : (opp.description || String(opp));
+              const srcUrl = typeof opp === "object" && opp.sourceUrl ? opp.sourceUrl : undefined;
+              return {
+                title: desc.substring(0, 60) + (desc.length > 60 ? "..." : ""),
+                description: desc,
+                sourceUrl: srcUrl,
+              };
+            })
           : [],
+        // Deduplicate and store all sources from Agents 1, 2, and scoring
+        sources: (() => {
+          const scoreSources = Array.isArray(scoring.sources) ? scoring.sources : [];
+          const combined = [...allSources, ...scoreSources];
+          const seen = new Map<string, string>();
+          for (const s of combined) { if (s.url) seen.set(s.url, s.title || ""); }
+          return Array.from(seen.entries()).map(([url, title]) => ({ url, title }));
+        })(),
         enrichedAt: new Date().toISOString(),
       });
 
@@ -1115,6 +1139,45 @@ export default function DetailPanel() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        )}
+
+        {/* Research Sources */}
+        {block.sources && block.sources.length > 0 && (
+          <div>
+            <SectionHeading muted={muted}>
+              Sources{" "}
+              <span className="normal-case font-normal tracking-normal">
+                ({block.sources.length})
+              </span>
+            </SectionHeading>
+            <div className="space-y-1.5">
+              {block.sources.map((src, i) => (
+                <a
+                  key={i}
+                  href={src.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-2 px-3 py-2 rounded-lg text-xs transition-colors hover:underline"
+                  style={{
+                    background: darkMode
+                      ? "rgba(96,165,250,0.06)"
+                      : "rgba(37,99,235,0.04)",
+                    border: `1px solid ${darkMode ? "rgba(96,165,250,0.12)" : "rgba(37,99,235,0.12)"}`,
+                    color: darkMode ? "#93bbfd" : "#2563eb",
+                  }}
+                >
+                  <span
+                    className="shrink-0 mt-px text-[10px] font-medium opacity-50"
+                  >
+                    [{i + 1}]
+                  </span>
+                  <span className="break-all leading-relaxed">
+                    {src.title || new URL(src.url).hostname}
+                  </span>
+                </a>
+              ))}
             </div>
           </div>
         )}

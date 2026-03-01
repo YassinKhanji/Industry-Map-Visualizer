@@ -5,7 +5,7 @@ import type { IndustryMap, IndustryBlock, FlowNodeData } from "@/types";
 const NODE_WIDTH = 190;
 const NODE_HEIGHT = 46;
 const RANK_SEP = 200;
-const NODE_SEP = 80;
+const NODE_SEP = 140;
 
 /**
  * Convert IndustryMap data into React Flow nodes and edges,

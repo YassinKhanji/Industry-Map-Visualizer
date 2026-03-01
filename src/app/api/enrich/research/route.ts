@@ -87,13 +87,24 @@ Return ONLY valid JSON.`;
       text: { format: { type: "text" } },
     });
 
-    // Extract text output
+    // Extract text output and url_citation annotations
     let outputText = "";
+    const citationMap = new Map<string, string>(); // url -> title
     if (response.output) {
       for (const item of response.output) {
         if (item.type === "message" && item.content) {
           for (const block of item.content) {
-            if (block.type === "output_text") outputText += block.text;
+            if (block.type === "output_text") {
+              outputText += block.text;
+              // Extract url_citation annotations from this block
+              if (Array.isArray(block.annotations)) {
+                for (const ann of block.annotations) {
+                  if (ann.type === "url_citation" && ann.url) {
+                    citationMap.set(ann.url, ann.title || new URL(ann.url).hostname);
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -105,12 +116,16 @@ Return ONLY valid JSON.`;
 
     const raw = extractJSON(outputText);
 
+    // Deduplicated sources from web search citations
+    const sources = Array.from(citationMap.entries()).map(([url, title]) => ({ url, title }));
+
     const result = {
       keyActors: Array.isArray(raw.keyActors) ? raw.keyActors : [],
       keyTools: Array.isArray(raw.keyTools) ? raw.keyTools : [],
       typicalClients: Array.isArray(raw.typicalClients) ? raw.typicalClients : [],
       costDrivers: Array.isArray(raw.costDrivers) ? raw.costDrivers : [],
       regulatoryNotes: typeof raw.regulatoryNotes === "string" ? raw.regulatoryNotes : "None specific",
+      sources,
     };
 
     return NextResponse.json(result);

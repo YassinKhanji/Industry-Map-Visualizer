@@ -51,6 +51,8 @@ export interface IndustryBlock {
   keyActors?: string[];
   /** Business opportunities / inefficiencies found via web search */
   opportunities?: { title: string; description: string; sourceUrl?: string }[];
+  /** Deduplicated source URLs from web research agents */
+  sources?: { url: string; title: string }[];
   /** ISO date when node was web-enriched */
   enrichedAt?: string;
   // ─── Enrichment-only fields (set by /api/enrich pipeline) ───
@@ -170,6 +172,7 @@ export interface FlowNodeData extends Record<string, unknown> {
   costDrivers?: string[];
   keyActors?: string[];
   opportunities?: { title: string; description: string; sourceUrl?: string }[];
+  sources?: { url: string; title: string }[];
   enrichedAt?: string;
   nodeRelevance?: string;
   connectionInsights?: { connectionLabel: string; insight: string }[];

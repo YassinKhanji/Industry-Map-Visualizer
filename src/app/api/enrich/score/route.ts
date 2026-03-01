@@ -57,6 +57,16 @@ export async function POST(req: NextRequest) {
       existingOpportunities?.length ? `EXISTING OPPORTUNITIES (verify/update): ${existingOpportunities.join("; ")}` : "",
     ].filter(Boolean).join("\n");
 
+    // Collect all sources from Agents 1 & 2
+    const allSources: { url: string; title: string }[] = [
+      ...(Array.isArray(research?.sources) ? research.sources : []),
+      ...(Array.isArray(analysis?.sources) ? analysis.sources : []),
+    ];
+    // Deduplicate by URL
+    const sourceMap = new Map<string, string>();
+    for (const s of allSources) { if (s.url) sourceMap.set(s.url, s.title || ""); }
+    const dedupedSources = Array.from(sourceMap.entries()).map(([url, title]) => ({ url, title }));
+
     const researchBlock = research
       ? `\nAGENT 1 — MARKET RESEARCH (web-verified):
 Key Actors: ${research.keyActors?.join(", ") || "none"}
@@ -78,6 +88,10 @@ Margin Profile: ${analysis.marginProfile || "unknown"}
 Client Switching Costs: ${analysis.clientSwitchingCosts || "unknown"}`
       : "";
 
+    const sourcesBlock = dedupedSources.length > 0
+      ? `\nSOURCES FROM WEB RESEARCH (use these to attribute opportunities):\n${dedupedSources.map((s, i) => `  [${i + 1}] ${s.title} — ${s.url}`).join("\n")}`
+      : "";
+
     const prompt = `You are a senior opportunity scorer performing VC-grade due diligence.
 
 YOUR RULES:
@@ -88,11 +102,13 @@ YOUR RULES:
     Scale: 1-10 where 1 = terrible, 5 = average, 10 = exceptional
 - If the research is thin or contradictory, LOWER the score, don't inflate it.
 - nodeRelevance: How important is this specific node to someone exploring the "${industry}" industry? ("critical" / "important" / "peripheral" / "tangential")
+- For each opportunity, include the most relevant source URL from the SOURCES list below. If no source is relevant, set sourceUrl to null.
 
 NODE CONTEXT:
 ${ctx}
 ${researchBlock}
 ${analysisBlock}
+${sourcesBlock}
 
 TASK: Synthesize all data and produce a final scoring. Return:
 
@@ -106,11 +122,11 @@ TASK: Synthesize all data and produce a final scoring. Return:
   "incomeRange": "<realistic USD revenue range once established, e.g. '$200K-$1M/year'>",
   "valueChainPosition": "<one of: upstream | midstream | downstream | cross-cutting — with 1 sentence why>",
   "opportunities": [
-    "<3-6 specific, actionable opportunity descriptions — each 1-2 sentences, grounded in the data above>"
+    { "description": "<specific, actionable opportunity — 1-2 sentences, grounded in the data above>", "sourceUrl": "<URL from SOURCES list or null>" }
   ]
 }
 
-CRITICAL: The "opportunities" field must describe REAL, SPECIFIC opportunities — not vague advice. Each should reference facts from the research/analysis.
+CRITICAL: The "opportunities" array must contain 3-6 objects, each with "description" (string) and "sourceUrl" (string or null). Each opportunity must describe REAL, SPECIFIC opportunities — not vague advice. Each should reference facts from the research/analysis.
 
 Return ONLY valid JSON.`;
 
@@ -137,7 +153,17 @@ Return ONLY valid JSON.`;
       expenseRange: typeof raw.expenseRange === "string" ? raw.expenseRange : "data unavailable",
       incomeRange: typeof raw.incomeRange === "string" ? raw.incomeRange : "data unavailable",
       valueChainPosition: typeof raw.valueChainPosition === "string" ? raw.valueChainPosition : "data unavailable",
-      opportunities: Array.isArray(raw.opportunities) ? raw.opportunities : [],
+      opportunities: Array.isArray(raw.opportunities)
+        ? raw.opportunities.map((opp: any) => {
+            // Support both new object format and legacy string format
+            if (typeof opp === "string") return { description: opp, sourceUrl: null };
+            return {
+              description: typeof opp.description === "string" ? opp.description : String(opp),
+              sourceUrl: typeof opp.sourceUrl === "string" ? opp.sourceUrl : null,
+            };
+          })
+        : [],
+      sources: dedupedSources,
     };
 
     return NextResponse.json(result);
