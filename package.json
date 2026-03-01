@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate-blocks": "npx tsx scripts/generate-blocks.ts",
     "seed-industries": "npx tsx scripts/seed-all-industries.ts",
     "test:search": "npx tsx scripts/test-search.ts"
   },

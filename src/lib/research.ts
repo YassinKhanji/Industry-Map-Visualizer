@@ -99,7 +99,13 @@ Return ONLY valid JSON.`,
   });
 
   const raw = res.choices[0]?.message?.content || "{}";
-  const parsed = JSON.parse(raw) as ClassificationResult;
+  let parsed: ClassificationResult;
+  try {
+    parsed = JSON.parse(raw) as ClassificationResult;
+  } catch {
+    console.warn("classifyArchetype: JSON parse failed, using defaults");
+    parsed = { archetype: "asset-manufacturing", industryName: query, jurisdiction: "Global" };
+  }
 
   // Validate archetype
   if (!ARCHETYPE_PROFILES[parsed.archetype]) {
@@ -166,7 +172,13 @@ Return ONLY valid JSON: { "roots": [...] }`,
   });
 
   const raw = res.choices[0]?.message?.content || '{"roots":[]}';
-  const parsed = JSON.parse(raw) as { roots: RootNodeEnriched[] };
+  let parsed: { roots: RootNodeEnriched[] };
+  try {
+    parsed = JSON.parse(raw) as { roots: RootNodeEnriched[] };
+  } catch {
+    console.warn("researchStructure: JSON parse failed, returning empty roots");
+    parsed = { roots: [] };
+  }
 
   return (parsed.roots || []).map((r) => ({
     ...r,
@@ -258,7 +270,13 @@ Revenue model: ${root.revenueModel}`,
   });
 
   const raw = res.choices[0]?.message?.content || '{"subNodes":[]}';
-  const parsed = JSON.parse(raw) as { subNodes: SubTreeNode[] };
+  let parsed: { subNodes: SubTreeNode[] };
+  try {
+    parsed = JSON.parse(raw) as { subNodes: SubTreeNode[] };
+  } catch {
+    console.warn(`researchSubTree(${root.id}): JSON parse failed, returning empty`);
+    parsed = { subNodes: [] };
+  }
 
   // Recursively sanitize categories
   function sanitizeTree(nodes: SubTreeNode[], fallback: Category): SubTreeNode[] {
@@ -325,7 +343,13 @@ Return ONLY valid JSON.`,
   });
 
   const raw = res.choices[0]?.message?.content || '{"edges":[]}';
-  const parsed = JSON.parse(raw) as { edges: MapEdge[] };
+  let parsed: { edges: MapEdge[] };
+  try {
+    parsed = JSON.parse(raw) as { edges: MapEdge[] };
+  } catch {
+    console.warn("researchEdges: JSON parse failed, returning empty edges");
+    parsed = { edges: [] };
+  }
 
   const validIds = new Set(rootNodes.map((n) => n.id));
   return (parsed.edges || []).filter(
@@ -447,12 +471,32 @@ export async function deepResearch(
     edges,
   };
 
-  // Validate with Zod
+  // Validate with Zod — attempt to fix common issues
   report("validating", "Validating map\u2026", 95);
   try {
     IndustryMapSchema.parse(map);
   } catch (e) {
-    console.error("Zod validation failed, returning unvalidated map:", e);
+    console.warn("Zod validation failed, attempting to fix:", e);
+    // Remove invalid edges (referencing non-existent nodes)
+    const allIds = new Set<string>();
+    function collectIds(nodes: IndustryBlock[]) {
+      for (const n of nodes) {
+        allIds.add(n.id);
+        if (n.subNodes) collectIds(n.subNodes);
+      }
+    }
+    collectIds(map.rootNodes);
+    map.edges = map.edges.filter(
+      (e) => e.source !== e.target && allIds.has(e.source) && allIds.has(e.target)
+    );
+    // Re-sanitize all categories
+    function fixCategories(nodes: IndustryBlock[]) {
+      for (const n of nodes) {
+        n.category = sanitizeCategory(n.category);
+        if (n.subNodes) fixCategories(n.subNodes);
+      }
+    }
+    fixCategories(map.rootNodes);
   }
 
   return map;

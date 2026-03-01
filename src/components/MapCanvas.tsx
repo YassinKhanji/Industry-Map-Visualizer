@@ -121,13 +121,6 @@ function MapCanvasInner() {
     setExpandedIds(new Set());
   }, []);
 
-  // Expand essentials: just the root nodes (depth 1)
-  const handleExpandEssentials = useCallback(() => {
-    if (!mapData) return;
-    const rootIds = getIdsToDepth(mapData.rootNodes, 1);
-    setExpandedIds(new Set(rootIds));
-  }, [mapData]);
-
   if (!mapData) return null;
 
   return (
@@ -135,7 +128,6 @@ function MapCanvasInner() {
       <AutoExpandToggle
         totalNodesAtDepth2={totalNodesAtDepth2}
         onCollapseAll={handleCollapseAll}
-        onExpandEssentials={handleExpandEssentials}
       />
       <ReactFlow
         nodes={nodes}

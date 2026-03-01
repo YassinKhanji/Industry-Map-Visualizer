@@ -107,7 +107,7 @@ export default function SearchBar() {
   /* searchingRef prevents re-entrancy */
   const searchingRef = useRef(false);
 
-  /* Core search logic — can be called from form submit or taxonomy trigger */
+  /* Core search logic — single SSE request delivers progress + data */
   const executeSearch = useCallback(
     async (query: string) => {
       const trimmed = query.trim();
@@ -125,7 +125,7 @@ export default function SearchBar() {
       if (cached && cached.data?.rootNodes && cached.data.rootNodes.length > 0) {
         setMapData(cached.data);
         setIsCached(true);
-        setSource(cached.source as "prebuilt" | "assemble" | "generate");
+        setSource(cached.source as "database" | "research" | "fallback");
         searchingRef.current = false;
         return;
       }
@@ -133,11 +133,14 @@ export default function SearchBar() {
       setIsLoading(true);
       setProgress({ step: "starting", message: "Starting\u2026", pct: 0 });
 
+      // Track whether SSE delivered data
+      let sseDelivered = false;
+
       try {
-        // ── Phase 1: SSE for real-time progress (ignore data payloads) ──
+        // ── SSE: progress updates + data delivery in one request ──
         const sseAbort = new AbortController();
-        const sseTimeout = setTimeout(() => sseAbort.abort(), 45000);
-        let sseError: string | null = null;
+        // 90s timeout — deep research pipeline can take 30-60s
+        const sseTimeout = setTimeout(() => sseAbort.abort(), 90000);
 
         try {
           const res = await fetch(
@@ -153,19 +156,30 @@ export default function SearchBar() {
             const processLine = (line: string) => {
               if (!line.startsWith("data: ")) return;
               try {
-                const evt = JSON.parse(line.slice(6)) as {
-                  step: string;
-                  message: string;
-                  pct: number;
-                  corrected?: string;
-                };
+                const evt = JSON.parse(line.slice(6));
+
                 if (evt.step === "error") {
-                  sseError = evt.message;
-                } else if (evt.step === "done") {
-                  // Capture corrected query from SSE, but don't rely on data blob
-                  if (evt.corrected) setCorrectedQuery(evt.corrected);
-                  setProgress({ step: "done", message: "Loading results\u2026", pct: 95 });
+                  // Error with optional fallback data
+                  if (evt.data?.rootNodes?.length > 0) {
+                    setMapData(evt.data);
+                    setSource("fallback");
+                    setError(evt.message || "Research failed");
+                    sseDelivered = true;
+                  } else {
+                    setError(evt.message || "Research failed");
+                  }
+                } else if (evt.step === "done" && evt.data) {
+                  // Success — data delivered via SSE
+                  setMapData(evt.data);
+                  const src = evt.source || "research";
+                  setSource(src);
+                  if (evt.matchedIndustry) setCorrectedQuery(evt.matchedIndustry);
+                  setProgress(null);
+                  // Cache the result
+                  localSet(cacheKey, evt.data, src);
+                  sseDelivered = true;
                 } else {
+                  // Progress update
                   setProgress({ step: evt.step, message: evt.message, pct: evt.pct });
                 }
               } catch {
@@ -173,7 +187,6 @@ export default function SearchBar() {
               }
             };
 
-            // Read SSE events for progress updates only
             while (true) {
               const { done, value } = await reader.read();
               if (done) {
@@ -187,7 +200,7 @@ export default function SearchBar() {
                 for (const line of part.split("\n")) processLine(line);
               }
             }
-            // Process any remaining buffer
+            // Process remaining buffer
             if (buffer.trim()) {
               for (const part of buffer.split("\n\n")) {
                 for (const line of part.split("\n")) processLine(line);
@@ -195,56 +208,38 @@ export default function SearchBar() {
             }
           }
         } catch {
-          // SSE failed (timeout / network) — that's OK, we'll fetch data below
+          // SSE failed (timeout / network) — fall through to GET fallback
         }
 
         clearTimeout(sseTimeout);
 
-        if (sseError) {
-          console.warn("SSE reported error, but Phase 2 GET may still succeed:", sseError);
-          // Don't return — Phase 2 GET runs independently and may succeed
-        }
+        // ── GET fallback: only if SSE didn't deliver data ──
+        if (!sseDelivered) {
+          setProgress({ step: "fetching", message: "Fetching results\u2026", pct: 95 });
 
-        // ── Phase 2: Fetch actual data via regular GET (reliable HTTP) ──
-        // The SSE handler already ran the full pipeline and cached the result,
-        // so this GET hits server cache immediately (~1ms).
-        setProgress({ step: "fetching", message: "Fetching results\u2026", pct: 98 });
+          const dataRes = await fetch(
+            `/api/generate?q=${encodeURIComponent(trimmed)}`
+          );
+          const json = await dataRes.json();
 
-        const dataRes = await fetch(
-          `/api/generate?q=${encodeURIComponent(trimmed)}`
-        );
-
-        const json = await dataRes.json();
-
-        // Server returns 503 + fallback skeleton when research fails
-        if (!dataRes.ok) {
-          // If server provided a fallback skeleton, show it with a warning
-          if (dataRes.status === 503 && json.data) {
+          if (!dataRes.ok) {
+            if (dataRes.status === 503 && json.data) {
+              setMapData(json.data);
+              setSource("fallback");
+              setError(json.error || "Research failed \u2014 showing skeleton map");
+            } else {
+              setError(json.error || "Something went wrong");
+            }
+          } else if (json.data) {
+            const src = (dataRes.headers.get("X-Source") || "research") as "database" | "research" | "fallback";
+            const matchedIndustry = dataRes.headers.get("X-Matched-Industry");
+            if (matchedIndustry) setCorrectedQuery(matchedIndustry);
             setMapData(json.data);
-            setSource("generate");
-            setError(json.error || "Research failed — showing skeleton map");
-            setProgress(null);
+            setSource(src);
+            if (!json.error) localSet(cacheKey, json.data, src);
           } else {
-            setError(json.error || "Something went wrong");
-            setProgress(null);
+            setError(json.error || "No data received");
           }
-          return;
-        }
-
-        if (json.data) {
-          const rawSrc = dataRes.headers.get("X-Source") || "research";
-          const src = rawSrc as "prebuilt" | "assemble" | "generate";
-          const matchedIndustry = dataRes.headers.get("X-Matched-Industry");
-          if (matchedIndustry) setCorrectedQuery(matchedIndustry);
-          setMapData(json.data);
-          setSource(src);
-          // Don't cache if server signaled an error alongside data
-          if (!json.error) {
-            localSet(cacheKey, json.data, rawSrc);
-          }
-          setProgress(null);
-        } else {
-          setError(json.error || "No data received");
           setProgress(null);
         }
       } catch {

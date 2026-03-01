@@ -1,12 +1,17 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppStore } from "@/lib/store";
 import { CATEGORY_ACCENTS, CATEGORY_LABELS } from "./NodeCard";
 import type { IndustryBlock, MapEdge } from "@/types";
 import { ARCHETYPE_PROFILES } from "@/lib/archetypes";
 import { buildEnrichPayload } from "@/lib/enrichContext";
 import type { ConnectionInfo } from "@/lib/enrichContext";
+
+const MIN_WIDTH = 320;
+const DEFAULT_WIDTH = 360;
+const EXPANDED_WIDTH = 640;
+const MAX_WIDTH_RATIO = 0.6; // max 60% of viewport
 
 /* ──────── helpers ──────── */
 
@@ -148,6 +153,57 @@ export default function DetailPanel() {
     "idle" | "researching" | "analyzing" | "scoring" | "done" | "error"
   >("idle");
   const [enrichError, setEnrichError] = useState<string | null>(null);
+
+  /* ── Resize / expand state ── */
+  const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH);
+  const [expanded, setExpanded] = useState(false);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartWidth = useRef(DEFAULT_WIDTH);
+
+  const toggleExpanded = useCallback(() => {
+    setExpanded((prev) => {
+      const next = !prev;
+      setPanelWidth(next ? EXPANDED_WIDTH : DEFAULT_WIDTH);
+      return next;
+    });
+  }, []);
+
+  // Drag-to-resize from left edge
+  const onMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      isDragging.current = true;
+      dragStartX.current = e.clientX;
+      dragStartWidth.current = panelWidth;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    },
+    [panelWidth]
+  );
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      const delta = dragStartX.current - e.clientX;
+      const maxW = window.innerWidth * MAX_WIDTH_RATIO;
+      const newW = Math.min(maxW, Math.max(MIN_WIDTH, dragStartWidth.current + delta));
+      setPanelWidth(newW);
+      setExpanded(newW > (DEFAULT_WIDTH + EXPANDED_WIDTH) / 2);
+    };
+    const onMouseUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, []);
 
   const close = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
 
@@ -362,12 +418,32 @@ export default function DetailPanel() {
     <div
       className="fixed top-0 right-0 h-full z-50 detail-panel-enter detail-scrollbar"
       style={{
-        width: 360,
+        width: panelWidth,
         background: darkMode ? "var(--card-bg)" : "#ffffff",
         borderLeft: `1px solid var(--border)`,
         overflowY: "auto",
+        transition: isDragging.current ? "none" : "width 0.25s ease",
       }}
     >
+      {/* Drag handle on left edge */}
+      <div
+        onMouseDown={onMouseDown}
+        className="resize-handle absolute top-0 left-0 h-full z-20"
+        style={{
+          width: 5,
+          cursor: "col-resize",
+        }}
+      >
+        <div
+          className="resize-indicator absolute top-0 left-0 h-full transition-opacity"
+          style={{
+            width: 3,
+            background: "var(--accent)",
+            opacity: 0,
+          }}
+        />
+      </div>
+
       {/* Header */}
       <div
         className="sticky top-0 z-10 px-5 py-4 flex items-start justify-between"
@@ -424,22 +500,47 @@ export default function DetailPanel() {
             {block.label}
           </h2>
         </div>
-        <button
-          onClick={close}
-          className="ml-3 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          style={{ color: muted }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
+        <div className="flex items-center gap-1 ml-3 flex-shrink-0">
+          {/* Expand / collapse toggle */}
+          <button
+            onClick={toggleExpanded}
+            className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            style={{ color: muted }}
+            title={expanded ? "Collapse panel" : "Expand panel"}
           >
-            <path d="M4 4l8 8M12 4l-8 8" />
-          </svg>
-        </button>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              {expanded ? (
+                <path d="M10 3l-4 5 4 5" />
+              ) : (
+                <path d="M6 3l4 5-4 5" />
+              )}
+            </svg>
+          </button>
+          {/* Close */}
+          <button
+            onClick={close}
+            className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            style={{ color: muted }}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <path d="M4 4l8 8M12 4l-8 8" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="px-5 py-4 space-y-5">

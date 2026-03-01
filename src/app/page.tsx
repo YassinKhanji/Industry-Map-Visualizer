@@ -94,7 +94,7 @@ export default function Home() {
           )}
           {!isLoading && source && !isCached && hasResults && (
             <span className="text-[10px]" style={{ color: "var(--muted)" }}>
-              Deep researched
+              {source === "database" ? "From knowledge base" : source === "research" ? "Deep researched" : "Skeleton"}
             </span>
           )}
           {!isLoading && query && hasResults && (

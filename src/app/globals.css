@@ -142,6 +142,12 @@ button, a, [role="button"], .react-flow__node {
   animation: slide-in-right 200ms ease-out forwards;
 }
 
+/* Drag-to-resize handle glow on hover */
+.detail-panel-enter .resize-handle:hover .resize-indicator,
+.detail-panel-enter .resize-handle:active .resize-indicator {
+  opacity: 0.6 !important;
+}
+
 /* Scrollbar for detail panel */
 .detail-scrollbar::-webkit-scrollbar {
   display: block;

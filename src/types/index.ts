@@ -154,8 +154,8 @@ export const IndustryMapSchema = z.object({
 
 export type IndustryMap = z.infer<typeof IndustryMapSchema>;
 
-// ─── Resolver modes ───
-export type ResolveMode = "prebuilt" | "assemble" | "generate";
+// ─── Source modes (how the map was obtained) ───
+export type SourceMode = "database" | "research" | "fallback";
 
 // ─── React Flow node data ───
 export interface FlowNodeData extends Record<string, unknown> {
@@ -205,7 +205,7 @@ export interface AppState {
   isLoading: boolean;
   autoExpand: boolean;
   isCached: boolean;
-  source: "prebuilt" | "assemble" | "generate" | null;
+  source: SourceMode | null;
   error: string | null;
   darkMode: boolean;
   selectedNodeId: string | null;

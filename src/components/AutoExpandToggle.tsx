@@ -7,13 +7,11 @@ const SAFE_AUTO_EXPAND_LIMIT = 150;
 interface AutoExpandToggleProps {
   totalNodesAtDepth2: number;
   onCollapseAll: () => void;
-  onExpandEssentials: () => void;
 }
 
 export default function AutoExpandToggle({
   totalNodesAtDepth2,
   onCollapseAll,
-  onExpandEssentials,
 }: AutoExpandToggleProps) {
   const autoExpand = useAppStore((s) => s.autoExpand);
   const setAutoExpand = useAppStore((s) => s.setAutoExpand);
@@ -31,11 +29,6 @@ export default function AutoExpandToggle({
       {/* Collapse all */}
       <button onClick={onCollapseAll} className={`${btnBase} ${btnStyle}`}>
         Collapse all
-      </button>
-
-      {/* Expand essentials */}
-      <button onClick={onExpandEssentials} className={`${btnBase} ${btnStyle}`}>
-        Essentials
       </button>
 
       {/* Auto-expand toggle */}
