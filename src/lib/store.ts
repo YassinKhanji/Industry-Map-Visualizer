@@ -27,9 +27,11 @@ export const useAppStore = create<AppState>((set) => ({
   userProfile: "",
   highlightedNodeIds: [],
   profileHighlightOn: false,
-  profilePanelOpen: false,
+  profilePanelOpen: true,
+  focusNodeId: null,
   nodeChatHistories: {},
   activeDetailTab: "details" as const,
+  pendingQuote: null,
 
   setQuery: (query: string) => set({ query }),
   setMapData: (data: IndustryMap | null) => set({ mapData: data }),
@@ -48,6 +50,7 @@ export const useAppStore = create<AppState>((set) => ({
   setHighlightedNodeIds: (ids: string[]) => set({ highlightedNodeIds: ids }),
   setProfileHighlightOn: (on: boolean) => set({ profileHighlightOn: on }),
   setProfilePanelOpen: (open: boolean) => set({ profilePanelOpen: open }),
+  setFocusNodeId: (id: string | null) => set({ focusNodeId: id }),
   appendChatMessage: (nodeId: string, msg) =>
     set((state) => {
       const prev = state.nodeChatHistories[nodeId] || [];
@@ -65,6 +68,7 @@ export const useAppStore = create<AppState>((set) => ({
       return { nodeChatHistories: { ...state.nodeChatHistories, [nodeId]: updated } };
     }),
   setActiveDetailTab: (tab) => set({ activeDetailTab: tab }),
+  setPendingQuote: (quote: string | null) => set({ pendingQuote: quote }),
   updateNode: (nodeId: string, patch: Partial<IndustryBlock>) =>
     set((state) => {
       if (!state.mapData) return state;

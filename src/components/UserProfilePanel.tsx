@@ -35,6 +35,9 @@ export default function UserProfilePanel() {
   const setProfileHighlightOn = useAppStore((s) => s.setProfileHighlightOn);
   const setProfilePanelOpen = useAppStore((s) => s.setProfilePanelOpen);
   const setSelectedNodeId = useAppStore((s) => s.setSelectedNodeId);
+  const setFocusNodeId = useAppStore((s) => s.setFocusNodeId);
+  const selectedNodeId = useAppStore((s) => s.selectedNodeId);
+  const setActiveDetailTab = useAppStore((s) => s.setActiveDetailTab);
 
   const [matches, setMatches] = useState<ProfileMatch[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -214,16 +217,28 @@ export default function UserProfilePanel() {
             >
               Matched Nodes ({matches.length})
             </h3>
-            {matches.map((m, i) => (
+            {matches.map((m, i) => {
+              const isActive = selectedNodeId === m.id;
+              return (
               <button
                 key={m.id}
-                onClick={() => setSelectedNodeId(m.id)}
-                className="w-full text-left px-3 py-2.5 rounded-lg transition-colors text-sm"
+                onClick={() => {
+                  setSelectedNodeId(m.id);
+                  setFocusNodeId(m.id);
+                  setActiveDetailTab("details");
+                }}
+                className="w-full text-left px-3 py-2.5 rounded-lg transition-all duration-200 text-sm"
                 style={{
-                  background: darkMode
-                    ? "rgba(245,158,11,0.06)"
-                    : "rgba(245,158,11,0.04)",
-                  border: `1px solid ${darkMode ? "rgba(245,158,11,0.12)" : "rgba(245,158,11,0.15)"}`,
+                  background: isActive
+                    ? darkMode ? "rgba(245,158,11,0.18)" : "rgba(245,158,11,0.12)"
+                    : darkMode ? "rgba(245,158,11,0.06)" : "rgba(245,158,11,0.04)",
+                  border: isActive
+                    ? `1.5px solid ${darkMode ? "rgba(245,158,11,0.5)" : "rgba(245,158,11,0.6)"}`
+                    : `1px solid ${darkMode ? "rgba(245,158,11,0.12)" : "rgba(245,158,11,0.15)"}`,
+                  boxShadow: isActive
+                    ? "0 0 8px rgba(245,158,11,0.2)"
+                    : "none",
+                  cursor: "pointer",
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -250,7 +265,8 @@ export default function UserProfilePanel() {
                   {m.reason}
                 </p>
               </button>
-            ))}
+              );
+            })}
           </div>
         )}
 

@@ -74,6 +74,8 @@ export default function NodeChatPanel() {
   const nodeChatHistories = useAppStore((s) => s.nodeChatHistories);
   const appendChatMessage = useAppStore((s) => s.appendChatMessage);
   const updateLastAssistantMessage = useAppStore((s) => s.updateLastAssistantMessage);
+  const pendingQuote = useAppStore((s) => s.pendingQuote);
+  const setPendingQuote = useAppStore((s) => s.setPendingQuote);
 
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -202,6 +204,21 @@ export default function NodeChatPanel() {
     };
   }, [selectedNodeId]);
 
+  // Consume pending quote from Details tab selection
+  useEffect(() => {
+    if (!pendingQuote) return;
+    setInput((prev) => {
+      const prefix = prev.trim() ? prev.trim() + "\n\n" : "";
+      return `${prefix}> ${pendingQuote}\n\n`;
+    });
+    setPendingQuote(null);
+    // Focus the textarea after inserting the quote
+    setTimeout(() => {
+      textareaRef.current?.focus();
+      adjustTextarea();
+    }, 50);
+  }, [pendingQuote, setPendingQuote, adjustTextarea]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -277,7 +294,7 @@ export default function NodeChatPanel() {
 
       {/* Input bar */}
       <div
-        className="flex-shrink-0 px-4 py-3"
+        className="flex-shrink-0 px-4 py-4"
         style={{ borderTop: "1px solid var(--border)" }}
       >
         {/* Web search toggle */}
@@ -318,20 +335,21 @@ export default function NodeChatPanel() {
             onKeyDown={handleKeyDown}
             placeholder={`Ask about ${block.label}…`}
             disabled={isStreaming}
-            rows={1}
-            className="flex-1 resize-none rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+            rows={2}
+            className="flex-1 resize-none rounded-xl px-4 py-3 text-sm outline-none transition-all focus:ring-2 focus:ring-[var(--accent)] focus:ring-opacity-40"
             style={{
               background: darkMode ? "var(--surface)" : "#f9fafb",
               color: "var(--foreground)",
-              border: "1px solid var(--border)",
-              maxHeight: 80,
+              border: "1.5px solid var(--border)",
+              maxHeight: 120,
               opacity: isStreaming ? 0.5 : 1,
+              fontSize: 14,
             }}
           />
           <button
             onClick={handleSend}
             disabled={isStreaming || !input.trim()}
-            className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg transition-all"
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl transition-all"
             style={{
               background:
                 isStreaming || !input.trim()
@@ -345,7 +363,7 @@ export default function NodeChatPanel() {
             }}
             title="Send message"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
               <path d="M1.5 1.5l13 6.5-13 6.5V9l8-1-8-1V1.5z" />
             </svg>
           </button>

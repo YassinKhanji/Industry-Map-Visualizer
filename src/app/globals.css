@@ -8,7 +8,7 @@
   --border: #e5e7eb;
   --border-hover: #d1d5db;
   --edge: #d1d5db;
-  --edge-dim: #d1d5db40;
+  --edge-dim: #9ca3af;
   --muted: #6b7280;
   --card-bg: #ffffff;
   --surface: #f9fafb;
@@ -262,4 +262,13 @@ button, a, [role="button"], .react-flow__node {
 @keyframes chat-dot-bounce {
   0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
   30%           { opacity: 1;   transform: translateY(-3px); }
+}
+
+/* Quote-to-Chat tooltip pop animation */
+.animate-quote-pop {
+  animation: quote-pop 0.15s ease-out;
+}
+@keyframes quote-pop {
+  from { opacity: 0; transform: translate(-50%, -100%) scale(0.85); }
+  to   { opacity: 1; transform: translate(-50%, -100%) scale(1); }
 }

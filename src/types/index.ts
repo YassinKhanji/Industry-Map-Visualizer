@@ -233,9 +233,12 @@ export interface AppState {
   highlightedNodeIds: string[];
   profileHighlightOn: boolean;
   profilePanelOpen: boolean;
+  // Focus / pan-to-node
+  focusNodeId: string | null;
   // Node chat
   nodeChatHistories: Record<string, ChatMessage[]>;
   activeDetailTab: "details" | "chat";
+  pendingQuote: string | null;
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -253,9 +256,11 @@ export interface AppState {
   setHighlightedNodeIds: (ids: string[]) => void;
   setProfileHighlightOn: (on: boolean) => void;
   setProfilePanelOpen: (open: boolean) => void;
+  setFocusNodeId: (id: string | null) => void;
   appendChatMessage: (nodeId: string, msg: ChatMessage) => void;
   updateLastAssistantMessage: (nodeId: string, content: string) => void;
   setActiveDetailTab: (tab: "details" | "chat") => void;
+  setPendingQuote: (quote: string | null) => void;
   updateNode: (nodeId: string, patch: Partial<IndustryBlock>) => void;
   reset: () => void;
 }

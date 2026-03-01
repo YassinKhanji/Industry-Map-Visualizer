@@ -9,6 +9,44 @@ import { buildEnrichPayload } from "@/lib/enrichContext";
 import type { ConnectionInfo } from "@/lib/enrichContext";
 import NodeChatPanel from "./NodeChatPanel";
 
+/* ── Quote-to-Chat floating tooltip ── */
+function QuoteTooltip({
+  x,
+  y,
+  onQuote,
+}: {
+  x: number;
+  y: number;
+  onQuote: () => void;
+}) {
+  return (
+    <button
+      onMouseDown={(e) => {
+        e.preventDefault(); // prevent selection from clearing
+        e.stopPropagation();
+        onQuote();
+      }}
+      className="fixed z-[100] flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium shadow-lg transition-all animate-quote-pop"
+      style={{
+        left: x,
+        top: y,
+        background: "var(--accent)",
+        color: "#fff",
+        border: "1px solid rgba(255,255,255,0.2)",
+        cursor: "pointer",
+        pointerEvents: "auto",
+        transform: "translate(-50%, -100%)",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+      </svg>
+      Quote to Chat
+    </button>
+  );
+}
+
 const MIN_WIDTH = 320;
 const DEFAULT_WIDTH = 360;
 const EXPANDED_WIDTH = 640;
@@ -151,6 +189,7 @@ export default function DetailPanel() {
   const updateNode = useAppStore((s) => s.updateNode);
   const activeDetailTab = useAppStore((s) => s.activeDetailTab);
   const setActiveDetailTab = useAppStore((s) => s.setActiveDetailTab);
+  const setPendingQuote = useAppStore((s) => s.setPendingQuote);
 
   const [enrichStage, setEnrichStage] = useState<
     "idle" | "researching" | "analyzing" | "scoring" | "done" | "error"
@@ -207,6 +246,76 @@ export default function DetailPanel() {
       window.removeEventListener("mouseup", onMouseUp);
     };
   }, []);
+
+  /* ── Quote-to-Chat selection tracking ── */
+  const detailsContentRef = useRef<HTMLDivElement>(null);
+  const [quotePos, setQuotePos] = useState<{ x: number; y: number } | null>(null);
+  const [quoteText, setQuoteText] = useState("");
+
+  const handleTextSelect = useCallback(() => {
+    // Only on the details tab
+    if (useAppStore.getState().activeDetailTab !== "details") return;
+
+    const sel = window.getSelection();
+    const text = sel?.toString().trim();
+    if (!text || text.length < 3) {
+      setQuotePos(null);
+      setQuoteText("");
+      return;
+    }
+
+    // Ensure the selection is inside the details content area
+    if (detailsContentRef.current && sel?.rangeCount) {
+      const range = sel.getRangeAt(0);
+      if (!detailsContentRef.current.contains(range.commonAncestorContainer)) {
+        setQuotePos(null);
+        return;
+      }
+    }
+
+    const range = sel!.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    setQuotePos({ x: rect.left + rect.width / 2, y: rect.top - 8 });
+    setQuoteText(text.length > 300 ? text.slice(0, 300) + "…" : text);
+  }, []);
+
+  const handleQuoteToChat = useCallback(() => {
+    if (!quoteText) return;
+    setPendingQuote(quoteText);
+    setActiveDetailTab("chat");
+    setQuotePos(null);
+    setQuoteText("");
+    window.getSelection()?.removeAllRanges();
+  }, [quoteText, setPendingQuote, setActiveDetailTab]);
+
+  // Listen for mouseup + key selection on document (for when selection ends)
+  useEffect(() => {
+    const onMouseUp = () => {
+      // Small delay to let the browser finalize the selection
+      setTimeout(handleTextSelect, 10);
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.shiftKey || e.key === "Shift") {
+        setTimeout(handleTextSelect, 10);
+      }
+    };
+    // Clear tooltip when clicking outside
+    const onMouseDown = (e: MouseEvent) => {
+      // If clicking on the quote tooltip, don't clear
+      const target = e.target as HTMLElement;
+      if (target.closest(".animate-quote-pop")) return;
+      setQuotePos(null);
+    };
+
+    document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("keyup", onKeyUp);
+    document.addEventListener("mousedown", onMouseDown);
+    return () => {
+      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("keyup", onKeyUp);
+      document.removeEventListener("mousedown", onMouseDown);
+    };
+  }, [handleTextSelect]);
 
   const close = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
 
@@ -631,7 +740,7 @@ export default function DetailPanel() {
 
       {/* Details tab */}
       {activeDetailTab === "details" && (
-      <div className="px-5 py-4 space-y-5">
+      <div ref={detailsContentRef} className="px-5 py-4 space-y-5">
         {/* Find Opportunities button — 3-stage */}
         <button
           onClick={handleEnrich}
@@ -1277,6 +1386,11 @@ export default function DetailPanel() {
           </div>
         </div>
       </div>
+      )}
+
+      {/* Quote-to-Chat floating tooltip */}
+      {quotePos && activeDetailTab === "details" && (
+        <QuoteTooltip x={quotePos.x} y={quotePos.y} onQuote={handleQuoteToChat} />
       )}
     </div>
   );

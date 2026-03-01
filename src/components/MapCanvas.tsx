@@ -26,6 +26,8 @@ function MapCanvasInner() {
   const darkMode = useAppStore((s) => s.darkMode);
   const selectedNodeId = useAppStore((s) => s.selectedNodeId);
   const hoveredNodeId = useAppStore((s) => s.hoveredNodeId);
+  const focusNodeId = useAppStore((s) => s.focusNodeId);
+  const setFocusNodeId = useAppStore((s) => s.setFocusNodeId);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
@@ -86,6 +88,24 @@ function MapCanvasInner() {
       };
     });
   }, [edges, darkMode, hoveredNodeId, selectedNodeId]);
+
+  // Pan & zoom to the focused node (triggered by profile matcher clicks, etc.)
+  useEffect(() => {
+    if (!focusNodeId) return;
+    // Small delay so layout can settle if expanded
+    const timer = setTimeout(() => {
+      const n = getNode(focusNodeId);
+      if (n) {
+        setCenter(n.position.x + 90, n.position.y + 22, {
+          duration: 500,
+          zoom: 1.2,
+        });
+      }
+      // Clear after focusing so re-clicking the same node works again
+      setFocusNodeId(null);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [focusNodeId, getNode, setCenter, setFocusNodeId]);
 
   // Handle node click: toggle expand/collapse
   const onNodeClick: NodeMouseHandler = useCallback(
