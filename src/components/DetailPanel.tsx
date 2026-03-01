@@ -384,13 +384,18 @@ export default function DetailPanel() {
       const vcpParts = scoring.valueChainPosition?.split(" — ") || [scoring.valueChainPosition];
       const vcpVal = vcpParts[0]?.toLowerCase().replace(/[^a-z-]/g, "").trim();
 
+      // Split nodeRelevance into keyword + explanation
+      const nrParts = (scoring.nodeRelevance || "").split(" — ");
+      const nrKeyword = nrParts[0]?.trim() || "unknown";
+      const nrExplanation = nrParts.slice(1).join(" — ").trim() || nrParts[0]?.trim() || "";
+
       // Final update with scoring results
       updateNode(block.id, {
         opportunityScore: {
           score: scoring.opportunityScore,
-          reasoning: scoring.nodeRelevance || "",
+          reasoning: nrExplanation,
         },
-        nodeRelevance: scoring.nodeRelevance,
+        nodeRelevance: nrKeyword,
         connectionInsights: Array.isArray(scoring.connectionInsights)
           ? scoring.connectionInsights.map((ci: string, i: number) => ({
               connectionLabel: connections[i]?.label || `Connection ${i + 1}`,
@@ -807,16 +812,33 @@ export default function DetailPanel() {
           </div>
         )}
 
-        {/* Node Relevance */}
+        {/* Node Relevance — shown as a badge */}
         {block.nodeRelevance && (
           <div>
             <SectionHeading muted={muted}>Node Relevance</SectionHeading>
-            <p
-              className="text-sm leading-relaxed"
-              style={{ color: darkMode ? "#d1d5db" : "#374151" }}
+            <span
+              className="px-2 py-1 text-xs rounded font-medium capitalize"
+              style={{
+                background:
+                  block.nodeRelevance.toLowerCase().startsWith("critical")
+                    ? "rgba(22,163,74,0.12)"
+                    : block.nodeRelevance.toLowerCase().startsWith("important")
+                    ? "rgba(99,102,241,0.12)"
+                    : block.nodeRelevance.toLowerCase().startsWith("peripheral")
+                    ? "rgba(245,158,11,0.12)"
+                    : darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                color:
+                  block.nodeRelevance.toLowerCase().startsWith("critical")
+                    ? "#16a34a"
+                    : block.nodeRelevance.toLowerCase().startsWith("important")
+                    ? "#6366f1"
+                    : block.nodeRelevance.toLowerCase().startsWith("peripheral")
+                    ? "#f59e0b"
+                    : darkMode ? "#9ca3af" : "#6b7280",
+              }}
             >
               {block.nodeRelevance}
-            </p>
+            </span>
           </div>
         )}
 
