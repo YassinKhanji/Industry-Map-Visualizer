@@ -199,13 +199,23 @@ export default function SearchBar() {
           `/api/generate?q=${encodeURIComponent(trimmed)}`
         );
 
+        const json = await dataRes.json();
+
+        // Server returns 503 + fallback skeleton when research fails
         if (!dataRes.ok) {
-          setError("Something went wrong");
-          setProgress(null);
+          // If server provided a fallback skeleton, show it with a warning
+          if (dataRes.status === 503 && json.data) {
+            setMapData(json.data);
+            setSource("generate");
+            setError(json.error || "Research failed — showing skeleton map");
+            setProgress(null);
+          } else {
+            setError(json.error || "Something went wrong");
+            setProgress(null);
+          }
           return;
         }
 
-        const json = await dataRes.json();
         if (json.data) {
           const rawSrc = dataRes.headers.get("X-Source") || "research";
           const src = rawSrc as "prebuilt" | "assemble" | "generate";
@@ -213,7 +223,10 @@ export default function SearchBar() {
           if (matchedIndustry) setCorrectedQuery(matchedIndustry);
           setMapData(json.data);
           setSource(src);
-          localSet(cacheKey, json.data, rawSrc);
+          // Don't cache if server signaled an error alongside data
+          if (!json.error) {
+            localSet(cacheKey, json.data, rawSrc);
+          }
           setProgress(null);
         } else {
           setError(json.error || "No data received");

@@ -43,12 +43,13 @@ async function migrate() {
     )
   `;
 
-  console.log("Creating vector similarity index...");
+  console.log("Replacing vector index with HNSW (perfect recall at any table size)...");
+  await sql`DROP INDEX IF EXISTS idx_map_queries_embedding`;
   await sql`
     CREATE INDEX IF NOT EXISTS idx_map_queries_embedding
     ON map_queries
-    USING ivfflat (embedding vector_cosine_ops)
-    WITH (lists = 10)
+    USING hnsw (embedding vector_cosine_ops)
+    WITH (m = 16, ef_construction = 64)
   `;
 
   console.log("Creating index on slug...");

@@ -151,7 +151,11 @@ export async function GET(request: NextRequest) {
 
     if (match) {
       // Also store this query as an alias for future exact matches
-      await addQueryAlias(match.mapId, query, queryEmbedding);
+      try {
+        await addQueryAlias(match.mapId, query, queryEmbedding);
+      } catch (e) {
+        console.warn("addQueryAlias failed (non-fatal):", e);
+      }
 
       return NextResponse.json(
         { data: match.mapData },
@@ -205,10 +209,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         data: fallbackMap(query),
-        error: "Research failed, showing skeleton map",
+        error: "Research failed — showing skeleton map",
       },
       {
-        status: 200,
+        status: 503,
         headers: { "X-Source": "fallback", "X-Cache": "MISS" },
       }
     );
