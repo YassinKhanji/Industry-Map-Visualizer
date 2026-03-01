@@ -140,7 +140,9 @@ button, a, [role="button"], .react-flow__node {
 
 /* Drag-to-resize handle glow on hover */
 .detail-panel-enter .resize-handle:hover .resize-indicator,
-.detail-panel-enter .resize-handle:active .resize-indicator {
+.detail-panel-enter .resize-handle:active .resize-indicator,
+.profile-panel-enter .resize-handle:hover .resize-indicator,
+.profile-panel-enter .resize-handle:active .resize-indicator {
   opacity: 0.6 !important;
 }
 

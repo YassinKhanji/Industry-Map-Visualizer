@@ -1,10 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppStore } from "@/lib/store";
 import type { IndustryBlock, ProfileMatch } from "@/types";
 
 const STORAGE_KEY = "imv:userProfile";
+const MIN_WIDTH = 280;
+const DEFAULT_WIDTH = 340;
+const EXPANDED_WIDTH = 520;
+const MAX_WIDTH_RATIO = 0.5; // max 50% of viewport
 
 /** Recursively flatten all nodes from the block tree */
 function flattenNodes(
@@ -43,6 +47,57 @@ export default function UserProfilePanel() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [noMatchMessage, setNoMatchMessage] = useState<string | null>(null);
+
+  /* ── Resize / expand state ── */
+  const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH);
+  const [expanded, setExpanded] = useState(false);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartWidth = useRef(DEFAULT_WIDTH);
+
+  const toggleExpanded = useCallback(() => {
+    setExpanded((prev) => {
+      const next = !prev;
+      setPanelWidth(next ? EXPANDED_WIDTH : DEFAULT_WIDTH);
+      return next;
+    });
+  }, []);
+
+  // Drag-to-resize from right edge
+  const onResizeMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      isDragging.current = true;
+      dragStartX.current = e.clientX;
+      dragStartWidth.current = panelWidth;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    },
+    [panelWidth]
+  );
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      const delta = e.clientX - dragStartX.current;
+      const maxW = window.innerWidth * MAX_WIDTH_RATIO;
+      const newW = Math.min(maxW, Math.max(MIN_WIDTH, dragStartWidth.current + delta));
+      setPanelWidth(newW);
+      setExpanded(newW > (DEFAULT_WIDTH + EXPANDED_WIDTH) / 2);
+    };
+    const onMouseUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, []);
 
   // Load profile from localStorage on mount
   useEffect(() => {
@@ -109,12 +164,32 @@ export default function UserProfilePanel() {
     <div
       className="fixed top-0 left-0 h-full z-50 profile-panel-enter detail-scrollbar"
       style={{
-        width: 340,
+        width: panelWidth,
         background: darkMode ? "var(--card-bg)" : "#ffffff",
         borderRight: `1px solid var(--border)`,
         overflowY: "auto",
+        transition: isDragging.current ? "none" : "width 0.25s ease",
       }}
     >
+      {/* Drag handle on right edge */}
+      <div
+        onMouseDown={onResizeMouseDown}
+        className="resize-handle absolute top-0 right-0 h-full z-20"
+        style={{
+          width: 5,
+          cursor: "col-resize",
+        }}
+      >
+        <div
+          className="resize-indicator absolute top-0 right-0 h-full transition-opacity"
+          style={{
+            width: 3,
+            background: "var(--accent)",
+            opacity: 0,
+          }}
+        />
+      </div>
+
       <div className="p-5 space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -124,19 +199,40 @@ export default function UserProfilePanel() {
           >
             Profile Matcher
           </h2>
-          <button
-            onClick={() => setProfilePanelOpen(false)}
-            className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
-            style={{
-              color: muted,
-              background: darkMode ? "rgba(255,255,255,0.05)" : "#f3f4f6",
-            }}
-            title="Close panel"
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M3 3l8 8M11 3l-8 8" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-1">
+            {/* Expand / collapse toggle */}
+            <button
+              onClick={toggleExpanded}
+              className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+              style={{
+                color: muted,
+                background: darkMode ? "rgba(255,255,255,0.05)" : "#f3f4f6",
+              }}
+              title={expanded ? "Collapse panel" : "Expand panel"}
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                {expanded ? (
+                  <path d="M10 3l-4 5 4 5" />
+                ) : (
+                  <path d="M6 3l4 5-4 5" />
+                )}
+              </svg>
+            </button>
+            {/* Close */}
+            <button
+              onClick={() => setProfilePanelOpen(false)}
+              className="w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+              style={{
+                color: muted,
+                background: darkMode ? "rgba(255,255,255,0.05)" : "#f3f4f6",
+              }}
+              title="Close panel"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M3 3l8 8M11 3l-8 8" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Description */}

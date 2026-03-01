@@ -16,9 +16,21 @@ import AutoExpandToggle from "./AutoExpandToggle";
 import DetailPanel from "./DetailPanel";
 import { buildFlowGraph, countNodesAtDepth, getIdsToDepth } from "@/lib/graphLayout";
 import { useAppStore } from "@/lib/store";
-import type { FlowNodeData } from "@/types";
+import type { FlowNodeData, IndustryBlock } from "@/types";
 
 const nodeTypes = { industryNode: NodeCard };
+
+/** Find a block by ID in the nested tree */
+function findBlockById(nodes: IndustryBlock[], id: string): IndustryBlock | undefined {
+  for (const n of nodes) {
+    if (n.id === id) return n;
+    if (n.subNodes) {
+      const found = findBlockById(n.subNodes, id);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
 
 function MapCanvasInner() {
   const mapData = useAppStore((s) => s.mapData);
@@ -127,20 +139,27 @@ function MapCanvasInner() {
         return next;
       });
 
-      // Auto-pan to the expanded node after layout settles
+      // Auto-pan to fit the expanded node + its children
       if (willExpand) {
-        setTimeout(() => {
-          const n = getNode(node.id);
-          if (n) {
-            setCenter(n.position.x + 90, n.position.y + 22, {
-              duration: 400,
-              zoom: 1,
-            });
+        // Collect the IDs of the clicked node + its direct children
+        const childIds = new Set<string>([node.id]);
+        const block = findBlockById(mapData!.rootNodes, node.id);
+        if (block?.subNodes) {
+          for (const child of block.subNodes) {
+            childIds.add(child.id);
           }
+        }
+
+        setTimeout(() => {
+          fitView({
+            nodes: Array.from(childIds).map((id) => ({ id })),
+            duration: 400,
+            padding: 0.25,
+          });
         }, 150);
       }
     },
-    [mapData, expandedIds, getNode, setCenter]
+    [mapData, expandedIds, fitView]
   );
 
   // Collapse all

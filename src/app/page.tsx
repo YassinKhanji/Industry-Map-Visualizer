@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import SearchBar from "@/components/SearchBar";
 import TaxonomyBrowser from "@/components/TaxonomyBrowser";
@@ -28,7 +29,14 @@ export default function Home() {
   const setProfilePanelOpen = useAppStore((s) => s.setProfilePanelOpen);
   const hasResults = !!mapData;
 
-
+  // Auto-open profile panel when map is first generated
+  const prevHasResults = useRef(false);
+  useEffect(() => {
+    if (hasResults && !prevHasResults.current) {
+      setProfilePanelOpen(true);
+    }
+    prevHasResults.current = hasResults;
+  }, [hasResults, setProfilePanelOpen]);
 
   return (
     <div
@@ -147,8 +155,8 @@ export default function Home() {
         )}
       </button>
 
-      {/* Profile matcher button — always visible */}
-      <button
+      {/* Profile matcher button — visible when map exists */}
+      {hasResults && <button
           onClick={() => setProfilePanelOpen(!profilePanelOpen)}
           className="fixed bottom-[184px] left-[13px] z-50 w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200"
           style={{
@@ -164,7 +172,7 @@ export default function Home() {
             <circle cx="8" cy="5" r="3" />
             <path d="M2 14c0-3.31 2.69-5 6-5s6 1.69 6 5" fill="currentColor" />
           </svg>
-        </button>
+        </button>}
 
       {/* Profile matcher panel */}
       {profilePanelOpen && <UserProfilePanel />}

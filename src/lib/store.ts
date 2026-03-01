@@ -27,7 +27,7 @@ export const useAppStore = create<AppState>((set) => ({
   userProfile: "",
   highlightedNodeIds: [],
   profileHighlightOn: false,
-  profilePanelOpen: true,
+  profilePanelOpen: false,
   focusNodeId: null,
   nodeChatHistories: {},
   activeDetailTab: "details" as const,
