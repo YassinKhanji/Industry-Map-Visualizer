@@ -5,6 +5,8 @@ import { useAppStore } from "@/lib/store";
 import { CATEGORY_ACCENTS, CATEGORY_LABELS } from "./NodeCard";
 import type { IndustryBlock, MapEdge } from "@/types";
 import { ARCHETYPE_PROFILES } from "@/lib/archetypes";
+import { buildEnrichPayload } from "@/lib/enrichContext";
+import type { ConnectionInfo } from "@/lib/enrichContext";
 
 /* ──────── helpers ──────── */
 
@@ -142,7 +144,9 @@ export default function DetailPanel() {
   const darkMode = useAppStore((s) => s.darkMode);
   const updateNode = useAppStore((s) => s.updateNode);
 
-  const [enriching, setEnriching] = useState(false);
+  const [enrichStage, setEnrichStage] = useState<
+    "idle" | "researching" | "analyzing" | "scoring" | "done" | "error"
+  >("idle");
   const [enrichError, setEnrichError] = useState<string | null>(null);
 
   const close = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
@@ -197,6 +201,7 @@ export default function DetailPanel() {
   const subCount = block.subNodes?.length || 0;
   const muted = "var(--muted)";
   const isEnriched = !!block.enrichedAt;
+  const isEnriching = enrichStage !== "idle" && enrichStage !== "done" && enrichStage !== "error";
 
   // Archetype info from map-level data
   const archetypeKey = mapData?.archetype;
@@ -205,42 +210,151 @@ export default function DetailPanel() {
     : undefined;
   const jurisdiction = mapData?.jurisdiction;
 
+  /* ── 3-stage enrichment pipeline ── */
   const handleEnrich = async () => {
-    if (enriching || !mapData) return;
-    setEnriching(true);
+    if (isEnriching || !mapData) return;
     setEnrichError(null);
+
+    // Build the shared payload
+    const payload = buildEnrichPayload(
+      block,
+      connections as ConnectionInfo[],
+      parentBlock,
+      mapData,
+      archetypeProfile
+    );
+
     try {
-      const res = await fetch("/api/enrich", {
+      // ── Stage 1: Market Research ──
+      setEnrichStage("researching");
+      const researchRes = await fetch("/api/enrich/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nodeId: block.id,
-          label: block.label,
-          category: block.category,
-          description: block.description,
-          objective: block.objective,
-          industry: mapData.industry,
-          jurisdiction: mapData.jurisdiction,
-        }),
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: "Request failed" }));
-        throw new Error(err.error || `HTTP ${res.status}`);
+      if (!researchRes.ok) {
+        const e = await researchRes.json().catch(() => ({ error: "Research failed" }));
+        throw new Error(e.error || `Research HTTP ${researchRes.status}`);
       }
-      const data = await res.json();
+      const research = await researchRes.json();
+
+      // Progressive update: show research results immediately
       updateNode(block.id, {
-        keyActors: data.keyActors,
-        keyTools: data.keyTools,
-        painPoints: data.painPoints,
-        costDrivers: data.costDrivers,
-        regulatoryNotes: data.regulatoryNotes,
-        opportunities: data.opportunities,
+        keyActors: research.keyActors,
+        keyTools: research.keyTools,
+        typicalClients: research.typicalClients,
+        costDrivers: research.costDrivers,
+        regulatoryNotes: research.regulatoryNotes,
+      });
+
+      // ── Stage 2: Analysis ──
+      setEnrichStage("analyzing");
+      const analyzeRes = await fetch("/api/enrich/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload, research }),
+      });
+      if (!analyzeRes.ok) {
+        const e = await analyzeRes.json().catch(() => ({ error: "Analysis failed" }));
+        throw new Error(e.error || `Analysis HTTP ${analyzeRes.status}`);
+      }
+      const analysis = await analyzeRes.json();
+
+      // Progressive update: show analysis results
+      // Parse structured fields from analysis strings
+      const demandDir = analysis.demandTrend?.split(" — ") || [analysis.demandTrend];
+      const satParts = analysis.competitiveSaturation?.split(" — ") || [analysis.competitiveSaturation];
+      const marginParts = analysis.marginProfile?.split(" — ") || [analysis.marginProfile];
+      const disruptParts = analysis.disruptionRisk?.split(" — ") || [analysis.disruptionRisk];
+      const switchPart = analysis.clientSwitchingCosts?.split(" — ")?.[0]?.toLowerCase().trim();
+      const barrierParts = analysis.entryBarriers?.split(" — ") || [analysis.entryBarriers];
+
+      updateNode(block.id, {
+        painPoints: analysis.painPoints,
+        unmetNeeds: analysis.unmetNeeds,
+        demandTrend: {
+          direction: (["growing", "declining", "stable", "emerging"].includes(demandDir[0]?.toLowerCase().trim())
+            ? demandDir[0].toLowerCase().trim()
+            : "stable") as "growing" | "declining" | "stable" | "emerging",
+          rationale: demandDir[1] || demandDir[0] || "",
+        },
+        competitiveSaturation: {
+          level: (["underserved", "moderate", "oversaturated"].includes(satParts[0]?.toLowerCase().trim())
+            ? satParts[0].toLowerCase().trim()
+            : "moderate") as "underserved" | "moderate" | "oversaturated",
+          playerEstimate: satParts[1] || satParts[0] || "",
+        },
+        entryBarriers: barrierParts.length > 0 ? barrierParts : [analysis.entryBarriers],
+        marginProfile: {
+          gross: marginParts[0] || "",
+          net: "",
+          verdict: marginParts[1] || marginParts[0] || "",
+        },
+        disruptionRisk: {
+          level: (["low", "medium", "high"].includes(disruptParts[0]?.toLowerCase().trim())
+            ? disruptParts[0].toLowerCase().trim()
+            : "medium") as "low" | "medium" | "high",
+          threats: disruptParts.slice(1).length > 0 ? disruptParts.slice(1) : [analysis.disruptionRisk || ""],
+        },
+        clientSwitchingCosts: (["low", "medium", "high"].includes(switchPart)
+          ? switchPart
+          : "medium") as "low" | "medium" | "high",
+      });
+
+      // ── Stage 3: Scoring ──
+      setEnrichStage("scoring");
+      const scoreRes = await fetch("/api/enrich/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload, research, analysis }),
+      });
+      if (!scoreRes.ok) {
+        const e = await scoreRes.json().catch(() => ({ error: "Scoring failed" }));
+        throw new Error(e.error || `Scoring HTTP ${scoreRes.status}`);
+      }
+      const scoring = await scoreRes.json();
+
+      // Parse value chain position
+      const vcpParts = scoring.valueChainPosition?.split(" — ") || [scoring.valueChainPosition];
+      const vcpVal = vcpParts[0]?.toLowerCase().replace(/[^a-z-]/g, "").trim();
+
+      // Final update with scoring results
+      updateNode(block.id, {
+        opportunityScore: {
+          score: scoring.opportunityScore,
+          reasoning: scoring.nodeRelevance || "",
+        },
+        nodeRelevance: scoring.nodeRelevance,
+        connectionInsights: Array.isArray(scoring.connectionInsights)
+          ? scoring.connectionInsights.map((ci: string, i: number) => ({
+              connectionLabel: connections[i]?.label || `Connection ${i + 1}`,
+              insight: ci,
+            }))
+          : [],
+        expenseRange: {
+          monthly: "",
+          annual: scoring.expenseRange || "",
+        },
+        incomeRange: {
+          low: scoring.incomeRange || "",
+          high: "",
+        },
+        valueChainPosition: (["upstream", "midstream", "downstream"].includes(vcpVal)
+          ? vcpVal
+          : "midstream") as "upstream" | "midstream" | "downstream",
+        opportunities: Array.isArray(scoring.opportunities)
+          ? scoring.opportunities.map((opp: string) => ({
+              title: opp.substring(0, 60) + (opp.length > 60 ? "..." : ""),
+              description: opp,
+            }))
+          : [],
         enrichedAt: new Date().toISOString(),
       });
+
+      setEnrichStage("done");
     } catch (err: any) {
       setEnrichError(err.message || "Enrichment failed");
-    } finally {
-      setEnriching(false);
+      setEnrichStage("error");
     }
   };
 
@@ -329,32 +443,36 @@ export default function DetailPanel() {
       </div>
 
       <div className="px-5 py-4 space-y-5">
-        {/* Find Opportunities button */}
+        {/* Find Opportunities button — 3-stage */}
         <button
           onClick={handleEnrich}
-          disabled={enriching}
+          disabled={isEnriching}
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
           style={{
-            background: enriching
+            background: isEnriching
               ? darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6"
               : isEnriched
               ? darkMode ? "rgba(22,163,74,0.12)" : "rgba(22,163,74,0.08)"
               : `${accent}18`,
-            color: enriching
+            color: isEnriching
               ? (darkMode ? "#9ca3af" : "#6b7280")
               : isEnriched ? "#16a34a" : accent,
-            border: `1px solid ${enriching ? "transparent" : isEnriched ? "rgba(22,163,74,0.25)" : `${accent}30`}`,
-            cursor: enriching ? "wait" : "pointer",
-            opacity: enriching ? 0.7 : 1,
+            border: `1px solid ${isEnriching ? "transparent" : isEnriched ? "rgba(22,163,74,0.25)" : `${accent}30`}`,
+            cursor: isEnriching ? "wait" : "pointer",
+            opacity: isEnriching ? 0.7 : 1,
           }}
         >
-          {enriching ? (
+          {isEnriching ? (
             <>
               <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
-              Searching the web...
+              {enrichStage === "researching"
+                ? "Researching market..."
+                : enrichStage === "analyzing"
+                ? "Analyzing industry..."
+                : "Scoring opportunities..."}
             </>
           ) : isEnriched ? (
             <>
@@ -373,6 +491,33 @@ export default function DetailPanel() {
             </>
           )}
         </button>
+        {/* Stage progress indicator */}
+        {isEnriching && (
+          <div className="flex gap-1 -mt-3">
+            {(["researching", "analyzing", "scoring"] as const).map((stage) => {
+              const stageIdx = ["researching", "analyzing", "scoring"].indexOf(stage);
+              const currentIdx = ["researching", "analyzing", "scoring"].indexOf(enrichStage as string);
+              const isActive = stage === enrichStage;
+              const isDone = currentIdx > stageIdx;
+              return (
+                <div
+                  key={stage}
+                  className="flex-1 h-1 rounded-full transition-all"
+                  style={{
+                    background: isDone
+                      ? "#16a34a"
+                      : isActive
+                      ? accent
+                      : darkMode
+                      ? "rgba(255,255,255,0.08)"
+                      : "#e5e7eb",
+                    opacity: isActive ? 1 : isDone ? 0.7 : 0.4,
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
         {enrichError && (
           <p className="text-xs text-red-500 -mt-3">{enrichError}</p>
         )}
@@ -501,6 +646,257 @@ export default function DetailPanel() {
           </div>
         )}
 
+        {/* ─── NEW ENRICHMENT SECTIONS ─── */}
+
+        {/* Opportunity Score — colored badge */}
+        {block.opportunityScore && (
+          <div>
+            <SectionHeading muted={muted}>Opportunity Score</SectionHeading>
+            <div className="flex items-center gap-3">
+              <span
+                className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-lg font-bold"
+                style={{
+                  background:
+                    block.opportunityScore.score >= 7
+                      ? "rgba(22,163,74,0.15)"
+                      : block.opportunityScore.score >= 4
+                      ? "rgba(245,158,11,0.15)"
+                      : "rgba(220,38,38,0.15)",
+                  color:
+                    block.opportunityScore.score >= 7
+                      ? "#16a34a"
+                      : block.opportunityScore.score >= 4
+                      ? "#f59e0b"
+                      : "#dc2626",
+                }}
+              >
+                {block.opportunityScore.score}
+              </span>
+              <p
+                className="text-xs leading-relaxed flex-1"
+                style={{ color: darkMode ? "#d1d5db" : "#374151" }}
+              >
+                {block.opportunityScore.reasoning}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Node Relevance */}
+        {block.nodeRelevance && (
+          <div>
+            <SectionHeading muted={muted}>Node Relevance</SectionHeading>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: darkMode ? "#d1d5db" : "#374151" }}
+            >
+              {block.nodeRelevance}
+            </p>
+          </div>
+        )}
+
+        {/* Market Indicators row */}
+        {(block.demandTrend || block.competitiveSaturation || block.valueChainPosition) && (
+          <div>
+            <SectionHeading muted={muted}>Market Indicators</SectionHeading>
+            <div className="flex flex-wrap gap-2">
+              {block.demandTrend && (
+                <span
+                  className="px-2 py-1 text-xs rounded"
+                  style={{
+                    background:
+                      block.demandTrend.direction === "growing"
+                        ? "rgba(22,163,74,0.12)"
+                        : block.demandTrend.direction === "declining"
+                        ? "rgba(220,38,38,0.12)"
+                        : block.demandTrend.direction === "emerging"
+                        ? "rgba(99,102,241,0.12)"
+                        : darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                    color:
+                      block.demandTrend.direction === "growing"
+                        ? "#16a34a"
+                        : block.demandTrend.direction === "declining"
+                        ? "#dc2626"
+                        : block.demandTrend.direction === "emerging"
+                        ? "#6366f1"
+                        : darkMode ? "#9ca3af" : "#6b7280",
+                  }}
+                  title={block.demandTrend.rationale}
+                >
+                  {block.demandTrend.direction === "growing" ? "↑" : block.demandTrend.direction === "declining" ? "↓" : "→"}{" "}
+                  Demand: {block.demandTrend.direction}
+                </span>
+              )}
+              {block.competitiveSaturation && (
+                <span
+                  className="px-2 py-1 text-xs rounded"
+                  style={{
+                    background:
+                      block.competitiveSaturation.level === "underserved"
+                        ? "rgba(22,163,74,0.12)"
+                        : block.competitiveSaturation.level === "oversaturated"
+                        ? "rgba(220,38,38,0.12)"
+                        : darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                    color:
+                      block.competitiveSaturation.level === "underserved"
+                        ? "#16a34a"
+                        : block.competitiveSaturation.level === "oversaturated"
+                        ? "#dc2626"
+                        : darkMode ? "#9ca3af" : "#6b7280",
+                  }}
+                  title={block.competitiveSaturation.playerEstimate}
+                >
+                  Competition: {block.competitiveSaturation.level}
+                </span>
+              )}
+              {block.valueChainPosition && (
+                <span
+                  className="px-2 py-1 text-xs rounded"
+                  style={{
+                    background: darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                    color: darkMode ? "#9ca3af" : "#6b7280",
+                  }}
+                >
+                  {block.valueChainPosition}
+                </span>
+              )}
+              {block.clientSwitchingCosts && (
+                <span
+                  className="px-2 py-1 text-xs rounded"
+                  style={{
+                    background:
+                      block.clientSwitchingCosts === "high"
+                        ? "rgba(22,163,74,0.12)"
+                        : block.clientSwitchingCosts === "low"
+                        ? "rgba(220,38,38,0.12)"
+                        : darkMode ? "rgba(255,255,255,0.06)" : "#f3f4f6",
+                    color:
+                      block.clientSwitchingCosts === "high"
+                        ? "#16a34a"
+                        : block.clientSwitchingCosts === "low"
+                        ? "#dc2626"
+                        : darkMode ? "#9ca3af" : "#6b7280",
+                  }}
+                >
+                  Switching: {block.clientSwitchingCosts}
+                </span>
+              )}
+            </div>
+            {/* Rationale texts below badges */}
+            {block.demandTrend?.rationale && (
+              <p className="text-xs mt-2 leading-relaxed" style={{ color: muted }}>
+                {block.demandTrend.rationale}
+              </p>
+            )}
+            {block.competitiveSaturation?.playerEstimate && (
+              <p className="text-xs mt-1 leading-relaxed" style={{ color: muted }}>
+                {block.competitiveSaturation.playerEstimate}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Financials card */}
+        {(block.expenseRange || block.incomeRange || block.marginProfile) && (
+          <div
+            className="px-3 py-3 rounded-lg"
+            style={{
+              background: darkMode ? "rgba(255,255,255,0.03)" : "#f9fafb",
+              border: `1px solid var(--border)`,
+            }}
+          >
+            <SectionHeading muted={muted}>Financials</SectionHeading>
+            <div className="space-y-2 text-sm">
+              {block.expenseRange?.annual && (
+                <div className="flex justify-between">
+                  <span style={{ color: muted }}>Expenses</span>
+                  <span style={{ color: darkMode ? "#f87171" : "#dc2626" }}>
+                    {block.expenseRange.annual}
+                  </span>
+                </div>
+              )}
+              {block.incomeRange?.low && (
+                <div className="flex justify-between">
+                  <span style={{ color: muted }}>Revenue</span>
+                  <span style={{ color: darkMode ? "#4ade80" : "#16a34a" }}>
+                    {block.incomeRange.low}
+                  </span>
+                </div>
+              )}
+              {block.marginProfile?.verdict && (
+                <div className="flex justify-between">
+                  <span style={{ color: muted }}>Margins</span>
+                  <span style={{ color: darkMode ? "#d1d5db" : "#374151" }}>
+                    {block.marginProfile.verdict}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Typical Clients */}
+        {block.typicalClients && block.typicalClients.length > 0 && (
+          <div>
+            <SectionHeading muted={muted}>Typical Clients</SectionHeading>
+            <PillList items={block.typicalClients} darkMode={darkMode} accent={accent} />
+          </div>
+        )}
+
+        {/* Unmet Needs */}
+        {block.unmetNeeds && block.unmetNeeds.length > 0 && (
+          <div>
+            <SectionHeading muted={muted}>
+              Unmet Needs{" "}
+              <span className="normal-case font-normal tracking-normal">— gaps in the market</span>
+            </SectionHeading>
+            <BulletList items={block.unmetNeeds} darkMode={darkMode} accent="#f59e0b" highlight />
+          </div>
+        )}
+
+        {/* Entry Barriers */}
+        {block.entryBarriers && block.entryBarriers.length > 0 && (
+          <div>
+            <SectionHeading muted={muted}>Entry Barriers</SectionHeading>
+            <BulletList items={block.entryBarriers} darkMode={darkMode} accent={accent} />
+          </div>
+        )}
+
+        {/* Disruption Risk */}
+        {block.disruptionRisk && (
+          <div>
+            <SectionHeading muted={muted}>Disruption Risk</SectionHeading>
+            <span
+              className="px-2 py-1 text-xs rounded font-medium"
+              style={{
+                background:
+                  block.disruptionRisk.level === "high"
+                    ? "rgba(220,38,38,0.12)"
+                    : block.disruptionRisk.level === "low"
+                    ? "rgba(22,163,74,0.12)"
+                    : "rgba(245,158,11,0.12)",
+                color:
+                  block.disruptionRisk.level === "high"
+                    ? "#dc2626"
+                    : block.disruptionRisk.level === "low"
+                    ? "#16a34a"
+                    : "#f59e0b",
+              }}
+            >
+              {block.disruptionRisk.level} risk
+            </span>
+            {block.disruptionRisk.threats?.length > 0 && (
+              <ul className="mt-2 space-y-1">
+                {block.disruptionRisk.threats.map((t, i) => (
+                  <li key={i} className="text-xs" style={{ color: darkMode ? "#d1d5db" : "#374151" }}>
+                    • {t}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
         {/* Cost Drivers */}
         {block.costDrivers && block.costDrivers.length > 0 && (
           <div>
@@ -574,38 +970,50 @@ export default function DetailPanel() {
               Connections ({connections.length})
             </SectionHeading>
             <div className="space-y-1.5">
-              {connections.map((conn) => (
-                <div
-                  key={`${conn.direction}-${conn.id}`}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded text-sm"
-                  style={{
-                    background: darkMode
-                      ? "rgba(255,255,255,0.03)"
-                      : "#f9fafb",
-                  }}
-                >
-                  <span
-                    className="text-[10px] font-medium px-1.5 py-0.5 rounded"
+              {connections.map((conn) => {
+                const insight = block.connectionInsights?.find(
+                  (ci) => ci.connectionLabel === conn.label
+                );
+                return (
+                  <div
+                    key={`${conn.direction}-${conn.id}`}
+                    className="px-3 py-1.5 rounded text-sm"
                     style={{
-                      background:
-                        conn.direction === "outbound"
-                          ? "rgba(37,99,235,0.1)"
-                          : "rgba(22,163,74,0.1)",
-                      color:
-                        conn.direction === "outbound" ? "#2563eb" : "#16a34a",
+                      background: darkMode
+                        ? "rgba(255,255,255,0.03)"
+                        : "#f9fafb",
                     }}
                   >
-                    {conn.direction === "outbound" ? "→ out" : "← in"}
-                  </span>
-                  <button
-                    onClick={() => setSelectedNodeId(conn.id)}
-                    className="truncate hover:underline"
-                    style={{ color: darkMode ? "#d1d5db" : "#374151" }}
-                  >
-                    {conn.label}
-                  </button>
-                </div>
-              ))}
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded"
+                        style={{
+                          background:
+                            conn.direction === "outbound"
+                              ? "rgba(37,99,235,0.1)"
+                              : "rgba(22,163,74,0.1)",
+                          color:
+                            conn.direction === "outbound" ? "#2563eb" : "#16a34a",
+                        }}
+                      >
+                        {conn.direction === "outbound" ? "→ out" : "← in"}
+                      </span>
+                      <button
+                        onClick={() => setSelectedNodeId(conn.id)}
+                        className="truncate hover:underline"
+                        style={{ color: darkMode ? "#d1d5db" : "#374151" }}
+                      >
+                        {conn.label}
+                      </button>
+                    </div>
+                    {insight && (
+                      <p className="text-[11px] mt-1 ml-7 leading-relaxed" style={{ color: muted }}>
+                        {insight.insight}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
