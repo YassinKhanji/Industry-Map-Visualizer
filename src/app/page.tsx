@@ -147,9 +147,8 @@ export default function Home() {
         )}
       </button>
 
-      {/* Profile matcher button — only when map is visible */}
-      {hasResults && (
-        <button
+      {/* Profile matcher button — always visible */}
+      <button
           onClick={() => setProfilePanelOpen(!profilePanelOpen)}
           className="fixed bottom-[184px] left-[13px] z-50 w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200"
           style={{
@@ -166,10 +165,9 @@ export default function Home() {
             <path d="M2 14c0-3.31 2.69-5 6-5s6 1.69 6 5" fill="currentColor" />
           </svg>
         </button>
-      )}
 
       {/* Profile matcher panel */}
-      {hasResults && profilePanelOpen && <UserProfilePanel />}
+      {profilePanelOpen && <UserProfilePanel />}
     </div>
   );
 }

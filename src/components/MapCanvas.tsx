@@ -156,6 +156,16 @@ function MapCanvasInner() {
         totalNodesAtDepth2={totalNodesAtDepth2}
         onCollapseAll={handleCollapseAll}
       />
+      {/* Hint */}
+      <div
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-full text-[11px] pointer-events-none select-none"
+        style={{
+          background: darkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)",
+          color: darkMode ? "#9ca3af" : "#6b7280",
+        }}
+      >
+        Right-click a node for details &amp; opportunities
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={styledEdges}

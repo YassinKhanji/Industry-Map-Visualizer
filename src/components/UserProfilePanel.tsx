@@ -42,6 +42,7 @@ export default function UserProfilePanel() {
   const [matches, setMatches] = useState<ProfileMatch[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [noMatchMessage, setNoMatchMessage] = useState<string | null>(null);
 
   // Load profile from localStorage on mount
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function UserProfilePanel() {
     if (!mapData || userProfile.trim().length < 10) return;
     setIsAnalyzing(true);
     setError(null);
+    setNoMatchMessage(null);
 
     try {
       const nodes = flattenNodes(mapData.rootNodes);
@@ -85,11 +87,17 @@ export default function UserProfilePanel() {
       const resultMatches: ProfileMatch[] = Array.isArray(data.matches) ? data.matches : [];
       setMatches(resultMatches);
       setHighlightedNodeIds(resultMatches.map((m) => m.id));
-      if (resultMatches.length > 0) setProfileHighlightOn(true);
+      if (resultMatches.length > 0) {
+        setProfileHighlightOn(true);
+        setNoMatchMessage(null);
+      } else {
+        setNoMatchMessage(data.noMatchMessage || "No strong matches found for your profile against these industry nodes.");
+      }
     } catch (err: any) {
       setError(err.message || "Analysis failed");
       setMatches([]);
       setHighlightedNodeIds([]);
+      setNoMatchMessage(null);
     } finally {
       setIsAnalyzing(false);
     }
@@ -271,10 +279,31 @@ export default function UserProfilePanel() {
         )}
 
         {/* Empty state after analysis */}
-        {!isAnalyzing && matches.length === 0 && highlightedNodeIds.length === 0 && userProfile.trim().length >= 10 && (
+        {!isAnalyzing && matches.length === 0 && highlightedNodeIds.length === 0 && userProfile.trim().length >= 10 && !noMatchMessage && (
           <p className="text-xs text-center py-3" style={{ color: muted }}>
-            Click &quot;Find My Matches&quot; to analyze your profile against the map
+            {mapData
+              ? <>Click &quot;Find My Matches&quot; to analyze your profile against the map</>
+              : <>Search for an industry first, then match your profile against the map</>}
           </p>
+        )}
+
+        {/* Honest no-match message from AI */}
+        {!isAnalyzing && noMatchMessage && matches.length === 0 && (
+          <div
+            className="rounded-lg px-3 py-3 text-xs leading-relaxed"
+            style={{
+              background: darkMode ? "rgba(255,255,255,0.04)" : "#f9fafb",
+              border: `1px solid var(--border)`,
+              color: muted,
+            }}
+          >
+            <div className="flex items-start gap-2">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" className="shrink-0 mt-0.5" style={{ color: "#f59e0b" }}>
+                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a.75.75 0 110-1.5.75.75 0 010 1.5zM8.75 4.5v4a.75.75 0 01-1.5 0v-4a.75.75 0 011.5 0z" />
+              </svg>
+              <span>{noMatchMessage}</span>
+            </div>
+          </div>
         )}
       </div>
     </div>
