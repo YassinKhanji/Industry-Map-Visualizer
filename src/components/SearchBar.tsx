@@ -9,7 +9,8 @@ function normalize(s: string): string {
 }
 
 /* ──── localStorage LRU with TTL ──── */
-const CACHE_PREFIX = "imv:";
+const CACHE_VERSION = 2; // bump to invalidate stale entries
+const CACHE_PREFIX = `imv${CACHE_VERSION}:`;
 const CACHE_MAX = 30;
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -76,6 +77,20 @@ function localSet(key: string, data: IndustryMap, source: string) {
 export default function SearchBar() {
   const [input, setInput] = useState("");
 
+  // Clean up stale entries from old cache versions on mount
+  useEffect(() => {
+    try {
+      const staleKeys: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("imv:") && !k.startsWith(CACHE_PREFIX)) {
+          staleKeys.push(k);
+        }
+      }
+      for (const k of staleKeys) localStorage.removeItem(k);
+    } catch { /* ignore */ }
+  }, []);
+
   const setQuery = useAppStore((s) => s.setQuery);
   const setMapData = useAppStore((s) => s.setMapData);
   const setIsLoading = useAppStore((s) => s.setIsLoading);
@@ -107,7 +122,7 @@ export default function SearchBar() {
       // Check localStorage cache first
       const cacheKey = `${CACHE_PREFIX}${normalize(trimmed)}`;
       const cached = localGet(cacheKey);
-      if (cached) {
+      if (cached && cached.data?.rootNodes && cached.data.rootNodes.length > 0) {
         setMapData(cached.data);
         setIsCached(true);
         setSource(cached.source as "prebuilt" | "assemble" | "generate");
