@@ -28,6 +28,8 @@ export const useAppStore = create<AppState>((set) => ({
   highlightedNodeIds: [],
   profileHighlightOn: false,
   profilePanelOpen: false,
+  nodeChatHistories: {},
+  activeDetailTab: "details" as const,
 
   setQuery: (query: string) => set({ query }),
   setMapData: (data: IndustryMap | null) => set({ mapData: data }),
@@ -46,6 +48,23 @@ export const useAppStore = create<AppState>((set) => ({
   setHighlightedNodeIds: (ids: string[]) => set({ highlightedNodeIds: ids }),
   setProfileHighlightOn: (on: boolean) => set({ profileHighlightOn: on }),
   setProfilePanelOpen: (open: boolean) => set({ profilePanelOpen: open }),
+  appendChatMessage: (nodeId: string, msg) =>
+    set((state) => {
+      const prev = state.nodeChatHistories[nodeId] || [];
+      return { nodeChatHistories: { ...state.nodeChatHistories, [nodeId]: [...prev, msg] } };
+    }),
+  updateLastAssistantMessage: (nodeId: string, content: string) =>
+    set((state) => {
+      const msgs = state.nodeChatHistories[nodeId];
+      if (!msgs || msgs.length === 0) return state;
+      const updated = [...msgs];
+      const last = updated[updated.length - 1];
+      if (last.role === "assistant") {
+        updated[updated.length - 1] = { ...last, content };
+      }
+      return { nodeChatHistories: { ...state.nodeChatHistories, [nodeId]: updated } };
+    }),
+  setActiveDetailTab: (tab) => set({ activeDetailTab: tab }),
   updateNode: (nodeId: string, patch: Partial<IndustryBlock>) =>
     set((state) => {
       if (!state.mapData) return state;
@@ -70,5 +89,6 @@ export const useAppStore = create<AppState>((set) => ({
       highlightedNodeIds: [],
       profileHighlightOn: false,
       profilePanelOpen: false,
+      activeDetailTab: "details",
     }),
 }));

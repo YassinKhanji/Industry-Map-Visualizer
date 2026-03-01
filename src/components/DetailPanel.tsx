@@ -7,6 +7,7 @@ import type { IndustryBlock, MapEdge } from "@/types";
 import { ARCHETYPE_PROFILES } from "@/lib/archetypes";
 import { buildEnrichPayload } from "@/lib/enrichContext";
 import type { ConnectionInfo } from "@/lib/enrichContext";
+import NodeChatPanel from "./NodeChatPanel";
 
 const MIN_WIDTH = 320;
 const DEFAULT_WIDTH = 360;
@@ -148,6 +149,8 @@ export default function DetailPanel() {
   const mapData = useAppStore((s) => s.mapData);
   const darkMode = useAppStore((s) => s.darkMode);
   const updateNode = useAppStore((s) => s.updateNode);
+  const activeDetailTab = useAppStore((s) => s.activeDetailTab);
+  const setActiveDetailTab = useAppStore((s) => s.setActiveDetailTab);
 
   const [enrichStage, setEnrichStage] = useState<
     "idle" | "researching" | "analyzing" | "scoring" | "done" | "error"
@@ -572,6 +575,62 @@ export default function DetailPanel() {
         </div>
       </div>
 
+      {/* Tab bar */}
+      <div
+        className="sticky z-10 flex px-5"
+        style={{
+          top: 0,
+          background: darkMode ? "var(--card-bg)" : "#ffffff",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        <button
+          onClick={() => setActiveDetailTab("details")}
+          className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium transition-colors relative"
+          style={{
+            color: activeDetailTab === "details" ? "var(--accent)" : "var(--muted)",
+          }}
+        >
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" opacity={0.7}>
+            <path d="M3 1h10a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V3a2 2 0 012-2zm1 3v2h8V4H4zm0 4v2h5V8H4z" />
+          </svg>
+          Details
+          {activeDetailTab === "details" && (
+            <span
+              className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+              style={{ background: "var(--accent)" }}
+            />
+          )}
+        </button>
+        <button
+          onClick={() => setActiveDetailTab("chat")}
+          className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium transition-colors relative"
+          style={{
+            color: activeDetailTab === "chat" ? "var(--accent)" : "var(--muted)",
+          }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" opacity={0.7}>
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          </svg>
+          Chat
+          {activeDetailTab === "chat" && (
+            <span
+              className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+              style={{ background: "var(--accent)" }}
+            />
+          )}
+        </button>
+      </div>
+
+      {/* Chat tab */}
+      {activeDetailTab === "chat" && (
+        <div className="flex-1" style={{ height: "calc(100% - 120px)" }}>
+          <NodeChatPanel />
+        </div>
+      )}
+
+      {/* Details tab */}
+      {activeDetailTab === "details" && (
       <div className="px-5 py-4 space-y-5">
         {/* Find Opportunities button — 3-stage */}
         <button
@@ -1218,6 +1277,7 @@ export default function DetailPanel() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

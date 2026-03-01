@@ -69,26 +69,23 @@ function MapCanvasInner() {
     }, 50);
   }, [mapData, expandedIds, autoExpand, totalNodesAtDepth2, setNodes, setEdges, fitView]);
 
-  // Edge highlighting: color edges with the accent color of the active (hovered or selected) node
+  // Edge highlighting: brighten edges connected to the active (hovered or selected) node
   const styledEdges = useMemo(() => {
     const activeId = hoveredNodeId || selectedNodeId;
     if (!activeId) return edges;
 
-    // Look up the category of the active node to get its accent color
-    const activeNode = nodes.find((n) => n.id === activeId);
-    const activeCategory = (activeNode?.data as unknown as FlowNodeData)?.category;
-    const accent = CATEGORY_ACCENTS[activeCategory] || "#2563eb";
+    const highlightColor = darkMode ? "#ffffff" : "#111827";
 
     return edges.map((e) => {
       const isConnected = e.source === activeId || e.target === activeId;
       if (!isConnected) return e;
       return {
         ...e,
-        style: { ...e.style, stroke: accent, strokeWidth: 2.2 },
+        style: { ...e.style, stroke: highlightColor, strokeWidth: 2 },
         zIndex: 10,
       };
     });
-  }, [edges, nodes, hoveredNodeId, selectedNodeId]);
+  }, [edges, darkMode, hoveredNodeId, selectedNodeId]);
 
   // Handle node click: toggle expand/collapse
   const onNodeClick: NodeMouseHandler = useCallback(
@@ -154,7 +151,7 @@ function MapCanvasInner() {
         style={{ background: darkMode ? "var(--background)" : "#ffffff" }}
         defaultEdgeOptions={{
           type: "default",
-          style: { stroke: "var(--edge)", strokeWidth: 1.2 },
+          style: { stroke: "var(--edge-dim)", strokeWidth: 1 },
         }}
       >
         <Controls

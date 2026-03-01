@@ -207,6 +207,12 @@ export interface ProfileMatch {
   reason: string;
 }
 
+// ─── Chat message ───
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 // ─── Store state ───
 export interface AppState {
   query: string;
@@ -227,6 +233,9 @@ export interface AppState {
   highlightedNodeIds: string[];
   profileHighlightOn: boolean;
   profilePanelOpen: boolean;
+  // Node chat
+  nodeChatHistories: Record<string, ChatMessage[]>;
+  activeDetailTab: "details" | "chat";
   setQuery: (query: string) => void;
   setMapData: (data: IndustryMap | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -244,6 +253,9 @@ export interface AppState {
   setHighlightedNodeIds: (ids: string[]) => void;
   setProfileHighlightOn: (on: boolean) => void;
   setProfilePanelOpen: (open: boolean) => void;
+  appendChatMessage: (nodeId: string, msg: ChatMessage) => void;
+  updateLastAssistantMessage: (nodeId: string, content: string) => void;
+  setActiveDetailTab: (tab: "details" | "chat") => void;
   updateNode: (nodeId: string, patch: Partial<IndustryBlock>) => void;
   reset: () => void;
 }

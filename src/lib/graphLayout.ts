@@ -83,7 +83,7 @@ export function buildFlowGraph(
             source: block.id,
             target: child.id,
             type: "default",
-            style: { stroke: "#d1d5db", strokeWidth: 1 },
+            style: { stroke: "var(--edge-dim)", strokeWidth: 1 },
             animated: false,
           });
         }
@@ -103,7 +103,7 @@ export function buildFlowGraph(
         source: edge.source,
         target: edge.target,
         type: "default",
-        style: { stroke: "#d1d5db", strokeWidth: 1.2 },
+        style: { stroke: "var(--edge-dim)", strokeWidth: 1 },
         animated: false,
       });
     }
