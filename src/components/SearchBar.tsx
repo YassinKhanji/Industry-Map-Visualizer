@@ -111,6 +111,7 @@ export default function SearchBar() {
         setMapData(cached.data);
         setIsCached(true);
         setSource(cached.source as "prebuilt" | "assemble" | "generate");
+        searchingRef.current = false;
         return;
       }
 
@@ -185,9 +186,8 @@ export default function SearchBar() {
         clearTimeout(sseTimeout);
 
         if (sseError) {
-          setError(sseError);
-          setProgress(null);
-          return;
+          console.warn("SSE reported error, but Phase 2 GET may still succeed:", sseError);
+          // Don't return — Phase 2 GET runs independently and may succeed
         }
 
         // ── Phase 2: Fetch actual data via regular GET (reliable HTTP) ──

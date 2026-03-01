@@ -63,7 +63,11 @@ async function handleStream(request: NextRequest, query: string) {
         if (match) {
           // Found a semantic match — link this query to existing map
           send("matched", `Found match: ${match.industryName}`, 90);
-          await addQueryAlias(match.mapId, query, queryEmbedding);
+          try {
+            await addQueryAlias(match.mapId, query, queryEmbedding);
+          } catch (e) {
+            console.warn("addQueryAlias failed (non-fatal):", e);
+          }
           send("done", "Complete", 100);
           controller.close();
           return;
