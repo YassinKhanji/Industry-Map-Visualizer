@@ -99,8 +99,9 @@ async function handleStream(request: NextRequest, query: string) {
         addRateLimit(ip);
         send("done", "Complete", 100);
       } catch (error) {
+        const msg = error instanceof Error ? error.message : String(error);
         console.error("Stream error:", error);
-        send("error", "Research failed — showing skeleton map", 0);
+        send("error", `Research failed: ${msg}`, 0);
       }
 
       controller.close();
@@ -204,12 +205,13 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
     console.error("API error:", error);
     const query = new URL(request.url).searchParams.get("q") || "Unknown Industry";
     return NextResponse.json(
       {
         data: fallbackMap(query),
-        error: "Research failed — showing skeleton map",
+        error: `Research failed: ${msg}`,
       },
       {
         status: 503,
