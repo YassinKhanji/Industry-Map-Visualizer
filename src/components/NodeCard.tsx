@@ -44,41 +44,20 @@ function NodeCard({ data, id }: NodeProps) {
     [id, setSelectedNodeId]
   );
 
-  // Compute vertically-spread handle offsets so parallel edges fan out
-  const MAX_SPREAD = 30; // max ±px from center
-  function offsets(count: number): number[] {
-    if (count <= 1) return [0];
-    const totalSpread = Math.min(MAX_SPREAD * 2, (count - 1) * 8);
-    return Array.from({ length: count }, (_, i) =>
-      (i / (count - 1) - 0.5) * totalSpread
-    );
-  }
-
-  const srcCount = nodeData.sourceHandleCount || 1;
-  const tgtCount = nodeData.targetHandleCount || 1;
-  const srcOffsets = offsets(srcCount);
-  const tgtOffsets = offsets(tgtCount);
-
   return (
     <div
       className="group relative select-none"
       style={{ minWidth: 140, cursor: "pointer" }}
       onContextMenu={handleContextMenu}
     >
-      {/* Target handles (left side) */}
-      {tgtOffsets.map((off, i) => (
-        <Handle
-          key={`target-${i}`}
-          id={`target-${i}`}
-          type="target"
-          position={Position.Left}
-          className="!w-1.5 !h-1.5 !border-0 !-left-1"
-          style={{
-            backgroundColor: isLeaf ? "#111827" : "#d1d5db",
-            top: `calc(50% + ${off}px)`,
-          }}
-        />
-      ))}
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!w-1.5 !h-1.5 !border-0 !-left-1"
+        style={{
+          backgroundColor: isLeaf ? "#111827" : "#d1d5db",
+        }}
+      />
 
       <div
         className="px-4 py-2.5 rounded transition-all duration-200"
@@ -120,20 +99,14 @@ function NodeCard({ data, id }: NodeProps) {
         )}
       </div>
 
-      {/* Source handles (right side) */}
-      {srcOffsets.map((off, i) => (
-        <Handle
-          key={`source-${i}`}
-          id={`source-${i}`}
-          type="source"
-          position={Position.Right}
-          className="!w-1.5 !h-1.5 !border-0 !-right-1"
-          style={{
-            backgroundColor: isLeaf ? "#111827" : "#d1d5db",
-            top: `calc(50% + ${off}px)`,
-          }}
-        />
-      ))}
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!w-1.5 !h-1.5 !border-0 !-right-1"
+        style={{
+          backgroundColor: isLeaf ? "#111827" : "#d1d5db",
+        }}
+      />
     </div>
   );
 }

@@ -143,7 +143,7 @@ function MapCanvasInner() {
         proOptions={{ hideAttribution: true }}
         style={{ background: darkMode ? "var(--background)" : "#ffffff" }}
         defaultEdgeOptions={{
-          type: "smoothstep",
+          type: "default",
           style: { stroke: "var(--edge)", strokeWidth: 1.2 },
         }}
       >
